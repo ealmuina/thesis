@@ -1,0 +1,52 @@
+% Preamble
+\documentclass[12pt]{report} %TODO How to avoid twoside from including presentation page
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[T1]{fontenc}
+%\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+
+% Document
+\begin{document}
+
+    \input{title}
+
+%    \input{abstract}
+%
+%    \chapter*{Dedication}\label{ch:dedication}
+%    To mum and dad
+%
+%    \chapter*{Acknowledgements}\label{ch:acknowledgements}
+%    I want to thank\ldots
+
+%    \tableofcontents
+%    \listoffigures
+%    \listoftables
+
+    \chapter{Introducción}\label{ch:introduction}
+    \input{chapters/introduction}
+
+%    \chapter{Chapter Two Title}\label{ch:chapter2}
+%    \input{chapters/chapter2}
+%
+%    \chapter{Conclusiones}\label{ch:conclusion}
+%    \input{chapters/conclusion}
+%
+%    \appendix
+%    \chapter{Appendix Title}\label{ch:appendix}
+%    \input{chapters/appendix}
+
+    \bibliographystyle{plain}
+    \bibliography{references}
+
+\end{document}

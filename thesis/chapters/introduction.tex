@@ -1,0 +1,49 @@
+%TODO Te falta el objeto de estudio que son los algoritmos de clasificación y los campos de acción es donde lo aplica en la detección de sonido
+
+Desde su origen, el ser humano se ha visto interesado por el medio que le rodea.
+Una parte de este medio a la que le ha prestado especial atención son los seres vivos que lo habitan, en especial los animales, con los que guarda mayor parentesco.
+Su estudio le ha permitido comprender el modo en que funciona la naturaleza, y puesto que es parte de esta, el modo en que funciona su propio organismo.
+
+La Biología no ha permanecido ajena a lo que ocurre con el resto de las ramas de la ciencia, se ha divido en áreas dedicadas a subcampos específicos, que mutan con el tiempo cual especies vivientes y que, en ocasiones se cruzan con otras ramas para dar origen a nuevos campos de estudio.
+El anterior es el caso de la Bioacústica, hija de la Biología y la Acústica, dedicada a la comprensión de señales sonoras de origen biológico.
+
+Durante años la Bioacústica vio su labor dificultada por problemas de índole tecnológica, el desarrollo científico estuvo lastrado por el de los medios necesarios para procesar la información disponible.
+Esto ha cambiado recientemente con la introducción de dispositivos de grabación y almacenamiento de mayor calidad y capacidad y, especialmente, con la aplicación de técnicas de Inteligencia Artificial.
+
+Un factor que afectó el avance científico en esta área era que las señales debían ser procesadas por expertos en la materia, quienes tenían la engorrosa tarea de segmentar\footnote{Segmentar es el procedimiento de separar una grabación sonora en porciones (segmentos) en las que ocurren una o varias señales acústicas de interés.} y clasificar cada grabación con el propósito de determinar la ocurrencia de sonidos emitidos por ciertas especies de animales en estas.
+Los especialistas debían dedicar horas a este tedioso procedimiento, haciendo poco factible el desarrollo de estudios que requirieran la detección de especies mediante dicho proceder.
+Dichos estudios son muy necesarios para el desarrollo de proyectos ecológicos, medioambientales y de investigación de nuevas especies, sobre todo en lugares donde las condiciones geográficas y del entorno dificultan la observación directa.
+
+La Inteligencia Artificial ha sido vista como una posible solución a la problemática antes planteada.
+Son numerosos los estudios llevados a cabo con diferentes algoritmos de esta para su aplicación en la detección y clasificación de señales bioacústicas~\cite{Gerhard03}.
+En general estos pueden ser clasificados en supervisados o no supervisados, de acuerdo a si requieren un conjunto de datos previamente procesados a partir de los cuales “deducir” el resultado para nuevos datos o no, respectivamente.
+Algoritmos supervisados han sido ampliamente aplicados para la solución del problema en cuestión, quedando la pertinencia y calidad del uso de los no supervisados como un objeto de estudio menos abordado.
+
+Entre las técnicas más estudiadas para la clasificación de señales bioacústicas encontramos:
+\begin{itemize}
+    \item Neural Networks~\cite{Gerhard03,Deecke05}
+    \item K-Nearest Neighbours~\cite{Dunkel06}
+    \item Support Vector Machines~\cite{Ilyas14}
+    \item Decision Trees~\cite{Lasseck14}
+    \item Naive-Bayes~\cite{Dunkel06}
+\end{itemize}
+
+Todas las técnicas antes mencionadas pertenecen al campo del aprendizaje supervisado por lo que, para su aplicación, están sujetas a la existencia de un conjunto de entrenamiento previamente etiquetado por expertos.
+
+Son múltiples los problemas que debe enfrentar un sistema automatizado para la clasificación de una señal bioacústica: el ruido de fondo producido por especies emitiendo sonidos de forma simultánea;
+el que producen eventos meteorológicos como la lluvia o el viento;
+o las variaciones en la frecuencia de la señal que emite un individuo en dos momentos distintos, o diferentes individuos de una misma especie.
+Todas constituyen dificultades a tratar cuando se desarrolla un mecanismo para responder a la interrogante de qué especie animal se escucha en un segmento de una grabación dada.
+
+Una tendencia en numerosos trabajos es enfocarse en la clasificación de una categoría taxonómica específica como aves~\cite{Lasseck14,Oliveira15,Stowell14} o primates~\cite{Heinicke15}.
+Lo anterior persigue lograr un mejor ajuste en los parámetros de los algoritmos y alcanzar así resultados de mayor calidad.
+Se encuentra menos estudiada la aplicación en grabaciones sobre una comunidad de organismos diversa, donde los resultados han sido menos alentadores~\cite{Ilyas14}; y resulta un campo particularmente propicio para la aplicación de algoritmos no supervisados, dada su naturaleza de no requerir conocimiento previo de las categorías esperadas, y que funcionan mejor para mayores separaciones entre las categorías.
+
+Planteado el contexto sobre el que se desarrolla este trabajo, formulamos la siguiente pregunta científica: ¿En qué escenarios resulta propicia la aplicación de algoritmos de aprendizaje no supervisado para la clasificación automática de señales sonoras?
+
+Para dar respuesta a esta interrogante, nos proponemos cumplir los siguientes objetivos:
+\begin{itemize}
+    \item Presentar un estudio de los algoritmos de aprendizaje no supervisado y clustering semi-supervisado\footnote{Técnica que aplica algoritmos de aprendizaje no supervisado a conjuntos de datos en los que se conoce la categoría de algunos elementos.} y su aplicación en el procesamiento de señales.
+    \item Implementar variantes de los algoritmos estudiados.
+    \item Establecer una comparación entre los resultados obtenidos, en correspondencia con el problema general (clasificación de señales de diversas especies) y restricciones de este (clasificación de señales en categorías de especies específicas).
+\end{itemize}
