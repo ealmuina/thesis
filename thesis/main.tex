@@ -1,13 +1,15 @@
 % Preamble
-\documentclass[12pt]{report} %TODO How to avoid twoside from including presentation page
+\documentclass[12pt,twoside]{report}
 
 % Packages
 \usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel}
 \usepackage[T1]{fontenc}
-%\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
+\usepackage[width=150mm,top=25mm,bottom=25mm]{geometry}
+%\usepackage[doublespacing]{setspace}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{pdfpages}
 
 \usepackage{graphicx}
 \graphicspath{ {images/} }
@@ -19,7 +21,7 @@
 % Document
 \begin{document}
 
-    \input{title}
+    \includepdf{../out/title.pdf}
 
     %    \input{abstract}
 
