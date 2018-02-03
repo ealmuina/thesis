@@ -1,12 +1,46 @@
-Se denominan algoritmos de \textit{clustering} a los algoritmos de aprendizaje no supervisado que particionan un conjunto de datos en conjuntos cuyos miembros son tan similares como sea posible.
+Se denominan algoritmos de \textit{clustering} a los algoritmos de aprendizaje no supervisado que agrupan los elementos de un conjunto de datos en conjuntos (clusters) de modo que los objetos pertenecientes a un mismo cluster sean más similares que aquellos en clusters distintos.
+
+% Wikipedia
+Los algoritmos de clustering difieren significativamente en su noción de qué constituye un cluster y cómo hallarlos eficientemente.
+Algunas de las nociones de cluster más populares incluyen grupos con pequeñas distancias entre sus integrantes, áreas de alta densidad en el espacio de datos, o distribuciones estadísticas particulares.
+El algoritmo de clustering más apropiado para un problema, así como su configuración de parámetros (incluyendo la función de distancia a emplear, el umbral de densidad o el número de clusters esperado) es altamente dependiente de las características del conjunto de datos y del uso que se desea dar a los resultados obtenidos.
 
 La determinación del número de conjuntos es a menudo un problema en sí;
 algunos algoritmos lo hayan como parte de su funcionamiento, mientras que otros requieren dicho valor como entrada.
 Al trabajo de elegir el modelo de <<complejidad>> adecuada se le conoce como \textit{selección del modelo} y será un asunto que discutiremos más adelante. %TODO check if accomplished or change
 
-En correspondencia con el marco teórico que emplean, una posible clasificación para este tipo de algoritmos es en:
-\begin{itemize}
-    \item \textbf{Probabilísticos y generativos}
-    \item \textbf{Basados en distancia}
-    \item \textbf{Basados en densidad}
-\end{itemize}
+En las siguientes secciones explicaremos los principales algoritmos de clustering que serán empleados en este trabajo.
+
+
+\section{Clustering particional}\label{sec:clusteringParticional}
+
+A continuación discutimos el algoritmo de clustering conocido como K-Means, el cual es uno de los más simples y eficientes existentes en la literatura.
+Luego de describir en detalle el algoritmo, analizamos algunos de los principales factores que influyen sobre sus resultados.
+Y posteriormente presentamos variaciones de K-Means ampliamente utilizadas.
+
+\subsection{K-Means}\label{subsec:k-means}
+
+K-Means es el algoritmo de algoritmo de clustering particional más empleado.
+Comienza seleccionando $K$ puntos representativos como \textit{centroides} iniciales.
+Cada punto del conjunto de datos es luego asignado al centroide más cercano basándose en una medida de proximidad determinada.
+Una vez se han formado los clusters, los centroides para cada cluster son actualizados a un nuevo punto.
+De manera iterativa, el algoritmo repite estos dos pasos hasta que los centroides no cambien o algún criterio de convergencia alternativo sea cumplido.
+K-Means es un algoritmo \textit{greedy} con convergencia garantizada ~\cite{Selim84} a un mínimo local pero, visto como un problema de optimización, ha sido demostrado que hallar el mínimo de su función objetivo es NP-Hard~\cite{Manning08}.
+En la práctica, suele usarse como criterio de convergencia una versión relajada, continuándose las iteraciones hasta que el 1\% de los puntos cambian de cluster.
+
+% TODO K-Means algorithm
+
+La elección de la medida de proximidad para computar el centroide más próximo a cada punto puede afectar significativamente las asignaciones y la calidad de la solución final.
+Medidas como la distancia Manhattan (norma $L_1$), la distancia euclidiana (norma $L_2$) y la similitud coseno son frecuentemente empleadas, especialmente la segunda.
+Tanto la medida de proximidad como el valor de $K$ son determinantes en la configuración de clusters producida por K-Means.
+
+La función objetivo de K-Means es conocida como Suma de Errores Cuadráticos (SSE por sus siglas en inglés).
+La formulación matemática de SSE es presentada a continuación.
+
+Dado un conjunto de datos $D={x_1,x_2,\dots,x_N}$ de $N$ puntos, denotemos el conjunto de clusters obtenido tras aplicar K-Means como $C={C_1,C_2,\dots,C_k,\dots,C_K}$.
+El SSE para $C$ es definido en la ecuación
+
+\begin{equation}
+    SSE(C)=\sum_{k=1}^{K}{\sum_{x_{i}\in C_k}{\|x_i-c_k\|^2}}
+\end{equation}
+

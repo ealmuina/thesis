@@ -1,5 +1,5 @@
 % Preamble
-\documentclass[12pt,twoside]{report}
+\documentclass[12pt,twoside,openany]{book}
 
 % Packages
 \usepackage[utf8]{inputenc}
@@ -10,6 +10,8 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{pdfpages}
+\usepackage{amsmath}
+\usepackage{algorithm2e}
 
 \usepackage{graphicx}
 \graphicspath{ {images/} }
@@ -20,13 +22,15 @@
 
 % Document
 \begin{document}
+    \frontmatter
 
     \includepdf{../out/title.pdf}
 
     %    \input{abstract}
 
-    %    \chapter*{Dedication}\label{ch:dedication}
-    %    To mum and dad
+    %    \begin{flushright}
+    %        To mum and dad
+    %    \end{flushright}
 
     %    \chapter*{Acknowledgements}\label{ch:acknowledgements}
     %    I want to thank\ldots
@@ -38,11 +42,15 @@
     \chapter*{Introducción}\label{ch:introduction}
     \input{chapters/introduction}
 
+    \mainmatter
+
     \chapter{Clustering}\label{ch:chapter1}
     \input{chapters/chapter1}
 
     %    \chapter{Conclusiones}\label{ch:conclusion}
     %    \input{chapters/conclusion}
+
+    \backmatter
 
     \bibliographystyle{plain}
     \bibliography{references}
