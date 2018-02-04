@@ -31,13 +31,13 @@ K-Means es un algoritmo \textit{greedy} con convergencia garantizada~\cite{Selim
 En la práctica, suele usarse como criterio de convergencia una versión relajada, continuándose las iteraciones hasta que el 1\% de los puntos cambian de cluster.
 
 \begin{algorithm}
+    \caption{Algoritmo K-Means básico}
     \label{algorithm:KMeans}
     Seleccionar $K$ puntos como centroides\;
     \Repeat{Se cumple criterio de convergencia}{
     Formar $K$ clusters asignando cada punto al centroide más próximo\;
     Recomputar el centroide de cada cluster\;
     }
-    \caption{Algoritmo K-Means básico}
 \end{algorithm}
 
 La elección de la medida de proximidad para computar el centroide más próximo a cada punto puede afectar significativamente las asignaciones y la calidad de la solución final.

@@ -12,6 +12,12 @@
 \usepackage{pdfpages}
 \usepackage{amsmath}
 \usepackage[algoruled,noline,linesnumbered,spanish]{algorithm2e}
+\usepackage[fixlanguage]{babelbib}
+
+\usepackage[backref=page]{hyperref}
+\renewcommand\backrefxxx[3]{%
+\hyperlink{page.#1}{$\uparrow$#1}%
+}
 
 \usepackage{graphicx}
 \graphicspath{ {images/} }
@@ -53,7 +59,8 @@
 
     \backmatter
 
-    \bibliographystyle{plain}
+    \selectbiblanguage{spanish}
+    \bibliographystyle{babplain-lf}
     \bibliography{references}
 
     %    \appendix
