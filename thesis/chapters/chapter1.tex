@@ -59,7 +59,7 @@ En otras palabras, se calcula el error de cada punto de los datos, es decir, sus
 Dados dos conjuntos de clusters obtenidos aplicando dos diferentes corridas de K-Means, sería preferible conservar el de menor SSE puesto que esto significaría que los centroides obtenidos en esa corrida constituyen una mejor representación de los puntos en sus clusters.
 De ahí que el resultado de minimizar la función SSE represente el conjunto de clusters óptimo.
 
-Se puede demostrar que los centroides que minimizan la SSE son la media de los puntos de cada cluster~\cite{Unknown}.
+Se puede demostrar que los centroides que minimizan la SSE son la media de los puntos de cada cluster~\cite{Tan05}.
 El centroide del $k$-ésimo centroide $c_k$ quedaría entonces definido según la ecuación~\ref{eq:centroid}.
 
 \begin{equation}
@@ -79,7 +79,7 @@ Este es ampliamente usado en la literatura por su sencillez, aunque tiene la des
 Se han popularizado otras variantes de selección de los centroides, con el propósito de aumentar la efectividad y consistencia en los resultados de K-Means.
 Uno de ellos es tomar una muestra de puntos y agruparlos empleando una técnica de clustering jerárquico.
 Una vez formados $K$ clusters, se toman sus centroides y se inicializa K-Means con estos.
-Este enfoque a menudo ofrece buenos resultados, pero solamente resulta práctico si la muestra tomada es relativamente pequeña (de un orden entre $10^2$ y $10^3$) y $K$ es relativamente pequeño comparado con el tamaño de dicha muestra~\cite{Unknown}.
+Este enfoque a menudo ofrece buenos resultados, pero solamente resulta práctico si la muestra tomada es relativamente pequeña (de un orden entre $10^2$ y $10^3$) y $K$ es relativamente pequeño comparado con el tamaño de dicha muestra~\cite{Tan05}.
 
 Otra variante, conocida como \textit{K-Means++}~\cite{Arthur07}, consiste en primeramente seleccionar un punto de manera aleatoria o tomando el centroide de todos los puntos.
 Luego, se selecciona el punto más alejado de los centroides formados con anterioridad y se repite este paso hasta obtener $K$ centroides iniciales.
@@ -139,7 +139,7 @@ Específicamente, la cantidad de memoria empleada es $O((n+K)m)$, donde $n$ es e
 Los requisitos de tiempo de este algoritmo son igualmente bajos -es básicamente lineal respecto al tamaño del conjunto de datos.
 En particular, el tiempo requerido es $O(I \cdot K \cdot m \cdot n)$, donde $I$ es el número de iteraciones necesarias para converger.
 A menudo $I$ es suficientemente pequeño, y usualmente puede ser considerado como un valor constante y despreciable.
-De esta forma, K-Means es lineal respecto al tamaño del conjunto de datos $n$, y es muy eficiente siempre que el número de clusters $K$ sea significativamente menor que $n$~\cite{Unknown}.
+De esta forma, K-Means es lineal respecto al tamaño del conjunto de datos $n$, y es muy eficiente siempre que el número de clusters $K$ sea significativamente menor que $n$~\cite{Tan05}.
 
 % TODO Analyse if this section needs to be included
 %\subsection{Variantes de K-Means}\label{subsec:variantesDeK-means}
