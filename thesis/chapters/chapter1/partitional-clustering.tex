@@ -1,21 +1,3 @@
-Se denominan algoritmos de \textit{clustering} a los algoritmos de aprendizaje no supervisado que agrupan los elementos de un conjunto de datos en conjuntos (clusters) de modo que los objetos pertenecientes a un mismo cluster sean más similares que aquellos en clusters distintos.
-Su aplicación permite simplificar la estructura del conjunto de datos, convirtiéndolo en uno más pequeño y fácilmente manipulable;
-o como en el caso que ocupa este trabajo, encontrar grupos de especial significación para el problema, como pueden ser agrupaciones de segmentos de audio correspondientes a individuos de una misma especie animal.
-
-% Wikipedia
-Los algoritmos de clustering difieren significativamente en su noción de qué constituye un cluster y cómo hallarlos eficientemente.
-Algunas de las nociones de cluster más populares incluyen grupos con pequeñas distancias entre sus integrantes, áreas de alta densidad en el espacio de datos, o distribuciones estadísticas particulares.
-El algoritmo de clustering más apropiado para un problema, así como su configuración de parámetros (incluyendo la función de distancia a emplear, el umbral de densidad o el número de clusters esperado) es altamente dependiente de las características del conjunto de datos y del uso que se desea dar a los resultados obtenidos.
-
-La determinación del número de conjuntos es a menudo un problema en sí;
-algunos algoritmos lo hayan como parte de su funcionamiento, mientras que otros requieren dicho valor como entrada.
-Al trabajo de elegir el modelo de <<complejidad>> adecuada se le conoce como \textit{selección del modelo} y será un asunto que discutiremos más adelante. %TODO check if accomplished or change
-
-En las siguientes secciones explicaremos los principales algoritmos de clustering que serán empleados en este trabajo.
-
-
-\section{Clustering particional}\label{sec:clusteringParticional}
-
 A continuación discutimos el algoritmo de clustering conocido como K-Means, el cual es uno de los más simples y eficientes existentes en la literatura.
 Luego de describir en detalle el algoritmo, analizamos algunos de los principales factores que influyen sobre sus resultados.
 Posteriormente presentamos variaciones de K-Means ampliamente utilizadas.
@@ -27,11 +9,11 @@ Comienza seleccionando $K$ puntos representativos como \textit{centroides} inici
 Cada punto del conjunto de datos es luego asignado al centroide más cercano basándose en una medida de proximidad determinada.
 Una vez se han formado los clusters, los centroides para cada cluster son actualizados a un nuevo punto.
 De manera iterativa, el algoritmo repite estos dos pasos hasta que los centroides no cambien o algún criterio de convergencia alternativo sea cumplido.
-K-Means es un algoritmo \textit{greedy} con convergencia garantizada~\cite{Selim84} a un mínimo local pero, visto como un problema de optimización, ha sido demostrado que hallar el mínimo de su función objetivo es NP-Hard~\cite{Manning08}.
+K-Means es un algoritmo \textit{greedy} con convergencia garantizada a un mínimo local~\cite{Selim84} pero, visto como un problema de optimización, ha sido demostrado que hallar el mínimo de su función objetivo es NP-Hard~\cite{Manning08}.
 En la práctica, suele usarse como criterio de convergencia una versión relajada, continuándose las iteraciones hasta que el 1\% de los puntos cambian de cluster.
 
 \begin{algorithm}
-    \caption{Algoritmo K-Means básico}
+    \caption{K-Means}
     \label{algorithm:KMeans}
     Seleccionar $K$ puntos como centroides\;
     \Repeat{Se cumple criterio de convergencia}{
@@ -150,18 +132,25 @@ De esta forma, K-Means es lineal respecto al tamaño del conjunto de datos $n$, 
 %\subsubsection{K-Medoids}
 %
 
-\subsection{Mini Batch K-Means}\label{subsec:miniBatchKMeans}
+\subsection{Mini-batch K-Means}\label{subsec:miniBatchKMeans}
 
-Mini Batch K-Means es una variante del algoritmo K-Means que emplea \textit{mini-batches} con el fin de reducir el tiempo de computación, sin afectar la función objetivo a optimizar.
+Mini-batch K-Means es una variante del algoritmo K-Means que emplea \textit{mini-batches} con el fin de reducir el tiempo de computación, sin afectar la función objetivo a optimizar.
 Los \textit{mini-batches} son subconjuntos del conjunto de datos sobre el que se aplica el algoritmo, tomados mediante un muestreo aleatorio en cada iteración.
 Estos reducen drásticamente la cantidad de cómputo necesario para converger a un óptimo local.
 
 \begin{algorithm}
+    \caption{Mini-batch K-Means}
     \label{algorithm:MiniBatchKMeans}
     Seleccionar $K$ puntos como centroides\;
     \Repeat{Se cumple criterio de convergencia}{
-    Formar $K$ clusters asignando cada punto al centroide más próximo\;
+    Tomar una muestra aleatoria de $b$ puntos del conjunto de datos\;
+    Asignar cada punto de la muestra al cluster que corresponda al centroide más próximo\;
     Recomputar el centroide de cada cluster\;
     }
-    \caption{Algoritmo K-Means básico}
 \end{algorithm}
+
+Al recomputar los centroides durante cada iteración se tienen en cuenta tanto los puntos de la muestra recién asignados como los asignados durante las iteraciones anteriores.
+
+El algoritmo Mini-batch K-Means converge a mayor velocidad que K-Means,
+aunque la calidad de sus resultados es menor.
+No obstante, para aplicaciones prácticas, esta diferencia en calidad suele ser poco significativa~\cite{Sculley10}.

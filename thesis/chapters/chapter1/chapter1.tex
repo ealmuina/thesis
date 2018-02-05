@@ -1,0 +1,22 @@
+Se denominan algoritmos de \textit{clustering} a los algoritmos de aprendizaje no supervisado que agrupan los elementos de un conjunto de datos en conjuntos (clusters) de modo que los objetos pertenecientes a un mismo cluster sean más similares que aquellos en clusters distintos.
+Su aplicación permite simplificar la estructura del conjunto de datos, convirtiéndolo en uno más pequeño y fácilmente manipulable;
+o como en el caso que ocupa este trabajo, encontrar grupos de especial significación para el problema, como pueden ser agrupaciones de segmentos de audio correspondientes a individuos de una misma especie animal.
+
+% Wikipedia
+Los algoritmos de clustering difieren significativamente en su noción de qué constituye un cluster y cómo hallarlos eficientemente.
+Algunas de las nociones de cluster más populares incluyen grupos con pequeñas distancias entre sus integrantes, áreas de alta densidad en el espacio de datos, o distribuciones estadísticas particulares.
+El algoritmo de clustering más apropiado para un problema, así como su configuración de parámetros (incluyendo la función de distancia a emplear, el umbral de densidad o el número de clusters esperado) es altamente dependiente de las características del conjunto de datos y del uso que se desea dar a los resultados obtenidos.
+
+La determinación del número de conjuntos es a menudo un problema en sí;
+algunos algoritmos lo hayan como parte de su funcionamiento, mientras que otros requieren dicho valor como entrada.
+Al trabajo de elegir el modelo de <<complejidad>> adecuada se le conoce como \textit{selección del modelo} y será un asunto que discutiremos más adelante. %TODO check if accomplished or change
+
+En las siguientes secciones explicaremos los principales algoritmos de clustering que serán empleados en este trabajo.
+
+
+\section{Clustering particional}\label{sec:clusteringParticional}
+\input{chapters/chapter1/partitional-clustering}
+
+\section{Clustering jerárquico}\label{sec:clusteringJerárquico}
+\input{chapters/chapter1/hierarchical-clustering}
+
