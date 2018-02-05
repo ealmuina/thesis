@@ -76,7 +76,7 @@ Es por esto que numerosos trabajos se han enfocado en el área de determinar el 
 En esta subsección mencionamos algunos de los más generalizados.
 
 \begin{enumerate}
-    \item \textit{Índice de Calinski-Harabasz}~\cite{Calinski74}: Está definido por la ecuación~\ref{eq:CH}:
+    \item \textbf{Índice de Calinski-Harabasz}~\cite{Calinski74}: Está definido por la ecuación~\ref{eq:CH}:
     \begin{equation}
         \label{eq:CH}
         CH(K)=\frac{\frac{B(K)}{K-1}}{\frac{W(K)}{N-K}}
@@ -85,7 +85,7 @@ En esta subsección mencionamos algunos de los más generalizados.
     El número de clusters es seleccionado maximizando la función dada en la ecuación~\ref{eq:CH}.
     $B(K)$ y $W(K)$ constituyen las sumas de los cuadrados de las distancias intra e inter-cluster respectivamente (dados $K$ clusters).
 
-    \item \textit{Estadística de Brecha}\footnote{\textit{Gap Statistic} en inglés.}~\cite{Tibshirani01}: En este método se generan $B$ conjuntos de datos que sigan una distribución uniforme en el mismo intervalo que el original.
+    \item \textbf{Estadística de Brecha}\footnote{\textit{Gap Statistic} en inglés.}~\cite{Tibshirani01}: En este método se generan $B$ conjuntos de datos que sigan una distribución uniforme en el mismo intervalo que el original.
     Sea $W_{b}^{*}(K)$ la suma de los cuadrados de las distancias intra-cluster del $b$-ésimo conjunto de datos, definimos entonces la siguiente ecuación:
     \begin{equation}
         Gap(K) = \frac{1}{B} \times\sum_{b}{\log(W_{b}^{*}(K)) - \log(W(K))}
@@ -97,13 +97,13 @@ En esta subsección mencionamos algunos de los más generalizados.
     \end{equation}
     donde $S_{k+1}$ es el valor de la desviación estándar de $\log(W_{b}^{*}(K+1))$.
 
-    \item \textit{Criterio de Información de Akaike (AIC)}~\cite{Yeung01}: Sea $M$ el número de dimensiones del conjunto de datos, K se calcula a partir de la ecuación~\ref{eq:AIC}.
+    \item \textbf{Criterio de Información de Akaike (AIC)}~\cite{Yeung01}: Sea $M$ el número de dimensiones del conjunto de datos, K se calcula a partir de la ecuación~\ref{eq:AIC}.
     \begin{equation}
         \label{eq:AIC}
         K=argmin_{K}[SSE(K)+2M K]
     \end{equation}
 
-    \item \textit{Coeficiente de Silueta}\footnote{\textit{Silhouette Coefficient} en inglés.}~\cite{Kaufman90}: Su formulación considera tanto la distancia intra-cluster como la inter-cluster.
+    \item \textbf{Coeficiente de Silueta}\footnote{\textit{Silhouette Coefficient} en inglés.}~\cite{Kaufman90}: Su formulación considera tanto la distancia intra-cluster como la inter-cluster.
     Para un punto dado $x_i$, primero calculamos el promedio de las distancias de este a todos los puntos del mismo cluster ($a_i$).
     Luego por cada cluster que no contiene a $x_i$, calculamos el promedio de las distancias de $x_i$ a sus integrantes ($b_i$).
     Usando estos dos valores, se estima el coeficiente de silueta de un punto como el cociente entre su diferencia y el mayor de ambos.
