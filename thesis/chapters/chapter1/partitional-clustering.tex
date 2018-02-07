@@ -27,17 +27,17 @@ Medidas como la distancia Manhattan (norma $L_1$), la distancia euclidiana (norm
 Tanto la medida de proximidad como el valor de $K$ son determinantes en la configuración de clusters producida por K-Means.
 
 Si visualizamos este algoritmo como un problema de optimización, entonces estaríamos minimizando la función objetivo de K-Means conocida como Suma de Errores Cuadráticos (SSE por sus siglas en inglés).
-La formulación matemática de SSE es presentada a continuación.
+A continuación presentamos su formulación matemática.
 
 Dado un conjunto de datos $D={x_1,x_2,\dots,x_N}$ de $N$ puntos, denotemos el conjunto de clusters obtenido tras aplicar K-Means como $C={C_1,C_2,\dots,C_k,\dots,C_K}$.
 La SSE para $C$ es definido en la ecuación~\ref{eq:SSE} donde $c_k$ es el centroide del cluster $C_k$.
 
 \begin{equation}
     \label{eq:SSE}
-    SSE(C)=\sum_{k=1}^{K}{\sum_{x_{i}\in C_k}{\|x_i-c_k\|^2}}
+    SSE(C)=\sum_{k=1}^{K}{\sum_{x_{i}\in C_k}{dist(x_i, c_k)^2}}
 \end{equation}
 
-En otras palabras, se calcula el error de cada punto de los datos, es decir, sus distancia al centroide más próximo, y luego computamos la suma total de los errores al cuadrado.
+En otras palabras, se calcula el error de cada punto de los datos, es decir, su distancia al centroide más próximo, y luego computamos la suma total de los errores al cuadrado.
 Dados dos conjuntos de clusters obtenidos aplicando dos diferentes corridas de K-Means, sería preferible conservar el de menor SSE puesto que esto significaría que los centroides obtenidos en esa corrida constituyen una mejor representación de los puntos en sus clusters.
 De ahí que el resultado de minimizar la función SSE represente el conjunto de clusters óptimo.
 
