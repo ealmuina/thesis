@@ -14,8 +14,13 @@
 \usepackage[fixlanguage]{babelbib}
 
 \usepackage[backref=page]{hyperref}
-\renewcommand\backrefxxx[3]{%
-\hyperlink{page.#1}{$\uparrow$#1}%
+\backrefspanish
+\renewcommand{\backref}[1]{}
+\renewcommand{\backrefalt}[4]{%
+\ifcase #1 \relax%
+\or (Citado en la página~#2).%
+\else (Citado en las páginas~#2).%
+\fi%
 }
 
 \usepackage{graphicx}
@@ -23,6 +28,31 @@
 
 \usepackage{fancyhdr}
 \pagestyle{fancy}
+\fancyfoot{}
+%\fancyfoot[C]{\bfseries \thepage} % except the center
+\fancyhead{}
+\renewcommand{\chaptermark}[1]{\markboth{\small \ \chaptername\ \thechapter. \ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection \ \ #1}}
+\fancyhead[L]{\slshape \leftmark}
+\fancyhead[R]{\thepage}
+\fancyhead[LO]{\slshape \rightmark}
+\fancyhead[RO,LE]{\textbf{\thepage}}
+\fancyhead[RE]{\slshape \leftmark}
+
+\def\frontmatter{%
+\pagenumbering{roman}
+\pagestyle{plain}
+}
+
+\def\mainmatter{%
+\cleardoublepage%
+\pagenumbering{arabic}
+\pagestyle{fancy}
+}
+
+\def\backmatter{%
+\pagestyle{plain}
+}
 
 
 % Document
