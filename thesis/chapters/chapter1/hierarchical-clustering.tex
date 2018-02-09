@@ -41,7 +41,7 @@ Este concepto constituye la diferencia entre los distintos algoritmos de cluster
     \centering
     \includegraphics[width=\textwidth]{agglomerative-clustering.png}
     \caption{Ejemplo de aplicación de algoritmos de clustering aglomerativo. (a) Matriz de similaridad para un conjunto de datos de 4 puntos.
-    Dendrogramas obtenidos a partir de este conjunto usando los métodos de clustering aglomerativo (b) single link y (c) complete link.}
+    Dendrogramas obtenidos a partir de este conjunto usando los métodos de clustering aglomerativo (b) single link y (c) complete link. (Tomado de~\cite{Aggarawal13}.)}
 \end{figure}
 
 \textbf{Group averaged}~\footnote{También conocido como \textit{Average linkage}} es una tercera variante de clustering aglomerativo.
@@ -68,4 +68,4 @@ El paso 4 solo requiere un tiempo $O(n-i+1)$ para actualizar la matriz luego de 
 Sin efectuar ninguna modificación, esto nos lleva a una complejidad temporal total $O(n^3)$.
 Aunque aplicando mejoras como el empleo de estructuras de datos alternativas para almacenar la matriz y optimizar la búsqueda del paso 3, esta complejidad puede disminuirse hasta $O(n^2\log{n})$~\cite{Tan05}.
 
-La complejidad espacial y temporal de los algoritmos de clustering jerárquico constituyen una de las principales limitantes para su empleo sobre conjuntos de datos de tamaño significativo.
+La complejidad espacial y temporal de los algoritmos de clustering jerárquico constituye una de las principales limitantes para su empleo sobre conjuntos de datos de tamaño significativo.

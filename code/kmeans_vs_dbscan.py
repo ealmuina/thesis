@@ -44,12 +44,12 @@ for i, (name, algorithm) in enumerate(algorithms):
     colors = np.array(list(islice(cycle(['#377eb8', '#ff7f00', '#4daf4a',
                                          '#f781bf', '#a65628', '#984ea3',
                                          '#999999', '#e41a1c', '#dede00']),
-                                  int(max(y_pred) + 1))))
+                                  int(len(set(y_pred))))))
 
     ax = fig.add_subplot(1, 2, i + 1)
-    for k, col in zip(range(len(set(y_pred))), colors):
+    for k, col in zip(set(y_pred), colors):
         my_members = y_pred == k
-        ax.plot(X[my_members, 0], X[my_members, 1], 'w', markerfacecolor=col, marker='.')
+        ax.scatter(X[:, 0], X[:, 1], s=0.5, color=colors[y_pred])
 
     ax.set_title(name)
     ax.set_xticks(())
