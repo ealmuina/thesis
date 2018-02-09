@@ -16,7 +16,7 @@ transformation = [[0.60834549, -0.63667341], [-0.40887718, 0.85253229]]
 X = np.dot(X, transformation)
 
 # #############################################################################
-# Compute clustering with Means
+# Compute clustering with K-Means
 
 k_means = KMeans(n_clusters=n_clusters)
 k_means.fit(X)

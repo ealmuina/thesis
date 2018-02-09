@@ -29,7 +29,6 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyfoot{}
-%\fancyfoot[C]{\bfseries \thepage} % except the center
 \fancyhead{}
 \renewcommand{\chaptermark}[1]{\markboth{\small \ \chaptername\ \thechapter. \ #1}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection \ \ #1}}
@@ -39,18 +38,18 @@
 \fancyhead[RO,LE]{\textbf{\thepage}}
 \fancyhead[RE]{\slshape \leftmark}
 
-\def\frontmatter{%
+\renewcommand{\frontmatter}{%
 \pagenumbering{roman}
 \pagestyle{plain}
 }
 
-\def\mainmatter{%
+\renewcommand{\mainmatter}{%
 \cleardoublepage%
 \pagenumbering{arabic}
 \pagestyle{fancy}
 }
 
-\def\backmatter{%
+\renewcommand{\backmatter}{%
 \pagestyle{plain}
 }
 
@@ -80,9 +79,21 @@
 
     \mainmatter
 
-    \chapter{Clustering}\label{ch:chapter1}
-    \input{chapters/chapter1/chapter1}
+    \chapter{Preliminares}\label{ch:preliminaries}
+    \input{chapters/chapter1/preliminaries}
 
+    \chapter{Clustering}\label{ch:clustering}
+    \input{chapters/chapter2/clustering}
+
+    %    \chapter{Preprocesamiento de Datos}\label{ch:preprocessing}
+    %    \input{chapters/chapter3/preprocessing}
+    %
+    %    \chapter{Evaluación}\label{ch:evaluation}
+    %    \input{chapters/chapter4/evaluation}
+    %
+    %    \chapter{Resultados}\label{ch:results}
+    %    \input{chapters/chapter5/results}
+    %
     %    \chapter{Conclusiones}\label{ch:conclusion}
     %    \input{chapters/conclusion}
 
