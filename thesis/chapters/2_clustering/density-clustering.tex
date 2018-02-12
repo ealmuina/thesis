@@ -28,7 +28,7 @@ Más adelante discutiremos algunas estrategias para la selección de valores apr
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=\textwidth]{dbscan.png}
+    \includegraphics[width=0.8\textwidth]{dbscan.png}
     \caption{Densidad en el entorno de un punto y clasificaciones de los puntos según su densidad. (Tomado de~\cite{Tan05}.)}
     \label{img:dbscan}
 \end{figure}
@@ -77,11 +77,16 @@ Un criterio para determinar los parámetros es mediante la observación del comp
 Si un punto pertenece a un cluster, entonces su $k$-distancia debe ser un valor relativamente pequeño, siempre que $k$ no sea mayor que el tamaño del cluster.
 Siempre que las densidades de los clusters no difieran radicalmente, en promedio, los valores de la $k$-distancias para puntos que pertenezcan a algún cluster no mostrarán un rango de valores muy amplio.
 En cambio, para puntos que no pertenezcan a ningún cluster, es decir, de ruido, este valor sí estará situado muy por encima del rango antes mencionado.
-De esta forma, si tomamos todos los puntos de un conjunto de datos, los ordenamos por su $k$-distancia y estas las representamos en una gráfica, deberíamos obtener una imagen donde existirá un punto de inflexión que se corresponda con el valor de la $k$-distancia a partir del cual los puntos se encuentran fuera de algún cluster.
+De esta forma, si tomamos todos los puntos de un conjunto de datos, los ordenamos por su $k$-distancia y estas las representamos en una gráfica (ver figura~\ref{img:dbscan-k-dist}), deberíamos obtener una imagen donde existirá un punto de inflexión que se corresponda con el valor de la $k$-distancia a partir del cual los puntos se encuentran fuera de algún cluster.
 Podemos entonces tomar dicho valor como el $Eps$ adecuado para el problema en cuestión.
 En cuanto al valor de $MinPts$, este sería precisamente el $k$ seleccionado para calcular las distancias, pues los puntos cuya $k$-distancia sea menor que $Eps$ serán etiquetados como núcleos, mientras los demás serán fronteras o ruido.
 
-% TODO Consider adding an example graphic here
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{dbscan-k-dist.png}
+    \caption{Representación de los puntos de un conjunto de datos ordenados por su $k$-distancia ($k=4$). (Tomado de~\cite{Tan05}.)}
+    \label{img:dbscan-k-dist}
+\end{figure}
 
 Es importante notar que el valor de $Eps$ resultante de este proceso dependerá del $k$ seleccionado al inicio.
 Si $k$ es demasiado pequeño, algunos puntos de ruido situados muy próximos entre sí pudieran ser etiquetados incorrectamente como clusters.
@@ -95,7 +100,7 @@ En cambio si el $Eps$ es tan alto como para distinguir a $A$ y $B$ como clusters
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=\textwidth]{density-issues.png}
+    \includegraphics[width=0.8\textwidth]{density-issues.png}
     \caption{Cuatro clusters en un entorno de ruido.
     Los tonos de gris más oscuros indican mayores densidades. (Tomado de~\cite{Tan05}.)}
     \label{img:density-issues}
@@ -148,7 +153,7 @@ Para ello eliminamos todas las aristas del grafo y las añadimos en orden ascend
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=\textwidth]{hdbscan-hierarchy.png}
+    \includegraphics[width=0.8\textwidth]{hdbscan-hierarchy.png}
     \caption{Jerarquía de clusters obtenida tras el paso 3 del algoritmo HDBSCAN aplicado al conjunto de datos de la figura~\ref{img:hdbscan-dataset+mst}a.}
     \label{img:hdbscan-hierarchy}
 \end{figure}
