@@ -113,7 +113,7 @@ La idea detrás del algoritmo consiste en usar DBSCAN convertido en algoritmo de
     \label{algorithm:HDBSCAN}
     Transformar el espacio en correspondencia con la densidad/dispersión de los puntos\;
     Computar el árbol abarcador de costo mínimo correspondiente al grafo completo ponderado por las distancias halladas\;
-    Construir una jerarquía de clusters de componentes conexas\;
+    Construir una jerarquía de componentes conexas (clusters)\;
     Condensar la jerarquía a partir de un tamaño mínimo para los clusters\;
     Extraer los clusters estables del árbol condensado\;
 \end{algorithm}
@@ -134,7 +134,7 @@ donde $dist(a,b)$ es la distancia original entre los puntos $a$ y $b$.
 Como mencionamos anteriormente, bajo esta nueva métrica, los puntos de regiones densas permanecen a la misma distancia, pues sus $k$-distancias tienen valores relativamente pequeños y siendo entonces su distancia entre sí quien domina en la ecuación~\ref{eq:d_mreach}.
 Lo contrario ocurre en puntos localizados en regiones esparcidas, en dichos casos se impone su $k$-distancia y por tanto son alejados del resto de los puntos a al menos dicho valor.
 
-Se ha demostrado que el uso de la distancia de alcanzabilidad mutua como alternativa a la medida de distancia tradicional mejora significativamente los resultados obtenidos al aproximar mediante una jerarquía la distribución de las densidades de los puntos del conjunto de datos. %TODO cite
+El uso de la distancia de alcanzabilidad mutua como alternativa a la medida de distancia tradicional mejora significativamente los resultados obtenidos al aproximar mediante una jerarquía la distribución de las densidades de los puntos del conjunto de datos~\cite{Eldridge15}.
 
 \begin{figure}[!h]
     \centering
