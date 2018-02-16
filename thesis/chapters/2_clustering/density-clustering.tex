@@ -135,6 +135,7 @@ A continuación, se construye la nueva matriz de distancias, empleando la funci�
     d_{mreach}(a,b)=\max(dist_k(a), dist_k(b), dist(a,b))
 \end{equation}
 
+\noindent
 donde $dist(a,b)$ es la distancia original entre los puntos $a$ y $b$.
 Como mencionamos anteriormente, bajo esta nueva métrica, los puntos de regiones densas permanecen a la misma distancia, pues sus $k$-distancias tienen valores relativamente pequeños y siendo entonces su distancia entre sí quien domina en la ecuación~\ref{eq:d_mreach}.
 Lo contrario ocurre en puntos localizados en regiones esparcidas, en dichos casos se impone su $k$-distancia y por tanto son alejados del resto de los puntos a al menos dicho valor.
@@ -197,3 +198,5 @@ Una vez alcanzado el nodo raíz, el algoritmo ha concluido y su resultado son lo
 
 Cualquier punto que no forme parte de los clusters seleccionados será considerado ruido.
 Además HDBSCAN permite, debido al funcionamiento del algoritmo, establecer un valor de pertenencia de los puntos a sus respectivos clusters, normalizando los $\lambda_p$.
+
+% TODO Add HDBSCAN time and space complexity?

@@ -15,6 +15,7 @@ Podemos definir entonces la función de densidad de $x_i$ como:
     p(x_i)=\sum_{k=1}^{K}{\pi_k p(x_i|\theta_k)}
 \end{equation}
 
+\noindent
 donde cada $\theta_k$ es el conjunto de parámetros específicos de la $k$-ésima componente y $p(x_i|\theta_k)$ su función de densidad.
 Los pesos $\pi_k$, también conocidos como \textit{mixing probabilities}, deben satisfacer las condiciones $0\leq \pi_k \leq 1$ y $\sum_{k=1}^{K}{\pi_k}=1$.
 
@@ -33,6 +34,7 @@ La distribución normal, en el caso de una variable unidimensional $x$, tiene un
     \mathcal{N}(x|\mu,\sigma^2)=\frac{1}{(2\pi\sigma^2)^{1/2}}\exp{(-\frac{1}{2\sigma^2}((x-\mu)^2)}
 \end{equation}
 
+\noindent
 donde $\mu$ es la media y $\sigma^2$ la varianza.
 Para el caso de $D$ dimensiones, la función toma la forma:
 
@@ -41,6 +43,7 @@ Para el caso de $D$ dimensiones, la función toma la forma:
     \mathcal{N}(x|\mu,\Sigma)=\frac{1}{(2\pi)^{D/2}|\Sigma|^{1/2}}\exp{(-\frac{1}{2}(x-\mu)^T \Sigma^{-1}(x-\mu))}
 \end{equation}
 
+\noindent
 donde $\mu$ es el vector $D$-dimensional de medias y $\Sigma$, de dimensión $D\times D$, la matriz de covarianza con determinante $|\Sigma|$.
 
 En GMM cada componente corresponde a una distribución normal con determinados valores asociados a sus parámetros $\mu$ y $\Sigma$.
