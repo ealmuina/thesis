@@ -1,5 +1,67 @@
-% TODO Do this
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.
-Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Los algoritmos de clustering probabilísticos modelan el conjunto de datos a partir de la asunción de que estos son generados a partir de la combinación de determinadas distribuciones de probabilidad.
+Estos algoritmos transforman el problema de clustering en el de estimar los parámetros para $K$ distribuciones de probabilidad.
+Luego los puntos del conjunto de datos que se correspondan con una misma distribución se asociarán al mismo cluster.
+
+En esta sección analizamos un modelo de clustering probabilístico ampliamente estudiado, conocido como \textit{Gaussian Mixture Model} (GMM) y la técnica \textit{Expectation-maximization}, empleada para estimarlo computacionalmente.
+
+\subsection{Combinación de modelos}\label{subsec:mixtureModels}
+
+Sea $X={x_1,\dots,x_N}$ un conjunto de datos de $N$ observaciones de una variable aleatoria $x$ con $D$ dimensiones.
+Asumimos que la variable $x_i$ sigue una distribución consistente con la combinación de $K$ \textit{distribuciones componentes} (clusters), cada una instancia de una distribución para determinados parámetros.
+Podemos definir entonces la función de densidad de $x_i$ como:
+
+\begin{equation}
+    \label{eq:mixtureModels}
+    p(x_i)=\sum_{k=1}^{K}{\pi_k p(x_i|\theta_k)}
+\end{equation}
+
+donde cada $\theta_k$ es el conjunto de parámetros específicos de la $k$-ésima componente y $p(x_i|\theta_k)$ su función de densidad.
+Los pesos $\pi_k$, también conocidos como \textit{mixing probabilities}, deben satisfacer las condiciones $0\leq \pi_k \leq 1$ y $\sum_{k=1}^{K}{\pi_k}=1$.
+
+Si bien la definición no establece ninguna restricción en cuanto al tipo de distribución que debe seguir cada componente;
+en la práctica, para simplificar el estudio de estos modelos, suele asociarse una misma distribución a todas las componentes, variando únicamente sus parámetros.
+
+\subsection{Gaussian Mixture Model}\label{subsec:GMM}
+
+El modelo de clustering probabilístico más extendido es el de combinación de distribuciones normales, conocido en la literatura como \textit{Gaussian Mixture Model} (GMM)~\cite{Murphy12}.
+Es asimismo, uno de los modelos de mayor uso en aplicaciones relacionadas con el análisis acústico. %TODO cite
+
+La distribución normal, en el caso de una variable unidimensional $x$, tiene una función de densidad de la forma:
+
+\begin{equation}
+    \label{eq:singleGaussian}
+    \mathcal{N}(x|\mu,\sigma^2)=\frac{1}{(2\pi\sigma^2)^{1/2}}\exp{(-\frac{1}{2\sigma^2}((x-\mu)^2)}
+\end{equation}
+
+donde $\mu$ es la media y $\sigma^2$ la varianza.
+Para el caso de $D$ dimensiones, la función toma la forma:
+
+\begin{equation}
+    \label{eq:multidimGaussian}
+    \mathcal{N}(x|\mu,\Sigma)=\frac{1}{(2\pi)^{D/2}|\Sigma|^{1/2}}\exp{(-\frac{1}{2}(x-\mu)^T \Sigma^{-1}(x-\mu))}
+\end{equation}
+
+donde $\mu$ es el vector $D$-dimensional de medias y $\Sigma$, de dimensión $D\times D$, la matriz de covarianza con determinante $|\Sigma|$.
+
+En GMM cada componente corresponde a una distribución normal con determinados valores asociados a sus parámetros $\mu$ y $\Sigma$.
+A partir de la ecuación~\ref{eq:mixtureModels} podemos entonces formular este modelo como:
+
+\begin{equation}
+    \label{eq:GMM}
+    p(x_i|\Theta) = p(x_i|\pi,\mu,\Sigma)= \sum_{k=1}^{K}{\pi_k \mathcal{N}(x_i|\mu_k,\Sigma_k)}
+\end{equation}
+
+Para estimar los parámetros de un modelo, podemos emplear el método de máxima verosimilitud.
+Dado un conjunto de observaciones $X$, la función de log-verosimilitud se define como:
+
+\begin{equation}
+    \label{eq:log-likelihood}
+    l(\Theta|X) = \log{p(X|\Theta)} = \sum_{i=1}^{N}{\log{p(x_i|\Theta)}} = \sum_{i=1}^{N}{\log{\sum_{k=1}^{K}{\pi_k \mathcal{N}(x_i|\mu_k,\Sigma_k)}}}
+\end{equation}
+
+El método de máxima verosimilitud estima $\Theta$ como el valor que maximiza~\ref{eq:log-likelihood}.
+Sin embargo, la optimización de la función~\ref{eq:log-likelihood} presenta serios inconvenientes y generalmente solo pueden ser obtenidos mínimos locales~\cite{Aggarawal13,Murphy12}.
+
+%\subsection{Expectation-maximization}\label{subsec:EM}
+
+
