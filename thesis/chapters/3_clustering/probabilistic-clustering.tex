@@ -118,13 +118,22 @@ En el caso particular de GMM, podemos aplicarlo empleando para ello las ecuacion
 
 Usualmente se toma como criterio de convergencia para este algoritmo que la variación de la log-verosimilitud respecto a la iteración anterior haya sido menor que un valor $\epsilon$ determinado, o se haya superado una cantidad máxima de iteraciones.
 
-La cantidad de iteraciones requeridas por EM para converger es mayor que las que toma K-Means. % TODO cite me!
+La cantidad de iteraciones requeridas por EM para converger es mayor que las que toma K-Means~\cite{Park09}.
 Para acelerar la ejecución de este algoritmo, generalmente se realiza una corrida de K-Means sobre el conjunto de datos, y se toman las medias, varianzas y proporción de puntos en los clusters para inicializar los parámetros $\mu_k^0$, $\Sigma_k^0$ y $\pi_k^0$ respectivamente.
 
 De forma similar a lo que ocurre con el algoritmo K-Means, EM puede caer en máximos locales en dependencia de los valores iniciales.
 
 % TODO Add explaination on how to determine number of components (chosing the right model)
 
-% TODO Add time and space complexity
+\subsubsection{Complejidad espacial y temporal}
+
+El análisis de los requerimientos de memoria de Expectation-maximization no difiere sustancialmente del de K-Means.
+Solamente los puntos del conjunto de datos y las variables deben ser almacenados para la ejecución del algoritmo.
+No obstante, a diferencia de K-Means donde la única variable asociada al algoritmo era la posición de los centroides, en EM el espacio de memoria ocupado es mayor, principalmente a causa de la matriz de covarianza.
+Las dimensiones de esta última varían en dependencia del modo en que sea analizada la covarianza, ya sea individual para cada componente o global, pudiendo ir desde $O(K)$ hasta $O(K \cdot m^2)$.
+En el caso peor, la cantidad de memoria es por tanto $O(nm + K \cdot m^2)$.
+
+El tiempo requerido por el algoritmo es igualmente $O(I\cdot K\cdot m\cdot n)$, siendo $I$ el número de iteraciones necesarias para la convergencia. %TODO cite!
+La principal diferencia en este caso radica en el hecho de la cantidad de iteraciones ejecutadas por el algoritmo, que es muy~\footnote{¡Superlativamente!} distinta a la de K-Means, y tiende a ser un valor considerablemente elevado~\cite{Park09}.
 
 % TODO Consider Variational Bayesian Gaussian Mixture
