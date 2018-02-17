@@ -199,4 +199,19 @@ Una vez alcanzado el nodo raíz, el algoritmo ha concluido y su resultado son lo
 Cualquier punto que no forme parte de los clusters seleccionados será considerado ruido.
 Además HDBSCAN permite, debido al funcionamiento del algoritmo, establecer un valor de pertenencia de los puntos a sus respectivos clusters, normalizando los $\lambda_p$.
 
-% TODO Add HDBSCAN time and space complexity?
+\subsubsection{Complejidad espacial y temporal}
+
+Asumiendo que la distancia entre dos puntos se calcula en un tiempo $O(m)$, siendo $m$ la cantidad de dimensiones, podemos afirmar entonces que el primer paso del algoritmo~\ref{algorithm:HDBSCAN} toma un tiempo $O(m n^2)$.
+Aplicando el algoritmo de Prim implementado con una lista, es posible construir el árbol abarcador de costo mínimo del paso 2 se realiza en $O(n^2+|E|) = O(n^2)$, pues $E$ conjunto de aristas del grafo y $|E|=O(n^2)$ por ser completo el grafo.
+El paso 3 requiere que las aristas sean ordenadas, tomando esto un tiempo $O(n\log n)$.
+El paso 4 puede ser realizado de conjunto con el 3, construyendo directamente la jerarquía condensada, lo que tarda un tiempo total $O(n^2)$.
+El último paso requiere recorrer el árbol construido a partir de la jerarquía, que tendrá una cantidad de nodos menor que $n$ y por tanto esta operación tiene una complejidad temporal menor que $O(n)$.
+Luego la ejecución completa del algoritmo HDBSCAN tiene una complejidad en tiempo $O(m n^2)$~\cite{Campello15}.
+
+La complejidad temporal de HDBSCAN puede ser reducida a $O(n\log n)$ para el caso promedio, mediante el uso de estructuras de datos y variaciones de los algoritmos mejor adaptados al problema~\cite{McInnes17-2}.
+
+En cuanto al espacio de memoria, se necesita $O(m n)$ para almacenar el conjunto de datos y $O(n)$ para las k-distancias del paso 1.
+El paso 2, teniendo en cuenta que el grafo no requiere ser computado y almacenado en memoria por completo, sino arista por arista;
+requiere una cantidad de memoria $O(n)$.
+Los siguientes pasos, solo necesitan tener en memoria en un mismo momento un nivel dado de la jerarquía, lo que ocupa un espacio $O(n)$.
+De esta forma, concluimos que la complejidad de memoria del algoritmo es $O(m n)$~\cite{Campello15}.
