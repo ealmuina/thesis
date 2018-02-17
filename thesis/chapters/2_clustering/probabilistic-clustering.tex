@@ -47,7 +47,7 @@ Para el caso de $D$ dimensiones, la función toma la forma:
 donde $\mu$ es el vector $D$-dimensional de medias y $\Sigma$, de dimensión $D\times D$, la matriz de covarianza con determinante $|\Sigma|$.
 
 En GMM cada componente corresponde a una distribución normal con determinados valores asociados a sus parámetros $\mu$ y $\Sigma$.
-A partir de la ecuación~\ref{eq:mixtureModels} podemos entonces formular este modelo como:
+A partir de la ecuación~(\ref{eq:mixtureModels}) podemos entonces formular este modelo como:
 
 \begin{equation}
     \label{eq:GMM}
@@ -62,9 +62,69 @@ Dado un conjunto de observaciones $X$, la función de log-verosimilitud se defin
     l(\Theta|X) = \log{p(X|\Theta)} = \sum_{i=1}^{N}{\log{p(x_i|\Theta)}} = \sum_{i=1}^{N}{\log{\sum_{k=1}^{K}{\pi_k \mathcal{N}(x_i|\mu_k,\Sigma_k)}}}
 \end{equation}
 
-El método de máxima verosimilitud estima $\Theta$ como el valor que maximiza~\ref{eq:log-likelihood}.
-Sin embargo, la optimización de la función~\ref{eq:log-likelihood} presenta serios inconvenientes y generalmente solo pueden ser obtenidos mínimos locales~\cite{Aggarawal13,Murphy12}.
+El método de máxima verosimilitud estima $\Theta$ como el valor que maximiza~(\ref{eq:log-likelihood}).
+Para encontrar dicho valor, podemos computar las derivadas parciales de~(\ref{eq:log-likelihood}) respecto a $\pi_k$, $\mu_k$, y $\Sigma_k$ respectivamente.
+Si igualamos a cero la derivada respecto a $\mu_k$ podemos despejar la siguiente expresión:
 
-%\subsection{Expectation-maximization}\label{subsec:EM}
+\begin{equation}
+    \label{eq:mu_k}
+    \mu_k = \frac{\sum_{i=1}^{N}{\gamma(z_{ik})x_i}}{\sum_{i=1}^{N}{\gamma(z_{ik})}}
+\end{equation}
 
+\noindent
+donde
 
+\begin{equation}
+    \label{eq:gamma}
+    \gamma(z_{ik}) = \frac{\pi_k \mathcal{N}(x_i|\mu_k,\Sigma_k)}{\sum_{j=1}^{K}{\pi_j \mathcal{N}(x_i|\mu_j,\Sigma_j)}}
+\end{equation}
+
+$\gamma(z_{ik})$ es conocida como la \textit{responsabilidad} de la componente $k$ sobre la observación $i$-ésima $x_i$.
+
+De igual forma, igualando a cero la derivada de~(\ref{eq:log-likelihood}) respecto a $\Sigma_k$, obtendremos
+
+\begin{equation}
+    \label{eq:Sigma_k}
+    \Sigma_k = \frac{\sum_{i=1}^{N}{\gamma(z_{ik})(x_i-\mu_k)(x_i-\mu_k)^T}}{\sum_{i=1}^{N}{\gamma(z_{ik})}}
+\end{equation}
+
+Luego de aplicar algunas operaciones adicionales~\cite{Aggarawal13} debido a las características de las restricciones a las que están sujetos los pesos $\pi_k$, se llega a
+
+\begin{equation}
+    \label{eq:pi_k}
+    \pi_k = \frac{\sum_{i=1}^{N}{\gamma(z_{ik})}}{N}
+\end{equation}
+
+Sin embargo, la optimización de la función~(\ref{eq:log-likelihood}) presenta serios inconvenientes debido a la dependencia existente entre las responsabilidades $\gamma(x_{ik})$ y el resto de los parámetros, por lo que no resulta simple derivar una expresión que permita calcular directamente dichos valores.
+Generalmente solo pueden ser obtenidos mínimos locales aplicando algoritmos de descenso por gradiente sobre la expresión~(\ref{eq:log-likelihood}), lo que igualmente resulta difícil debido a las restricciones del modelo (matriz de covarianzas definida positiva, suma de los pesos $\pi_k$ igual a uno, etc.)~\cite{Aggarawal13,Murphy12}.
+
+\subsection{Expectation-maximization}\label{subsec:EM}
+
+El algoritmo \textit{Expectation-maximization} (EM) permite estimar parámetros de máxima verosimilitud para un modelo.
+Sigue un proceso iterativo que alterna dos etapas: se infieren valores para los parámetros (\textit{expectation}), y luego se optimizan dichos valores para el conjunto de datos dado (\textit{maximization}).
+
+En el caso particular de GMM, podemos aplicarlo empleando para ello las ecuaciones que obtenidas en la sección~\ref{subsec:GMM} como se explica en el algoritmo~\ref{algorithm:EM}.
+
+\begin{algorithm}
+    \caption{Expectation-maximization para GMM}
+    \label{algorithm:EM}
+    Inicializar $\mu_k^0$, $\Sigma_k^0$, y $\pi_k^0$\;
+    \Repeat{Se cumple criterio de convergencia}{
+    \textbf{Expectation}: Calcular las responsabilidades $\gamma(z_{ik})$ sustituyendo los valores actuales de los parámetros en~(\ref{eq:gamma})\;
+    \textbf{Maximization}: Actualizar los parámetros sustituyendo las responsabilidades actuales en las expresiones (\ref{eq:mu_k}), (\ref{eq:Sigma_k}) y (\ref{eq:pi_k}).
+    Las nuevas medias son usadas al calcular las covarianzas\;
+    }
+\end{algorithm}
+
+Usualmente se toma como criterio de convergencia para este algoritmo que la variación de la log-verosimilitud respecto a la iteración anterior haya sido menor que un $\epsilon$ determinado, o se haya superado una cantidad máxima de iteraciones.
+
+La cantidad de iteraciones requeridas por EM para converger es mayor que las que toma K-Means. % TODO cite me!
+Para acelerar la ejecución de este algoritmo, generalmente se realiza una corrida de K-Means sobre el conjunto de datos, y se toman las medias, varianzas y proporción de puntos en los clusters para inicializar los parámetros $\mu_k^0$, $\Sigma_k^0$ y $\pi_k^0$ respectivamente.
+
+De forma similar a lo que ocurre con el algoritmo K-Means, EM puede caer en máximos locales en dependencia de los valores iniciales.
+
+% TODO Add explaination on how to determine number of components (chosing the right model)
+
+% TODO Add time and space complexity
+
+% TODO Consider Variational Bayesian Gaussian Mixture

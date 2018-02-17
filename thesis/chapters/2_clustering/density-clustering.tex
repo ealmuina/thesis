@@ -128,7 +128,7 @@ La nueva matriz de distancias conservará las distancias entre puntos situados e
 mientras que asociará valores más altos a las distancias correspondientes a puntos ubicados fuera de estas.
 
 Primero se calculan las $k$-distancias (ver página~\ref{subsubsec:paramsDBSCAN}) de cada punto $x$ del conjunto de datos: $dist_k(x)$.
-A continuación, se construye la nueva matriz de distancias, empleando la función conocida como \textit{distancia de alcanzabilidad mutua}~\footnote{\textit{mutual reachability distance} en inglés.} definida por la ecuación~\ref{eq:d_mreach}:
+A continuación, se construye la nueva matriz de distancias, empleando la función conocida como \textit{distancia de alcanzabilidad mutua}~\footnote{\textit{mutual reachability distance} en inglés.} definida por la ecuación~(\ref{eq:d_mreach}):
 
 \begin{equation}
     \label{eq:d_mreach}
@@ -137,7 +137,7 @@ A continuación, se construye la nueva matriz de distancias, empleando la funci�
 
 \noindent
 donde $dist(a,b)$ es la distancia original entre los puntos $a$ y $b$.
-Como mencionamos anteriormente, bajo esta nueva métrica, los puntos de regiones densas permanecen a la misma distancia, pues sus $k$-distancias tienen valores relativamente pequeños y siendo entonces su distancia entre sí quien domina en la ecuación~\ref{eq:d_mreach}.
+Como mencionamos anteriormente, bajo esta nueva métrica, los puntos de regiones densas permanecen a la misma distancia, pues sus $k$-distancias tienen valores relativamente pequeños y siendo entonces su distancia entre sí quien domina en la ecuación~(\ref{eq:d_mreach}).
 Lo contrario ocurre en puntos localizados en regiones esparcidas, en dichos casos se impone su $k$-distancia y por tanto son alejados del resto de los puntos a al menos dicho valor.
 
 El uso de la distancia de alcanzabilidad mutua como alternativa a la medida de distancia tradicional mejora significativamente los resultados obtenidos al aproximar mediante una jerarquía la distribución de las densidades de los puntos del conjunto de datos~\cite{Eldridge15}.

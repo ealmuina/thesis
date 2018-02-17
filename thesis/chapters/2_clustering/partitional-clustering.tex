@@ -30,7 +30,7 @@ Si visualizamos este algoritmo como un problema de optimización, entonces estar
 A continuación presentamos su formulación matemática.
 
 Dado un conjunto de datos $D={x_1,x_2,\dots,x_N}$ de $N$ puntos, denotemos el conjunto de clusters obtenido tras aplicar K-Means como $C={C_1,C_2,\dots,C_k,\dots,C_K}$.
-La SSE para $C$ es definido en la ecuación~\ref{eq:SSE} donde $c_k$ es el centroide del cluster $C_k$.
+La SSE para $C$ es definido en la ecuación~(\ref{eq:SSE}) donde $c_k$ es el centroide del cluster $C_k$.
 
 \begin{equation}
     \label{eq:SSE}
@@ -42,7 +42,7 @@ Dados dos conjuntos de clusters obtenidos aplicando dos diferentes corridas de K
 De ahí que el resultado de minimizar la función SSE represente el conjunto de clusters óptimo.
 
 Se puede demostrar que los centroides que minimizan la SSE son la media de los puntos de cada cluster~\cite{Tan05}.
-El centroide del $k$-ésimo centroide $c_k$ quedaría entonces definido según la ecuación~\ref{eq:centroid}.
+El centroide del $k$-ésimo centroide $c_k$ quedaría entonces definido según la ecuación~(\ref{eq:centroid}).
 
 \begin{equation}
     \label{eq:centroid}
@@ -50,7 +50,7 @@ El centroide del $k$-ésimo centroide $c_k$ quedaría entonces definido según l
 \end{equation}
 
 Los pasos 3 y 4 del algoritmo~\ref{algorithm:KMeans} directamente intentan minimizar la SSE. El paso 3 forma clusters asignando los puntos al centroide más cercano, lo que minimiza el SSE de dicho conjunto de centroides.
-Asimismo, el paso 4 recomputa los centroides, produciendo un nuevo conjunto de menor SSE, en correspondencia con la ecuación ~\ref{eq:centroid}.
+Asimismo, el paso 4 recomputa los centroides, produciendo un nuevo conjunto de menor SSE, en correspondencia con la ecuación ~(\ref{eq:centroid}).
 Sin embargo, como mencionamos anteriormente, estos pasos solamente garantizan la convergencia de K-Means a un mínimo local de la función SSE, puesto que la optimizan partiendo de una selección específica de centroides y cantidad de estos, en lugar de todas las posibles opciones.
 
 \subsubsection{Selección de centroides iniciales}
@@ -76,13 +76,13 @@ Es por esto que numerosos trabajos se han enfocado en el área de determinar el 
 En esta subsección mencionamos algunos de los más generalizados.
 
 \begin{enumerate}
-    \item \textbf{Índice de Calinski-Harabasz}~\cite{Calinski74}: Está definido por la ecuación~\ref{eq:CH}:
+    \item \textbf{Índice de Calinski-Harabasz}~\cite{Calinski74}: Está definido por la ecuación~(\ref{eq:CH}):
     \begin{equation}
         \label{eq:CH}
         CH(K)=\frac{\frac{B(K)}{K-1}}{\frac{W(K)}{N-K}}
     \end{equation}
     donde $N$ representa la cardinalidad del conjunto de datos.
-    El número de clusters es seleccionado maximizando la función dada en la ecuación~\ref{eq:CH}.
+    El número de clusters es seleccionado maximizando la función dada en la ecuación~(\ref{eq:CH}).
     $B(K)$ y $W(K)$ constituyen las sumas de los cuadrados de las distancias intra e inter-cluster respectivamente (dados $K$ clusters).
 
     \item \textbf{Estadística de Brecha}\footnote{\textit{Gap Statistic} en inglés.}~\cite{Tibshirani01}: En este método se generan $B$ conjuntos de datos que sigan una distribución uniforme en el mismo intervalo que el original.
@@ -90,14 +90,14 @@ En esta subsección mencionamos algunos de los más generalizados.
     \begin{equation}
         Gap(K) = \frac{1}{B} \times\sum_{b}{\log(W_{b}^{*}(K)) - \log(W(K))}
     \end{equation}
-    El número de clusters seleccionado es el menor valor de $K$ que satisfaga la ecuación~\ref{eq:Gap}:
+    El número de clusters seleccionado es el menor valor de $K$ que satisfaga la ecuación~(\ref{eq:Gap}):
     \begin{equation}
         \label{eq:Gap}
         Gap(K) \geq Gap(K+1) - S_{k+1}
     \end{equation}
     donde $S_{k+1}$ es el valor de la desviación estándar de $\log(W_{b}^{*}(K+1))$.
 
-    \item \textbf{Criterio de Información de Akaike (AIC)}~\cite{Yeung01}: Sea $M$ el número de dimensiones del conjunto de datos, K se calcula a partir de la ecuación~\ref{eq:AIC}.
+    \item \textbf{Criterio de Información de Akaike (AIC)}~\cite{Yeung01}: Sea $M$ el número de dimensiones del conjunto de datos, K se calcula a partir de la ecuación~(\ref{eq:AIC}).
     \begin{equation}
         \label{eq:AIC}
         K=argmin_{K}[SSE(K)+2M K]
