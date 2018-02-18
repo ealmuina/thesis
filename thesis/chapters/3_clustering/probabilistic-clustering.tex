@@ -25,7 +25,7 @@ en la práctica, para simplificar el estudio de estos modelos, suele asociarse u
 \subsection{Gaussian Mixture Model}\label{subsec:GMM}
 
 El modelo de clustering probabilístico más extendido es el de combinación de distribuciones normales, conocido en la literatura como \textit{Gaussian Mixture Model} (GMM)~\cite{Murphy12}.
-Es asimismo, uno de los modelos de mayor uso en aplicaciones relacionadas con el análisis acústico. %TODO cite
+Es asimismo, uno de los modelos de mayor uso en aplicaciones relacionadas con el análisis acústico~\cite{Kakar13,Virtanen18,Somervuo06,Lee08,Kwan06}.
 
 La distribución normal, en el caso de una variable unidimensional $x$, tiene una función de densidad de la forma:
 
@@ -123,7 +123,42 @@ Para acelerar la ejecución de este algoritmo, generalmente se realiza una corri
 
 De forma similar a lo que ocurre con el algoritmo K-Means, EM puede caer en máximos locales en dependencia de los valores iniciales.
 
-% TODO Add explaination on how to determine number of components (chosing the right model)
+\subsubsection{Estimación de hiper-parámetros}
+
+El número de componentes es decisivo en la calidad del resultado producido por el algoritmo EM\@.
+Asimismo, debe decidirse cuál emplear entre los diferentes patrones existentes para representar la covarianza del modelo~\footnote{En inglés se les conoce como \textit{full}, \textit{tied}, \textit{diagonal} y \textit{spherical} respectivamente.}:
+\begin{itemize}
+    \item \textbf{Completa}: De dimensión $K\times m\times m$.
+    Cada componente posee su propia matriz de covarianza.
+    \item \textbf{Atada}: De dimensión $m\times m$.
+    Todas las componentes comparten la misma matriz de covarianza.
+    \item \textbf{Diagonal}: De dimensión $K\times m$.
+    Cada componente posee su propia matriz de covarianza diagonal.
+    \item \textbf{Esférica}: De dimensión $K\times 1$.
+    Cada componente tiene un único valor de varianza que le es propio.
+\end{itemize}
+A continuación mencionamos dos criterios ampliamente usados para la evaluación de la calidad de un GMM con parámetros calculados aplicando este algoritmo.
+Estos facilitan la decisión de los hiper-parámetros en correspondencia con el problema que se intenta modelar.
+
+\begin{enumerate}
+    \item \textbf{Criterio de Información de Akaike} (AIC)~\cite{Akaike74}:
+    Penaliza la cantidad de parámetros en el modelo, mediante la fórmula
+    \[
+        AIC = \log(\hat{L}) - d
+    \]
+    donde $d$ es el número de parámetros libres del modelo, y $\hat L$ el valor de la función de log-verosimilitud asociada.
+    \item \textbf{Criterio de Información Bayesiano} (BIC)~\cite{Schwarz78}: Al igual que AIC penaliza la complejidad del modelo, aunque en este caso la penalización es mayor.
+    Su fórmula es
+    \[
+        BIC = \log(\hat{L}) - \frac{d}{2}\log(n)
+    \]
+\end{enumerate}
+
+Como se puede apreciar, ambos criterios se basan en la penalización de la función de verosimilitud (log-verosimilitud) a partir de la complejidad del modelo.
+De esta forma a modelos más complejos corresponde mayor penalización, y se logra así un equilibrio entre la calidad del resultado y la complejidad del modelo correspondiente.
+
+Los parámetros libres son los parámetros del modelo estimados aplicando el método de máxima verosimilitud.
+Para GMM son $\mu_k$, $\Sigma_k$ y $\pi_k$, aunque se cuantifican (valor asociado a $d$) por la cantidad total de valores que estos vectores contienen.
 
 \subsubsection{Complejidad espacial y temporal}
 
@@ -133,7 +168,7 @@ No obstante, a diferencia de K-Means donde la única variable asociada al algori
 Las dimensiones de esta última varían en dependencia del modo en que sea analizada la covarianza, ya sea individual para cada componente o global, pudiendo ir desde $O(K)$ hasta $O(K \cdot m^2)$.
 En el caso peor, la cantidad de memoria es por tanto $O(nm + K \cdot m^2)$.
 
-El tiempo requerido por el algoritmo es igualmente $O(I\cdot K\cdot m\cdot n)$, siendo $I$ el número de iteraciones necesarias para la convergencia. %TODO cite!
+El tiempo requerido por el algoritmo es igualmente $O(I\cdot K\cdot m\cdot n)$, siendo $I$ el número de iteraciones necesarias para la convergencia. %TODO cite with Dunham06!
 La principal diferencia en este caso radica en el hecho de la cantidad de iteraciones ejecutadas por el algoritmo, que es muy~\footnote{¡Superlativamente!} distinta a la de K-Means, y tiende a ser un valor considerablemente elevado~\cite{Park09}.
 
 % TODO Consider Variational Bayesian Gaussian Mixture
