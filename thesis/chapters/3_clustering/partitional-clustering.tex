@@ -41,7 +41,7 @@ En otras palabras, se calcula el error de cada punto de los datos, es decir, su 
 Dados dos conjuntos de clusters obtenidos aplicando dos diferentes corridas de K-Means, sería preferible conservar el de menor SSE puesto que esto significaría que los centroides obtenidos en esa corrida constituyen una mejor representación de los puntos en sus clusters.
 De ahí que el resultado de minimizar la función SSE represente el conjunto de clusters óptimo.
 
-Se puede demostrar que los centroides que minimizan la SSE son la media de los puntos de cada cluster~\cite{Tan05}.
+Los centroides que minimizan la SSE son la media de los puntos de cada cluster~\cite{Tan05}.
 El centroide del $k$-ésimo centroide $c_k$ quedaría entonces definido según la ecuación~(\ref{eq:centroid}).
 
 \begin{equation}
@@ -63,7 +63,7 @@ Uno de ellos es tomar una muestra de puntos y agruparlos empleando una técnica 
 Una vez formados $K$ clusters, se toman sus centroides y se inicializa K-Means con estos.
 Este enfoque a menudo ofrece buenos resultados, pero solamente resulta práctico si la muestra tomada es relativamente pequeña (de un orden entre $10^2$ y $10^3$) y $K$ es relativamente pequeño comparado con el tamaño de dicha muestra~\cite{Tan05}.
 
-Otra variante, conocida como \textit{K-Means++}~\cite{Arthur07}, consiste en primeramente seleccionar un punto de manera aleatoria o tomando el centroide de todos los puntos.
+Otra variante, conocida como \textbf{K-Means++}~\cite{Arthur07}, consiste en primeramente seleccionar un punto de manera aleatoria o tomando el centroide de todos los puntos.
 Luego, se selecciona el punto más alejado de los centroides formados con anterioridad y se repite este paso hasta obtener $K$ centroides iniciales.
 
 Posteriormente mencionaremos algunas otras versiones de K-Means que persiguen obtener resultados más próximos al óptimo de la función SSE y que son menos susceptibles a problemas derivados de la selección inicial de los centroides.
