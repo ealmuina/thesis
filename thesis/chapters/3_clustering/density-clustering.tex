@@ -10,7 +10,7 @@ Podemos observar un ejemplo en el escenario de la figura~\ref{img:kmeans-dbscan}
 \end{figure}
 
 En la imagen podemos observar asimismo el comportamiento de otro algoritmo sobre el mismo conjunto de datos.
-En esta sección abordamos el algoritmo en cuestión, denominado \textit{DBSCAN}~\footnote{Siglas en inglés de \textit{Density-based spatial clustering of applications with noise}.}, que forma parte del conjunto de algoritmos de clustering basados en la densidad de los datos.
+En esta sección abordamos el algoritmo en cuestión, denominado \textit{DBSCAN}\footnote{Siglas en inglés de \textit{Density-based spatial clustering of applications with noise}.}, que forma parte del conjunto de algoritmos de clustering basados en la densidad de los datos.
 
 Un cluster basado en el criterio de densidad de los puntos consiste en un área densa de puntos conectados, separado de otros clusters por áreas de menor densidad.
 
@@ -73,7 +73,7 @@ No obstante, este uso de memoria depende igualmente del comportamiento de la est
 
 \subsubsection{Selección de parámetros para DBSCAN}\label{subsubsec:paramsDBSCAN}
 
-Un criterio para determinar los parámetros es mediante la observación del comportamiento de la distancia de los puntos a su $k$-ésimo vecino más cercano, que llamaremos $k$-distancia~\footnote{En la bibliografía en inglés suele nombrársele \textit{core distance}.}.
+Un criterio para determinar los parámetros es mediante la observación del comportamiento de la distancia de los puntos a su $k$-ésimo vecino más cercano, que llamaremos $k$-distancia\footnote{En la bibliografía en inglés suele nombrársele \textit{core distance}.}.
 Si un punto pertenece a un cluster, entonces su $k$-distancia debe ser un valor relativamente pequeño, siempre que $k$ no sea mayor que el tamaño del cluster.
 Siempre que las densidades de los clusters no difieran radicalmente, en promedio, los valores de la $k$-distancias para puntos que pertenezcan a algún cluster no mostrarán un rango de valores muy amplio.
 En cambio, para puntos que no pertenezcan a ningún cluster, es decir, de ruido, este valor sí estará situado muy por encima del rango antes mencionado.
@@ -108,7 +108,7 @@ En cambio si el $Eps$ es tan alto como para distinguir a $A$ y $B$ como clusters
 
 \subsection{Algoritmo HDBSCAN}\label{subsec:HDBSCAN}
 
-HDBSCAN~\footnote{\textit{Hierarchical DBSCAN} en inglés, o \textit{DBSCAN jerárquico} en español.} es un algoritmo creado en 2013~\cite{Campello13}, basado en la combinación del concepto de densidad con el clustering jerárquico.
+HDBSCAN\footnote{\textit{Hierarchical DBSCAN} en inglés, o \textit{DBSCAN jerárquico} en español.} es un algoritmo creado en 2013~\cite{Campello13}, basado en la combinación del concepto de densidad con el clustering jerárquico.
 Fue propuesto como solución a algunas desventajas presentes en DBSCAN y otros algoritmos de clustering, como las mencionadas en el epígrafe anterior.
 
 La idea detrás del algoritmo consiste en usar DBSCAN convertido en algoritmo de clustering jerárquico, y luego emplear una técnica basada en el concepto de \textit{estabilidad} de un cluster para extraer los clusters a partir de la jerarquía encontrada~\cite{McInnes17}.
@@ -128,7 +128,7 @@ La nueva matriz de distancias conservará las distancias entre puntos situados e
 mientras que asociará valores más altos a las distancias correspondientes a puntos ubicados fuera de estas.
 
 Primero se calculan las $k$-distancias (ver página~\ref{subsubsec:paramsDBSCAN}) de cada punto $x$ del conjunto de datos: $dist_k(x)$.
-A continuación, se construye la nueva matriz de distancias, empleando la función conocida como \textit{distancia de alcanzabilidad mutua}~\footnote{\textit{mutual reachability distance} en inglés.} definida por la ecuación~(\ref{eq:d_mreach}):
+A continuación, se construye la nueva matriz de distancias, empleando la función conocida como \textit{distancia de alcanzabilidad mutua}\footnote{\textit{mutual reachability distance} en inglés.} definida por la ecuación~(\ref{eq:d_mreach}):
 
 \begin{equation}
     \label{eq:d_mreach}
