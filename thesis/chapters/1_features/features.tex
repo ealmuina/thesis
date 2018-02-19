@@ -4,13 +4,15 @@ Comienza en los oídos y continúa a través de la cóclea, en el oído interno,
 
 El hertz (Hz) es la unidad que expresa la cantidad de vibraciones que emite una fuente sonora en cada segundo de tiempo (frecuencia).
 Se considera que el oído humano puede percibir ondas sonoras de frecuencias entre los 20 y los 20~000 Hz.
+Los tonos agudos son percibidos en las frecuencias más altas (por encima de 5 kHz), y los graves en las bajas (menos de 250 Hz).
 
 Un sonido puede ser representado de forma simple mediante un \textbf{oscilograma} (figura~\ref{img:oscillogram}), donde el eje X representa el tiempo, y el eje Y representa la \textit{amplitud} de la presión del sonido (generalmente usando unidades de media arbitrarias).
+Mediante su análisis se pueden detectar con facilidad los instantes de tiempo de sonido más intensos y aquellos de silencio.
 
 \begin{figure}[!h]
     \centering
     \includegraphics[width=\textwidth]{oscillogram.png}
-    \caption{Oscilograma de una vocalización de un individuo de la especie \textit{puma concolor}.}
+    \caption{Oscilograma de una vocalización, de 6 segundos de duración, de un individuo de la especie \textit{puma concolor}.}
     \label{img:oscillogram}
 \end{figure}
 
@@ -20,7 +22,7 @@ Existen otros sonidos de características aleatorias y que no se repiten periód
 
 Una oscilación puede ser descompuesta en una suma de sinusoides elementales de diferentes frecuencias, mediante la aplicación de la \textbf{transformada de Fourier}.
 La representación de la transformada de Fourier de una señal en un tiempo dado es conocida como su \textbf{espectro} (figura~\ref{img:spectrum+spectrogram}a).
-Esta transformada puede ser igualmente computada sobre pequeñas ventanas de tiempo superpuestas, lo que produce una representación tridimensional de la intensidad de las frecuencias en el tiempo, que llamamos \textbf{espectrograma} (figura~\ref{img:spectrum+spectrogram}b).
+Esta transformada puede ser igualmente computada sobre pequeñas tramas de tiempo superpuestas, lo que produce una representación tridimensional de la intensidad de las frecuencias en el tiempo, que llamamos \textbf{espectrograma} (figura~\ref{img:spectrum+spectrogram}b).
 
 \begin{figure}[!h]
     \centering
@@ -35,7 +37,7 @@ Los pasos más importantes en esta conversión de la señal de analógica a digi
 \begin{enumerate}
     \item \textbf{Filtrado}: La señal analógica se filtra con el propósito de limitar las frecuencias presentes al intervalo $[0,B]$, donde $B$ es la frecuencia \textit{máxima} o \textit{de corte}.
     \item \textbf{Muestreo}: Se digitaliza la señal resultante del paso anterior;
-    se emplea \textit{frecuencia de muestreo} $F_s = 2B$ para evita el fenómeno de \textit{aliasing}\footnote{Efecto que causa que señales continuas distintas se tornen indistinguibles cuando se muestrean digitalmente.
+    se emplea \textit{frecuencia de muestreo} $F_s = 2B$ para evita el fenómeno de \textit{aliasing}\footnote{Efecto que causa que señales continuas distintas se tornen indistinguibles cuando se muestrean digitalmente si la tasa de muestreo es menor que el doble de la frecuencia más alta.
     Cuando esto sucede, la señal original no puede ser reconstruida de forma unívoca a partir de la señal digital.}.
     \item \textbf{Cuantificación}: La señal digital es cuantificada, se limita el espacio de almacenamiento ocupado por cada muestra.
 \end{enumerate}
@@ -45,17 +47,17 @@ Para una calidad de audio de CD se emplean valores de muestreo $F_s = 44.1$ kHz 
 Los algoritmos de inteligencia artificial tradicionalmente operan con vectores numéricos, llamados \textit{vectores de características}.
 En las siguientes secciones analizamos los procedimientos mediante los cuales una señal de audio digital se transforma en una secuencia de tales vectores.
 
-\section{Ventanas}\label{sec:frames}
+\section{Tramas}\label{sec:frames}
 
-Para procesar una señal esta a menudo es dividida en pequeños segmentos, conocidos como \textit{ventanas}\footnote{\textit{frames} en inglés.}, de longitud constante y espaciados en intervalos de tiempo iguales.
-Denotamos por $N$ la cantidad de muestras de la señal que contiene una ventana;
-de esta forma la duración de una ventana será de $N/F_s$.
-Asimismo, denotamos por $M$ la cantidad de muestras en que difieren dos ventanas consecutivas, conocida como \textit{tamaño de paso}, y que usualmente es menor que $N$.
-A partir de estos valores podemos igualmente calcular la cantidad de muestras que dos ventanas consecutivas tienen en común, como $N-M$;
-y el número de ventanas por segundo (\textit{frame rate}) como $F_s/M$.
+Para procesar una señal esta a menudo es dividida en pequeños segmentos, conocidos como \textit{tramas}\footnote{\textit{frames} en inglés.}, de longitud constante y espaciados en intervalos de tiempo iguales.
+Denotamos por $N$ la cantidad de muestras de la señal que contiene una trama;
+de esta forma la duración de una trama será de $N/F_s$.
+Asimismo, denotamos por $M$ la cantidad de muestras en que difieren dos tramas consecutivas, conocida como \textit{tamaño de paso}, y que usualmente es menor que $N$.
+A partir de estos valores podemos igualmente calcular la cantidad de muestras que dos tramas consecutivas tienen en común, como $N-M$;
+y el número de tramas por segundo (\textit{frame rate}) como $F_s/M$.
 
-Cada ventana de $N$ muestras es usualmente obtenida mediante la aplicación de una función $w(t)$ a la señal, que es distinta de cero solo si $1\leq t\leq N$.
-Dada la señal $s(t)$, una ventana que comienza en la muestra $m$ es obtenida como
+Cada trama de $N$ muestras es usualmente obtenida mediante la aplicación de una función \textit{ventana} $w(t)$ a la señal, que es distinta de cero solo si $1\leq t\leq N$.
+Dada la señal $s(t)$, una trama que comienza en la muestra $m$ es obtenida como
 
 \begin{equation}
     \label{eq:windowing}
@@ -82,5 +84,5 @@ Dos de ellas son las siguientes:
     \]
 \end{itemize}
 
-La elección de la función $w(t)$ tiene un efecto sobre los resultados de operaciones posteriores sobre las ventanas obtenidas.
+La elección de la ventana $w(t)$ tiene un efecto sobre los resultados de operaciones posteriores sobre las tramas obtenidas.
 En la práctica, algunos métodos de procesamiento, como la transformada de Fourier producen mejores resultados cuando se emplean funciones que se aproximan a cero en sus extremos, como la de Hamming.
