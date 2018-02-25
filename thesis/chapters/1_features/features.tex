@@ -48,8 +48,9 @@ Los algoritmos de inteligencia artificial tradicionalmente operan con vectores n
 En las siguientes secciones analizamos los procedimientos mediante los cuales una señal de audio digital se transforma en una secuencia de tales vectores.
 
 Al procesar una grabación sonora, determinados intervalos de tiempo y/o frecuencias pueden resultar más <<importantes>> que otros.
-Estas secciones, conocidas como \textit{segmentos}, permiten establecer una correspondencia entre un sonido y un individuo de una especie dada.
-La segmentación, por lo tanto, simplifica la tarea de clasificar una señal acústica y las operaciones de procesamiento y extracción de características que se mencionan en lo adelante se aplican sobre dichos segmentos.
+Estas secciones, conocidas como \textit{segmentos}, permiten establecer una correspondencia entre un evento de sonido y un individuo de una especie dada.
+La segmentación, por lo tanto, simplifica la tarea de clasificar una señal acústica;
+y las operaciones de procesamiento y extracción de características que se mencionan en lo adelante se aplican sobre dichos segmentos.
 
 \section{Tramas}\label{sec:frames}
 
@@ -118,15 +119,28 @@ Este tipo de características son de las más simples y se computan directamente
 Algunas de las más comunes son:
 
 \begin{enumerate}
-    \item \textbf{Short time energy}: Da una medida de la cantidad de energía presente en una señal.
+    \item \textbf{Short time energy}: Da una medida de la cantidad de energía presente en la señal.
     \[
         STE = \frac{1}{N}\sum_{n=0}^{N-1}{x[n]^2}
     \]
-    \item \textbf{Zero crossing rate} (ZCR): Está dado por el número de veces que la amplitud de la señal cambia de signo.
+    \item \textbf{Zero crossing rate}: Está dado por el número de veces que la amplitud de la señal cambia de signo.
     \[
         ZCR = \frac{1}{2}\sum_{n=1}^{N-1}{|\text{sign}(x[n]) - \text{sign}(x[n-1])|}
     \]
     donde $\text{sign}(x[n])$ es el signo de la amplitud de la muestra $n$-ésima de la señal.
+    \item \textbf{Temporal centroid}: Centro de gravedad del oscilograma.
+    \[
+        TC = \frac{\sum_{n=0}^{N-1}{n*x[n]}}{\sum_{n=0}^{N-1}{x[n]}}
+    \]
+    \item \textbf{Temporal width}: Dispersión de las intensidades en torno al centroide.
+    \[
+        TW = \sqrt{\frac{\sum_{n=0}^{N-1}{(n-TC)^2 x[n]^2}}{\sum_{n=0}^{N-1}{x[n]^2}}}
+    \]
+    \item \textbf{Temporal flatness}: Da una medida de la variación de la intensidad del sonido en el transcurso del tiempo.
+    \[
+        TF = \frac{(\prod_{n=0}^{N-1}{|x[n]})^{\frac{1}{N}}}{\frac{1}{N}\sum_{n=0}^{N-1}{x[n]}}
+    \]
+    Los valores próximos a 1 indican que la intensidad del sonido permanece con poca variación, mientras que lo contrario corresponde a valores cercanos a 0.
     \item \textbf{Autocorrelación}: Coeficientes que pueden ser interpretados como la distribución espectral de la señal en el dominio del tiempo.
     Los primeros $k$ coeficientes pueden ser obtenidos mediante la fórmula
     \[
@@ -146,9 +160,25 @@ Algunas de las más comunes son:
 \begin{enumerate}
     \item \textbf{Energía}: Se computa para una frecuencia específica como la suma de los cuadrados de las magnitudes que esta tiene en el tiempo.
     Es, en otras palabras, la suma de los cuadrados del módulo de los valores por cada fila de la matriz $X[f,t]$.
-    \item \textbf{Spectral Centroid}: Constituye el centroide del espectro de frecuencias.
+    \item \textbf{Spectral centroid}: Constituye el centroide del espectro de frecuencias.
     \[
         SC = \frac{\sum_{k=0}^{K-1}{f(k)|X[k]|}}{\sum_{k=0}^{K-1}{|X[k]|}}
     \]
     donde $K = \lceil (N+1)/2 \rceil$ es la longitud del vector obtenido aplicando la DFT a la trama, y $f(k)$ frecuencia asociada a la posición $k$-ésima de este.
+    \item \textbf{Spectral width}: Medida de la dispersión del espectro de frecuencias en torno a su centroide (SC).
+    \[
+        SW = \sqrt{\frac{\sum_{k=0}^{K-1}{(f(k)-SC)^2 |X[k]|^2}}{\sum_{k=0}^{K-1}{|X[k]|^2}}}
+    \]
+    \item \textbf{Spectral flatness}: Permite discriminar si hay eventos harmónicos presentes en la señal o esta se encuentra compuesta solamente por ruido.
+    \[
+        SF = \frac{(\prod_{k=0}^{K-1}{|X[k]|})^{\frac{1}{K}}}{\frac{1}{K}\sum_{k=0}^{K-1}{|X[k]|}}
+    \]
+    Los valores de $SF$ próximos a 1 indican que la señal se compone de ruido, mientras que una señal harmónica corresponde a un valor cercano a 0.
+    \item \textbf{Spectral roll-off}: Se define como la frecuencia bajo la cual se encuentra un porcentaje específico (usualmente entre el 85\% y el 99\%) de la energía espectral total.
+    \item \textbf{Spectral flux}: Caracteriza la variación dinámica de la información espectral.
+    Se calcula como la norma de la diferencia entre los espectros de dos tramas consecutivas.
+    \item \textbf{Rango de frecuencias}: Máxima ($f_{\max}$) y mínima ($f_{\min}$) frecuencias presentes en la señal.
 \end{enumerate}
+
+\section{Mel Frequency Cepstral Coefficients}\label{sec:melFrequencyCepstralCoefficients}
+
