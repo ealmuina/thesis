@@ -1,6 +1,6 @@
 Los \textit{Mel Frequency Cepstral Coefficients} (MFCC)~\cite{Davis80} son coeficientes para la representación del habla basados en la percepción auditiva humana.
 Su objetivo es caracterizar el contenido relevante de la señal, obviando aquellas características que poseen información poco valiosa como el ruido de fondo, emociones, volumen, tono, etc.
-Si bien fueron desarrollados para tareas asociadas al reconocimiento automático del habla, igualmente han tenido una amplia aplicación en áreas relacionadas al procesamiento de señales musicales y bioacústicas~\cite{McKinney03,Dufour14,Clemins05,Lee06,Li01,Cowling03,Mitrovic06}.
+Si bien fueron desarrollados para tareas asociadas al reconocimiento automático del habla, igualmente han tenido una amplia aplicación en áreas relacionadas al procesamiento de señales musicales y bioacústicas~\cite{McKinney03,Dufour14,Clemins05,Lee06,Li01,Cowling03,Mitrovic06,Fagerlund07}.
 
 Los MFCC se basan en la característica del sistema auditivo humano que provoca que para este sea más difícil discernir entre dos frecuencias cercanas cuanto más altas ellas sean.
 La \textbf{escala Mel} (figura~\ref{img:mel-scale}) fue desarrollada con el propósito de representar esta propiedad, permitiendo medir las frecuencias de un modo más acorde a la percepción humana de estas, mediante el uso de la unidad de medida conocida como \textit{Mel}.
@@ -68,8 +68,8 @@ A partir de todo lo anterior podemos definir el algoritmo para el cálculo de lo
 \end{algorithm}
 
 Los pasos del 1 al 4 cumplen la meta de lograr un <<resumen>> de la energía presente en la señal que se corresponda con la percepción humana del sonido.
-El paso número 5, persigue eliminar la correlación entre los coeficientes producida por el hecho de que las tramas se superponen.
-Gracias a la aplicación de la DCT, se obtiene un vector de componentes independientes entre sí (no correlacionadas), y por lo tanto este puede ser utilizado en procedimientos que así lo requieran.
+El paso número 5, persigue eliminar la correlación entre los coeficientes.
+Gracias a la aplicación de la DCT, se obtiene un vector de componentes independientes entre sí (no correlacionadas), y por lo tanto este puede ser utilizado en otros procedimientos que así lo requieran.
 
 La DCT se calcula mediante la siguiente ecuación:
 \begin{equation}
@@ -77,7 +77,31 @@ La DCT se calcula mediante la siguiente ecuación:
     f[j] = \sum_{m=0}^{M-1}{e[m]\cos{\left[ \frac{\pi}{M}j\left( m + \frac{1}{2} \right) \right]}}
 \end{equation}
 
-Generalmente se usan bancos de $M=26$ filtros y solamente se conservan los primeros 12 o 13 coeficientes;
-esto último debido a que los coeficientes de mayor índice suelen representar fluctuaciones altas en las energías del banco de filtros, y que no aportan información significativa~\cite{Davis80}.
+Generalmente se usan bancos de entre 20 y 40 filtros y solamente se conservan los primeros 12 o 13 coeficientes;
+esto último debido a que la representación obtenida a partir de la aplicación de la DCT suele comprimir la información relevante en los primeros coeficientes, quedando poco valor en los más altos~\cite{Davis80}.
 
-% TODO Deltas and Delta-Deltas
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{mfcc.png}
+    \caption{Coeficientes MFCC del sonido de la figura~\ref{img:oscillogram}, para tramas de 1024 muestras con un tamaño de paso de 512 y empleando \textit{Hamming} como ventana.}
+    \label{img:mfcc}
+\end{figure}
+
+Los coeficientes \textbf{delta} y \textbf{delta-delta}, también conocidos como \textit{diferenciales} y \textit{de aceleración} respectivamente,
+constituyen una posible mejora al vector de los MFCC.
+Estos incluyen información relativa al comportamiento de la energía espectral en el tiempo, que complementa la información estática de una trama que recogen los MFCC.
+Para calcular los coeficientes delta aplicamos la siguiente fórmula:
+
+\begin{equation}
+    \label{eq:delta}
+    d_t = \frac{\sum_{n=1}^{T}{n(c_{t+n} - c_{t-n})}}{2\sum_{n=1}^{T}{n^2}}
+\end{equation}
+
+\noindent
+donde $d_t$ es el vector de coeficientes delta correspondiente a la trama $t$, y $c_{t+n}$ y $c_{t-n}$ son los MFCC de las tramas posteriores y anteriores respectivamente.
+El valor de la cantidad de tramas adyacentes a explorar ($T$) suele ser 2.
+
+Los coeficientes delta-delta pueden ser calculados de igual forma aplicando~(\ref{eq:delta}) empleando los delta en lugar de los MFCC.
+
+A menudo sucede que un segmento de audio está compuesto por más de una trama, de manera que los procedimientos que se han descrito en esta sección producen no un único vector de características sino uno por cada trama del segmento.
+Para solucionar esta situación, se construye un único vector con los promedios componente a componente de todos los de la secuencia obtenida~\cite{Lee06,Fagerlund07}.
