@@ -53,132 +53,16 @@ La segmentación, por lo tanto, simplifica la tarea de clasificar una señal ac�
 y las operaciones de procesamiento y extracción de características que se mencionan en lo adelante se aplican sobre dichos segmentos.
 
 \section{Tramas}\label{sec:frames}
+\input{chapters/1_features/frames}
 
-Para procesar una señal esta a menudo es dividida en pequeños segmentos, conocidos como \textit{tramas}\footnote{\textit{frames} en inglés.}, de longitud constante y espaciados en intervalos de tiempo iguales.
-Denotamos por $N$ la cantidad de muestras de la señal que contiene una trama;
-de esta forma la duración de una trama será de $N/F_s$.
-Asimismo, denotamos por $M$ la cantidad de muestras en que difieren dos tramas consecutivas, conocida como \textit{tamaño de paso}, y que usualmente es menor que $N$.
-A partir de estos valores podemos igualmente calcular la cantidad de muestras que dos tramas consecutivas tienen en común, como $N-M$;
-y el número de tramas por segundo (\textit{frame rate}) como $F_s/M$.
-
-Cada trama de $N$ muestras es usualmente obtenida mediante la aplicación de una función \textit{ventana} $w(n)$ a la señal, que es distinta de cero solo si $0\leq n\leq N-1$.
-Dada la señal $s[n]$, una trama que comienza en la muestra $m$ es obtenida como
-
-\begin{equation}
-    \label{eq:windowing}
-    s[n]_m = \begin{cases}
-                 s[n + m]w(n) & 0\leq n\leq N-1 \\
-                 0 & eoc.
-    \end{cases}
-\end{equation}
-
-Dos de las variantes más conocidas para la función $w(n)$ son las siguientes:
-
-\begin{itemize}
-    \item \textbf{Rectangular}:
-    \[
-        w(n) = \begin{cases}
-                   1 & 0\leq n\leq N-1 \\
-                   0 & eoc.
-        \end{cases}
-    \]
-    \item \textbf{Hamming}:
-    \[
-        w(n) = 0.53836 - 0.46164 \cos\left(\frac{2\pi n}{N-1}\right)
-    \]
-\end{itemize}
-
-La elección de la ventana $w(n)$ tiene un efecto sobre los resultados de operaciones posteriores sobre las tramas obtenidas.
-En la práctica, algunos métodos de procesamiento, como la transformada de Fourier producen mejores resultados cuando se emplean funciones que se aproximan a cero en sus extremos, como la de Hamming.
-
-\section{Representaciones Frecuencia-Tiempo}\label{sec:representacionesFrecuencia-tiempo}
-
-El primer paso para el análisis de una señal suele ser su descomposición en frecuencias.
-Una trama $x[n]$, de longitud $N$, tiene una representación en dicho dominio que puede ser obtenida mediante la aplicación de la transformada discreta de Fourier (DFT por sus siglas en inglés):
-
-\begin{equation}
-    \label{eq:DFT}
-    X[f] = \sum_{n=0}^{N-1}{x[n]e^{\frac{-i2\pi fn}{N}}}
-\end{equation}
-
-El espectro $X[f]$ puede ser transformado de vuelta al dominio del tiempo aplicando la transformada discreta inversa de Fourier (IDFT):
-
-\begin{equation}
-    \label{eq:IDFT}
-    x[n] = \frac{1}{N}\sum_{f=0}^{N-1}{X[f]e^{\frac{i2\pi fn}{N}}}
-\end{equation}
-
-Al ser $x[n]$ un vector de valores reales, podemos aplicar sobre este una propiedad de la DFT que plantea que el vector $X[f]$ es, por tanto, conjugado simétrico, por lo que suelen considerarse solamente los últimos $\lceil (N+1)/2 \rceil$ valores de este.
-
-Podemos definir $X[f,t]$ como la matriz compuesta por las DFTs correspondientes a cada una de las tramas de una señal, donde el valor en la posición $(f, t)$ corresponde a la amplitud de la frecuencia $f$ en la trama $t$.
-A partir de esta matriz se construye el espectrograma de la señal.
+\section{Representaciones frecuencia-tiempo}\label{sec:representacionesFrecuencia-tiempo}
+\input{chapters/1_features/frequency-time}
 
 \section{Características temporales}\label{sec:característicasTemporales}
-
-Este tipo de características son de las más simples y se computan directamente a partir de la señal digitalizada.
-Algunas de las más comunes son:
-
-\begin{enumerate}
-    \item \textbf{Short time energy}: Da una medida de la cantidad de energía presente en la señal.
-    \[
-        STE = \frac{1}{N}\sum_{n=0}^{N-1}{x[n]^2}
-    \]
-    \item \textbf{Zero crossing rate}: Está dado por el número de veces que la amplitud de la señal cambia de signo.
-    \[
-        ZCR = \frac{1}{2}\sum_{n=1}^{N-1}{|\text{sign}(x[n]) - \text{sign}(x[n-1])|}
-    \]
-    donde $\text{sign}(x[n])$ es el signo de la amplitud de la muestra $n$-ésima de la señal.
-    \item \textbf{Temporal centroid}: Centro de gravedad del oscilograma.
-    \[
-        TC = \frac{\sum_{n=0}^{N-1}{n*x[n]}}{\sum_{n=0}^{N-1}{x[n]}}
-    \]
-    \item \textbf{Temporal width}: Dispersión de las intensidades en torno al centroide.
-    \[
-        TW = \sqrt{\frac{\sum_{n=0}^{N-1}{(n-TC)^2 x[n]^2}}{\sum_{n=0}^{N-1}{x[n]^2}}}
-    \]
-    \item \textbf{Temporal flatness}: Da una medida de la variación de la intensidad del sonido en el transcurso del tiempo.
-    \[
-        TF = \frac{(\prod_{n=0}^{N-1}{|x[n]})^{\frac{1}{N}}}{\frac{1}{N}\sum_{n=0}^{N-1}{x[n]}}
-    \]
-    Los valores próximos a 1 indican que la intensidad del sonido permanece con poca variación, mientras que lo contrario corresponde a valores cercanos a 0.
-    \item \textbf{Autocorrelación}: Coeficientes que pueden ser interpretados como la distribución espectral de la señal en el dominio del tiempo.
-    Los primeros $k$ coeficientes pueden ser obtenidos mediante la fórmula
-    \[
-        R(k) = \frac{\sum_{n=0}^{N-k-1}{x[n]x[n+k]}}{\sqrt{\sum_{n=0}^{N-k-1}{x[n]^2}}\sqrt{\sum_{n=0}^{N-k-1}{x[n+k]^2}}}
-    \]
-    \item \textbf{Duración}: Longitud del segmento en el tiempo.
-    \[
-        L = t_{\max} - t_{\min}
-    \]
-\end{enumerate}
+\input{chapters/1_features/temporal-features}
 
 \section{Características espectrales}\label{sec:característicasEspectrales}
+\input{chapters/1_features/spectral-features}
 
-Estas características se derivan a partir de la representación de la señal en el dominio de las frecuencias.
-Algunas de las más comunes son:
-
-\begin{enumerate}
-    \item \textbf{Energía}: Se computa para una frecuencia específica como la suma de los cuadrados de las magnitudes que esta tiene en el tiempo.
-    Es, en otras palabras, la suma de los cuadrados del módulo de los valores por cada fila de la matriz $X[f,t]$.
-    \item \textbf{Spectral centroid}: Constituye el centroide del espectro de frecuencias.
-    \[
-        SC = \frac{\sum_{k=0}^{K-1}{f(k)|X[k]|}}{\sum_{k=0}^{K-1}{|X[k]|}}
-    \]
-    donde $K = \lceil (N+1)/2 \rceil$ es la longitud del vector obtenido aplicando la DFT a la trama, y $f(k)$ frecuencia asociada a la posición $k$-ésima de este.
-    \item \textbf{Spectral width}: Medida de la dispersión del espectro de frecuencias en torno a su centroide (SC).
-    \[
-        SW = \sqrt{\frac{\sum_{k=0}^{K-1}{(f(k)-SC)^2 |X[k]|^2}}{\sum_{k=0}^{K-1}{|X[k]|^2}}}
-    \]
-    \item \textbf{Spectral flatness}: Permite discriminar si hay eventos harmónicos presentes en la señal o esta se encuentra compuesta solamente por ruido.
-    \[
-        SF = \frac{(\prod_{k=0}^{K-1}{|X[k]|})^{\frac{1}{K}}}{\frac{1}{K}\sum_{k=0}^{K-1}{|X[k]|}}
-    \]
-    Los valores de $SF$ próximos a 1 indican que la señal se compone de ruido, mientras que una señal harmónica corresponde a un valor cercano a 0.
-    \item \textbf{Spectral roll-off}: Se define como la frecuencia bajo la cual se encuentra un porcentaje específico (usualmente entre el 85\% y el 99\%) de la energía espectral total.
-    \item \textbf{Spectral flux}: Caracteriza la variación dinámica de la información espectral.
-    Se calcula como la norma de la diferencia entre los espectros de dos tramas consecutivas.
-    \item \textbf{Rango de frecuencias}: Máxima ($f_{\max}$) y mínima ($f_{\min}$) frecuencias presentes en la señal.
-\end{enumerate}
-
-\section{Mel Frequency Cepstral Coefficients}\label{sec:melFrequencyCepstralCoefficients}
-
+\section{Mel Frequency Cepstral Coefficients}\label{sec:MFCC}
+\input{chapters/1_features/mfcc}

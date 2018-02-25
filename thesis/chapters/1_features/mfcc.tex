@@ -1,0 +1,83 @@
+Los \textit{Mel Frequency Cepstral Coefficients} (MFCC)~\cite{Davis80} son coeficientes para la representación del habla basados en la percepción auditiva humana.
+Su objetivo es caracterizar el contenido relevante de la señal, obviando aquellas características que poseen información poco valiosa como el ruido de fondo, emociones, volumen, tono, etc.
+Si bien fueron desarrollados para tareas asociadas al reconocimiento automático del habla, igualmente han tenido una amplia aplicación en áreas relacionadas al procesamiento de señales musicales y bioacústicas~\cite{McKinney03,Dufour14,Clemins05,Lee06,Li01,Cowling03,Mitrovic06}.
+
+Los MFCC se basan en la característica del sistema auditivo humano que provoca que para este sea más difícil discernir entre dos frecuencias cercanas cuanto más altas ellas sean.
+La \textbf{escala Mel} (figura~\ref{img:mel-scale}) fue desarrollada con el propósito de representar esta propiedad, permitiendo medir las frecuencias de un modo más acorde a la percepción humana de estas, mediante el uso de la unidad de medida conocida como \textit{Mel}.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{mel-scale.png}
+    \caption{Correspondencia entre las unidades de medida de frecuencias \textit{Hz} y \textit{Mel} de acuerdo con la escala Mel.}
+    \label{img:mel-scale}
+\end{figure}
+
+La conversión de Hertz ($f$) a Mel ($m$) se realiza aplicando la ecuación~(\ref{eq:Hz-Mel}), mientras que por~(\ref{eq:Mel-Hz}) se puede convertir en sentido contrario.
+
+\begin{equation}
+    \label{eq:Hz-Mel}
+    m = 2595\log_{10}\left( 1 + \frac{f}{700} \right)
+\end{equation}
+
+\begin{equation}
+    \label{eq:Mel-Hz}
+    f = 700\left( 10^{m/2595} - 1 \right)
+\end{equation}
+
+Una ventaja de la escala Mel es que nos permite definir los llamados \textbf{bancos de filtros de Mel}, mediante los cuales podemos <<resumir>> la energía de una señal en $M$ regiones de frecuencias repartidas en correspondencia con la escala Mel (más distanciadas a medida que las frecuencias se hacen mayores).
+Para ello, dividimos el intervalo de frecuencias presente en la señal en $M+2$ puntos igualmente distanciados.
+A continuación los convertimos a Mel, de forma que ahora estos estarán situados a distancias correspondientes a la percepción humana de las frecuencias.
+Luego, definimos los $M$ filtros mediante la siguiente fórmula:
+
+\begin{equation}
+    \label{eq:Mel filterbank}
+    H_m(k) = \begin{cases}
+                 0 & k < f_{m-1} \\
+                 \frac{k-f_{m-1}}{f_m - f_{m-1}} & f_{m-1}\leq k\leq f_m \\
+                 \frac{f_{m+1}-k}{f_{m+1}-f_m} & f_m \leq k\leq f_{m+1} \\
+                 0 & k > f_{m+1} \\
+    \end{cases}
+\end{equation}
+
+\noindent
+donde $f_m$ es la frecuencia correspondiente al $m$-ésimo punto del intervalo.
+La representación gráfica de un resultado de la aplicación del procedimiento anterior puede observarse en la figura~\ref{img:mel-filters}.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{mel-filters.png}
+    \caption{Banco de 40 filtros de Mel en el intervalo de frecuencias de 0~Hz a 4~000~Hz.}
+    \label{img:mel-filters}
+\end{figure}
+
+A partir de todo lo anterior podemos definir el algoritmo para el cálculo de los MFCC como sigue:
+
+\begin{algorithm}
+    \caption{Cálculo de los MFCC}
+    \label{algorithm:MFCC}
+    Descomponer la señal $s[n]$ en tramas $s[n]_m = x[n]$ aplicando una función ventana\;
+    Por cada trama calcular la potencia espectral (periodograma) a partir de su DFT, cuya $k$-ésima componente se calcula mediante la ecuación
+    \[
+        P[k] = \frac{|X[k]|^2}{K}
+    \]
+    donde $K$ es la dimensión de la DFT de la trama\;
+    Aplicar el banco de filtros de Mel a $P[k]$ y sumar las energías de cada filtro.
+    Aplicando $M$ filtros, se obtendrá entonces un vector de $M$ componentes (energías)\;
+    Calcular el logaritmo de las energías\;
+    Aplicar la transformada de coseno discreta (DCT) al vector de los logaritmos\;
+\end{algorithm}
+
+Los pasos del 1 al 4 cumplen la meta de lograr un <<resumen>> de la energía presente en la señal que se corresponda con la percepción humana del sonido.
+El paso número 5, persigue eliminar la correlación entre los coeficientes producida por el hecho de que las tramas se superponen.
+Gracias a la aplicación de la DCT, se obtiene un vector de componentes independientes entre sí (no correlacionadas), y por lo tanto este puede ser utilizado en procedimientos que así lo requieran.
+
+La DCT se calcula mediante la siguiente ecuación:
+\begin{equation}
+    \label{eq:DCT}
+    f[j] = \sum_{m=0}^{M-1}{e[m]\cos{\left[ \frac{\pi}{M}j\left( m + \frac{1}{2} \right) \right]}}
+\end{equation}
+
+Generalmente se usan bancos de $M=26$ filtros y solamente se conservan los primeros 12 o 13 coeficientes;
+esto último debido a que los coeficientes de mayor índice suelen representar fluctuaciones altas en las energías del banco de filtros, y que no aportan información significativa~\cite{Davis80}.
+
+% TODO Deltas and Delta-Deltas
