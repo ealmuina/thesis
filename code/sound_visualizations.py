@@ -4,16 +4,17 @@ from pylab import plot, show, figure, imshow
 
 plt.rcParams['figure.figsize'] = (15, 6)
 
-audio = MonoLoader(filename='/home/eddy/Downloads/sonidos animales/cougar/cougar4.wav')()
+audio = MonoLoader(
+    filename='/media/eddy/Erato/Zchool/Computer Science/5º/X Semestre/Tesis/Incoming/avisoft.com/sounds/sheep.wav')()
 plot(audio)
-plt.title("Puma concolor")
+plt.title("Ovis orientalis aries")
 show()
 
 w = Windowing(type='hamming')
 spectrum = Spectrum()  # FFT() would return the complex FFT, here we just want the magnitude spectrum
 mfcc = MFCC()
 
-frame = audio[1 * 44100: 1 * 44100 + 1024]
+frame = audio[20000: 20000 + 1024]
 spec = spectrum(w(frame))
 
 fig = figure(figsize=(15, 6))
@@ -38,7 +39,7 @@ specs = essentia.array(specs).T
 mfccs = essentia.array(mfccs).T
 
 ax = fig.add_subplot(1, 2, 2)
-ax.imshow(specs[:30, :], aspect='auto', origin='lower', interpolation='none')
+ax.imshow(specs[:160, :], aspect='auto', origin='lower', interpolation='none')
 ax.set_title('(b)')
 
 fig.show()
