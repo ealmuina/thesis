@@ -1,11 +1,11 @@
+import essentia
 import matplotlib.pyplot as plt
-from essentia.standard import *
+from essentia.standard import MonoLoader, Windowing, Spectrum, MFCC, FrameGenerator
 from pylab import plot, show, figure, imshow
 
 plt.rcParams['figure.figsize'] = (15, 6)
 
-audio = MonoLoader(
-    filename='/media/eddy/Erato/Zchool/Computer Science/5º/X Semestre/Tesis/Incoming/avisoft.com/sounds/sheep.wav')()
+audio = MonoLoader(filename='../sounds/sheep.wav')()
 plot(audio)
 plt.title("Ovis orientalis aries")
 show()
