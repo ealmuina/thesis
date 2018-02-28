@@ -15,7 +15,7 @@ pool = essentia.Pool()
 
 # BASIC DESCRIPTORS
 
-for i, frame in enumerate(FrameGenerator(audio, frameSize=512, hopSize=512, startFromZero=True)):
+for i, frame in enumerate(FrameGenerator(audio, frameSize=1024, hopSize=1024, startFromZero=True)):
     awf.append([(i, frame.min()), (i, frame.max())])
     pool.add('AP', power(frame))
 
