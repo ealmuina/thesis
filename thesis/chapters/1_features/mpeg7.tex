@@ -42,3 +42,29 @@ La representación gráfica del AP posibilita el análisis directo de la evoluci
     \label{img:awf+ap}
 \end{figure}
 
+\subsection{Descriptores espectrales básicos}\label{subsec:descriptoresEspectralesBásicos}
+
+Las características de esta categoría describen la representación de las señales de sonido en el dominio de las frecuencias.
+Una trama $x[n]$, de longitud $N$, tiene una representación en dicho dominio que puede ser obtenida mediante la aplicación de la transformada discreta de Fourier (DFT por sus siglas en inglés):
+
+\begin{equation}
+    \label{eq:DFT}
+    X[f] = \sum_{n=0}^{N-1}{x[n]e^{\frac{-i2\pi fn}{N}}}
+\end{equation}
+
+El espectro $X[f]$ puede ser transformado de vuelta al dominio del tiempo aplicando la transformada discreta inversa de Fourier (IDFT):
+
+\begin{equation}
+    \label{eq:IDFT}
+    x[n] = \frac{1}{N}\sum_{f=0}^{N-1}{X[f]e^{\frac{i2\pi fn}{N}}}
+\end{equation}
+
+Al ser $x[n]$ un vector de valores reales, podemos aplicar sobre este una propiedad de la DFT que plantea que el vector $X[f]$ es, por tanto, conjugado simétrico, por lo que suelen considerarse solamente los últimos $\lceil (N+1)/2 \rceil$ valores de este.
+
+Podemos definir $X[f,t]$ como la matriz compuesta por las DFTs correspondientes a cada una de las tramas de una señal, donde el valor en la posición $(f, t)$ corresponde a la amplitud de la frecuencia $f$ en la trama $t$.
+A partir de esta matriz se construye el espectrograma de la señal.
+
+Las cuatro características, que a continuación se mencionan, describen la señal en términos de los logaritmos de su representación en el dominio de las frecuencias, pues de esta forma es modelada de un modo más similar al comportamiento de la audición humana.
+
+\subsubsection{Audio Spectrum Envelope}
+
