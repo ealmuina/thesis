@@ -2,24 +2,7 @@ Estas características se derivan a partir de la representación de la señal en
 Algunas de las más comunes son:
 
 \begin{enumerate}
-    \item \textbf{Energía}: Se computa para una frecuencia específica como la suma de los cuadrados de las magnitudes que esta tiene en el tiempo.
-    Es, en otras palabras, la suma de los cuadrados del módulo de los valores por cada fila de la matriz $X[f,t]$.
-    \item \textbf{Spectral centroid}: Constituye el centroide del espectro de frecuencias.
-    \[
-        SC = \frac{\sum_{k=0}^{K-1}{f(k)|X[k]|}}{\sum_{k=0}^{K-1}{|X[k]|}}
-    \]
-    donde $K = \lceil (N+1)/2 \rceil$ es la longitud del vector obtenido aplicando la DFT a la trama, y $f(k)$ frecuencia asociada a la posición $k$-ésima de este.
-    \item \textbf{Spectral width}: Medida de la dispersión del espectro de frecuencias en torno a su centroide (SC).
-    \[
-        SW = \sqrt{\frac{\sum_{k=0}^{K-1}{(f(k)-SC)^2 |X[k]|^2}}{\sum_{k=0}^{K-1}{|X[k]|^2}}}
-    \]
-    \item \textbf{Spectral flatness}: Permite discriminar si hay eventos harmónicos presentes en la señal o esta se encuentra compuesta solamente por ruido.
-    \[
-        SF = \frac{(\prod_{k=0}^{K-1}{|X[k]|})^{\frac{1}{K}}}{\frac{1}{K}\sum_{k=0}^{K-1}{|X[k]|}}
-    \]
-    Los valores de $SF$ próximos a 1 indican que la señal se compone de ruido, mientras que una señal harmónica corresponde a un valor cercano a 0.
     \item \textbf{Spectral roll-off}: Se define como la frecuencia bajo la cual se encuentra un porcentaje específico (usualmente entre el 85\% y el 99\%) de la energía espectral total.
     \item \textbf{Spectral flux}: Caracteriza la variación dinámica de la información espectral.
     Se calcula como la norma de la diferencia entre los espectros de dos tramas consecutivas.
-    \item \textbf{Rango de frecuencias}: Máxima ($f_{\max}$) y mínima ($f_{\min}$) frecuencias presentes en la señal.
 \end{enumerate}

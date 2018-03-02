@@ -2,35 +2,14 @@ Este tipo de características son de las más simples y se computan directamente
 Algunas de las más comunes son:
 
 \begin{enumerate}
-    \item \textbf{Short time energy}: Da una medida de la cantidad de energía presente en la señal.
-    \[
-        STE = \frac{1}{N}\sum_{n=0}^{N-1}{x[n]^2}
-    \]
     \item \textbf{Zero crossing rate}: Está dado por el número de veces que la amplitud de la señal cambia de signo.
     \[
         ZCR = \frac{1}{2}\sum_{n=1}^{N-1}{|\text{sign}(x[n]) - \text{sign}(x[n-1])|}
     \]
     donde $\text{sign}(x[n])$ es el signo de la amplitud de la muestra $n$-ésima de la señal.
-    \item \textbf{Temporal centroid}: Centro de gravedad del oscilograma.
-    \[
-        TC = \frac{\sum_{n=0}^{N-1}{n*x[n]}}{\sum_{n=0}^{N-1}{x[n]}}
-    \]
-    \item \textbf{Temporal width}: Dispersión de las intensidades en torno al centroide.
-    \[
-        TW = \sqrt{\frac{\sum_{n=0}^{N-1}{(n-TC)^2 x[n]^2}}{\sum_{n=0}^{N-1}{x[n]^2}}}
-    \]
-    \item \textbf{Temporal flatness}: Da una medida de la variación de la intensidad del sonido en el transcurso del tiempo.
-    \[
-        TF = \frac{(\prod_{n=0}^{N-1}{|x[n]})^{\frac{1}{N}}}{\frac{1}{N}\sum_{n=0}^{N-1}{x[n]}}
-    \]
-    Los valores próximos a 1 indican que la intensidad del sonido permanece con poca variación, mientras que lo contrario corresponde a valores cercanos a 0.
     \item \textbf{Autocorrelación}: Coeficientes que pueden ser interpretados como la distribución espectral de la señal en el dominio del tiempo.
     Los primeros $k$ coeficientes pueden ser obtenidos mediante la fórmula
     \[
         R(k) = \frac{\sum_{n=0}^{N-k-1}{x[n]x[n+k]}}{\sqrt{\sum_{n=0}^{N-k-1}{x[n]^2}}\sqrt{\sum_{n=0}^{N-k-1}{x[n+k]^2}}}
-    \]
-    \item \textbf{Duración}: Longitud del segmento en el tiempo.
-    \[
-        L = t_{\max} - t_{\min}
     \]
 \end{enumerate}

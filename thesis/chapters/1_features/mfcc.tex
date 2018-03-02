@@ -4,6 +4,7 @@ Si bien fueron desarrollados para tareas asociadas al reconocimiento automático
 
 Los MFCC se basan en la característica del sistema auditivo humano que provoca que para este sea más difícil discernir entre dos frecuencias cercanas cuanto más altas ellas sean.
 La \textbf{escala Mel} (figura~\ref{img:mel-scale}) fue desarrollada con el propósito de representar esta propiedad, permitiendo medir las frecuencias de un modo más acorde a la percepción humana de estas, mediante el uso de la unidad de medida conocida como \textit{Mel}.
+Esta escala sigue el mismo propósito que el espectro de log-frecuencias: transformar el espectro de frecuencias a uno donde la distancia entre los valores guarde relación con la percepción auditiva del ser humano.
 
 \begin{figure}[!h]
     \centering
@@ -24,7 +25,7 @@ La conversión de Hertz ($f$) a Mel ($m$) se realiza aplicando la ecuación~(\re
     f = 700\left( 10^{m/2595} - 1 \right)
 \end{equation}
 
-Una ventaja de la escala Mel es que nos permite definir los llamados \textbf{bancos de filtros de Mel}, mediante los cuales podemos <<resumir>> la energía de una señal en $M$ regiones de frecuencias repartidas en correspondencia con la escala Mel (más distanciadas a medida que las frecuencias se hacen mayores).
+Una ventaja de la escala Mel es que nos permite definir los llamados \textbf{bancos de filtros de Mel}, mediante los cuales podemos <<resumir>> la energía de una señal en $M$ bandas repartidas en correspondencia con la escala Mel (más distanciadas a medida que las frecuencias se hacen mayores).
 Para ello, dividimos el intervalo de frecuencias presente en la señal en $M+2$ puntos igualmente distanciados.
 A continuación los convertimos a Mel, de forma que ahora estos estarán situados a distancias correspondientes a la percepción humana de las frecuencias.
 Luego, definimos los $M$ filtros mediante la siguiente fórmula:
