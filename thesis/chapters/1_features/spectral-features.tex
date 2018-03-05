@@ -1,8 +1,83 @@
-Estas características se derivan a partir de la representación de la señal en el dominio de las frecuencias.
-Algunas de las más comunes son:
+Las características de esta categoría describen la representación de las señales de sonido en el dominio de las frecuencias.
 
-\begin{enumerate}
-    \item \textbf{Spectral roll-off}: Se define como la frecuencia bajo la cual se encuentra un porcentaje específico (usualmente entre el 85\% y el 99\%) de la energía espectral total.
-    \item \textbf{Spectral flux}: Caracteriza la variación dinámica de la información espectral.
-    Se calcula como la norma de la diferencia entre los espectros de dos tramas consecutivas.
-\end{enumerate}
+Una trama $x[n]$, de longitud $N$, tiene una representación en el dominio de las frecuencias que puede ser obtenida mediante la aplicación de la transformada discreta de Fourier (DFT por sus siglas en inglés):
+
+\begin{equation}
+    \label{eq:DFT}
+    X[f] = \sum_{n=0}^{N-1}{x[n]e^{\frac{-i2\pi fn}{N}}}
+\end{equation}
+
+El espectro $X[f]$ puede ser transformado de vuelta al dominio del tiempo aplicando la transformada discreta inversa de Fourier (IDFT):
+
+\begin{equation}
+    \label{eq:IDFT}
+    x[n] = \frac{1}{N}\sum_{f=0}^{N-1}{X[f]e^{\frac{i2\pi fn}{N}}}
+\end{equation}
+
+Al ser $x[n]$ un vector de valores reales, podemos aplicar sobre este una propiedad de la DFT que plantea que el vector $X[f]$ es, por tanto, conjugado simétrico, por lo que suelen considerarse solamente los últimos $\lceil (N+1)/2 \rceil$ valores de este.
+
+La posición $k$-ésima del vector $X[k]$ contiene la amplitud correspondiente a la frecuencia $k(F_s/N)$ en la señal.
+
+Podemos definir $X[f,t]$ como la matriz compuesta por las DFTs correspondientes a cada una de las tramas de una señal, donde el valor en la posición $(f, t)$ corresponde a la amplitud de la frecuencia $f$ en la trama $t$.
+A partir de esta matriz se construye el espectrograma de la señal.
+
+\subsubsection{Spectral Centroid}
+
+El \textit{spectral centroid} (SC) constituye el centro de masas del espectro de frecuencias de una trama, y permite describir la señal en términos del tipo de frecuencias predominantes (altas o bajas) en cada trama.
+Puede computarse mediante la siguiente expresión:
+
+\begin{equation}
+    \label{eq:SC}
+    SC = \frac{\sum_{k=0}^{K-1}{f(k)|X[k]|}}{\sum_{k=0}^{K-1}{|X[k]|}}
+\end{equation}
+
+\noindent
+donde $K$ es la longitud del vector correspondiente a la DFT de la trama, y $f(k)$ frecuencia asociada a la posición $k$-ésima de este.
+
+\subsubsection{Spectral Spread}
+
+También conocido como \textit{instantaneous bandwith} o \textit{spectral width}, el \textit{spectral spread} (SS) de una señal refleja la dispersión del espectro de frecuencias en torno a su centroide.
+
+Puede calcularse aplicando la siguiente expresión en cada trama:
+
+\begin{equation}
+    \label{eq:SS}
+    SS = \sqrt{\frac{\sum_{k=0}^{K-1}{\left[ \log_{2}{(f(k))-SC} \right]^2 |X[k]|}}{\sum_{k=0}^{K-1}{|X[k]|}}}
+\end{equation}
+
+\noindent
+donde $X[k]$ es la DFT de la trama, y tiene cardinalidad $K$.
+
+Valores bajos (característicos de sonidos armónicos) del SS expresan una concentración de las amplitudes alrededor de la frecuencia centroide;
+los valores altos (propios de ruidos), en cambio, muestran una dispersión de las amplitudes en un rango de frecuencias mayor.
+
+\subsubsection{Spectral Roll-off}
+
+El \textit{spectral roll-off} (SRO) se define como la frecuencia bajo la cual se encuentra un porcentaje específico (usualmente entre el 85\% y el 99\%) de la energía espectral total.
+
+\subsubsection{Spectral Flux}
+
+Caracteriza la variación dinámica de la información espectral.
+El \textit{spectral flux} (SFX) se calcula como la norma de la diferencia entre los espectros de dos tramas consecutivas.
+
+\subsubsection{Spectral Flatness}
+
+El \textit{spectral flatness} (SF) de una señal refleja su similitud a una señal compuesta por ruido, caso en que su valor se aproxima a 1;
+mientras que si se trata de una señal armónica, el valor será próximo a 0.
+
+El SF se calcula como la razón entre las medias geométrica y aritmética de las amplitudes presentes en la DFT de la trama, es decir, mediante la expresión:
+
+\begin{equation}
+    \label{eq:SF}
+    SF = \frac{\prod_{k=0}^{K-1}{|X[k]|}^{\frac{1}{K}}}{\frac{1}{K}\sum_{k=0}^{K-1}{|X[k]|}}
+\end{equation}
+
+\noindent
+donde $X[k]$ es la DFT de la trama, de cardinalidad $K$.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{spectral-features.png}
+    \caption{Características espectrales básicas de una señal de audio.}
+    \label{img:basic-spectral-descriptors}
+\end{figure}
