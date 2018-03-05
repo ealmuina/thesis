@@ -54,7 +54,7 @@ def plot_spectral_descriptors(audio):
     ax[0, 0].plot(pool['SC'], label='SC')
     ax[0, 0].plot(pool['SS'], label='SS')
     ax[0, 0].legend()
-    ax[0, 0].set_title('Spectral Centroid (SC) and Spectral Spread (SS)')
+    ax[0, 0].set_title('Spectral Centroid (SC) y Spectral Spread (SS)')
 
     ax[0, 1].plot(pool['SRO'])
     ax[0, 1].set_title('Spectral Roll-off (SRO)')

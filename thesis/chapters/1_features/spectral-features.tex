@@ -1,13 +1,13 @@
 Las características de esta categoría describen la representación de las señales de sonido en el dominio de las frecuencias.
 
-Una trama $x[n]$, de longitud $N$, tiene una representación en el dominio de las frecuencias que puede ser obtenida mediante la aplicación de la transformada discreta de Fourier (DFT por sus siglas en inglés):
+Una trama $x[n]$, de longitud $N$, tiene una representación en el dominio de las frecuencias que puede ser obtenida mediante la aplicación de la \textbf{transformada discreta de Fourier} (DFT por sus siglas en inglés):
 
 \begin{equation}
     \label{eq:DFT}
     X[f] = \sum_{n=0}^{N-1}{x[n]e^{\frac{-i2\pi fn}{N}}}
 \end{equation}
 
-El espectro $X[f]$ puede ser transformado de vuelta al dominio del tiempo aplicando la transformada discreta inversa de Fourier (IDFT):
+El espectro $X[f]$ puede ser transformado de vuelta al dominio del tiempo aplicando la \textbf{transformada discreta inversa de Fourier} (IDFT):
 
 \begin{equation}
     \label{eq:IDFT}
@@ -59,6 +59,15 @@ El \textit{spectral roll-off} (SRO) se define como la frecuencia bajo la cual se
 
 Caracteriza la variación dinámica de la información espectral.
 El \textit{spectral flux} (SFX) se calcula como la norma de la diferencia entre los espectros de dos tramas consecutivas.
+El coeficiente correspondiente a la trama $t$, $t\geq 1$, puede calcularse entonces aplicando:
+
+\begin{equation}
+    \label{eq:SFX}
+    SFX_t = ||\hat{X}_t -\hat{X}_{t-1}||
+\end{equation}
+
+\noindent
+donde $\hat{X}_t$ es la transformada discreta de Fourier de la trama $t$-ésima de la señal.
 
 \subsubsection{Spectral Flatness}
 
@@ -77,7 +86,7 @@ donde $X[k]$ es la DFT de la trama, de cardinalidad $K$.
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=\textwidth]{spectral-features.png}
+    \includegraphics[width=0.95\textwidth]{spectral-features.png}
     \caption{Características espectrales básicas de una señal de audio.}
     \label{img:basic-spectral-descriptors}
 \end{figure}

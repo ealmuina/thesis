@@ -100,7 +100,7 @@ Para calcular los coeficientes delta aplicamos la siguiente fórmula:
 
 \noindent
 donde $d_t$ es el vector de coeficientes delta correspondiente a la trama $t$, y $c_{t+n}$ y $c_{t-n}$ son los MFCC de las tramas posteriores y anteriores respectivamente.
-El valor de la cantidad de tramas adyacentes a explorar ($T$) suele ser 2.
+El valor de la cantidad de tramas consecutivas a explorar ($T$) suele ser 2.
 
 Los coeficientes delta-delta pueden ser calculados de igual forma aplicando~(\ref{eq:delta}) empleando los delta en lugar de los MFCC.
 
