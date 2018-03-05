@@ -138,19 +138,19 @@ Puede calcularse aplicando la siguiente expresión en cada trama:
 \noindent
 donde $K$ es el tamaño del vector correspondiente al ASE de la trama.
 
-Valores bajos (característicos de sonidos harmónicos) del ASS expresan una concentración de las amplitudes alrededor de la frecuencia centroide;
+Valores bajos (característicos de sonidos armónicos) del ASS expresan una concentración de las amplitudes alrededor de la frecuencia centroide;
 los valores altos (propios de ruidos), en cambio, muestran una dispersión de las amplitudes en un rango de frecuencias mayor.
 
 \subsubsection{Audio Spectrum Flatness}
 
 El \textit{audio spectrum flatness} (ASF) de una señal refleja su similitud a una señal compuesta por ruido, caso en que su valor se aproxima a 1;
-mientras que si se trata de una señal harmónica, el valor será próximo a 0.
+mientras que si se trata de una señal armónica, el valor será próximo a 0.
 
-Para calcular el ASF, de acuerdo con el estándar MPEG-7, se divide la señal en tramas no superpuestas, y el espectro se separa en bandas con $loEdge = 250$ Hz y $hiEdge = 16$ kHz.
+Para calcular el ASF, de acuerdo con el estándar MPEG-7, se divide la señal en tramas no superpuestas, y el espectro se separa en bandas en el intervalo $[loEdge, hiEdge]$ con $loEdge = 250$ Hz y $hiEdge = 16$ kHz.
 Los extremos de cada banda se determinan por las ecuaciones:
 
 \begin{gather*}
-    loF_b = 0.95 \cdot loEdge \cdot 2^{\frac{1}{4}(b-1)} \\
+    loF_b = 0.95 \cdot loEdge \cdot 2^{\frac{1}{4}(b-1)}\\
     hiF_b = 1.05 \cdot loEdge \cdot 2^{\frac{1}{4}b}
 \end{gather*}
 
@@ -160,17 +160,25 @@ El coeficiente correspondiente a la banda $b$ en el ASF se calcula como la razó
 
 \begin{equation}
     \label{eq:ASF}
-    ASF_b = \frac{\prod_{k=0}^{K-1}{|X_{b}[k]|}}{\frac{1}{K}\sum{k=0}^{K-1}{|X_{b}[k]|}}
+    ASF_b = \frac{\prod_{k=0}^{K-1}{|X_{b}[k]|}^{\frac{1}{K}}}{\frac{1}{K}\sum_{k=0}^{K-1}{|X_{b}[k]|}}
 \end{equation}
 
 \noindent
-donde $X_{b}[k]$ es la subsecuencia de la DFT de la señal correspondiente a las frecuencias que pertenecen a la banda $b$, y $K$ su cardinalidad.
+donde $X_{b}[k]$ son las energías correspondientes a las frecuencias que pertenecen a la banda $b$, y $K$ su cardinalidad.
 
 La matriz de los ASF es un buen identificador para una señal, y el vector formado por los promedios de los ASF de cada trama puede ser empleado como vector de características en aplicaciones de clasificación de señales de audio~\cite{Kim05}.
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.9\textwidth]{basic-spectral-descriptors.png}
+    \includegraphics[width=0.85\textwidth]{basic-spectral-descriptors.png}
     \caption{Características espectrales básicas de una señal de audio según MPEG-7.}
     \label{img:basic-spectral-descriptors}
 \end{figure}
+
+\subsection{Parámetros básicos de una señal}\label{subsec:basicSignalParameters}
+
+Las características incluidas en esta categoría persiguen describir la señal en términos de su harmonicidad, es decir, su constitución en términos de señales armónicas. % TODO Am I right?
+
+\subsubsection{Audio Harmonicity}
+
+

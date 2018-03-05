@@ -1,34 +1,63 @@
-from math import ceil
+import math
 
 import essentia
+import numpy as np
 import pylab as pl
 from essentia.standard import MonoLoader, Windowing, Spectrum, FrameGenerator, InstantPower, FrequencyBands, Centroid, \
     CentralMoments, Flatness
 from matplotlib import collections as mc
 
 
-def get_freq_bands(lo_edge, hi_edge, band_resolution, overlap=0.0):
+def get_log_freq_bands(lo_edge, hi_edge, band_resolution):
     freq_bands = [0]
     current = lo_edge
     b = 1
     while current <= hi_edge:
         freq_bands.append(current)
-        current = (1 + overlap) * lo_edge * 2 ** (b * band_resolution)
+        current = lo_edge * 2 ** (b * band_resolution)
         b += 1
     freq_bands.append(22050)
     return freq_bands
 
 
-def bands_flatness(x):
+def bands_flatness(x, lo_edge=250, hi_edge=16000, fs=44100, n=1024):
     flatness = Flatness()
-    freq_bands = get_freq_bands(250, 16000, 0.25, overlap=0.05)
+    numbands = int(math.floor(4 * math.log2(hi_edge / lo_edge)))
+    firstband = round(math.log2(lo_edge / 1000) * 4)
+    overlap = 0.5
+    gm, am = [], []
 
-    result = []
-    kl = 0
-    for kh in sorted(set(map(lambda f: ceil(1024 * f / 44100 + 1e-6), freq_bands[1:]))):
-        result.append(flatness(x[kl:kh]))
-        kl = kh
-    return result
+    grpsize = 1
+    for k in range(1, numbands + 1):
+        f_lo = lo_edge * (2 ** ((k - 1) / 4)) * (1 - overlap)
+        f_hi = lo_edge * (2 ** (k / 4)) * (1 + overlap)
+        i_lo = round(f_lo / (fs / n)) + 1
+        i_hi = round(f_hi / (fs / n)) + 1
+
+        # Rounding of upper index according due to coefficient grouping
+        if k + firstband - 1 >= 0:  # start grouping at 1 kHz
+            grpsize = 2 ** math.ceil((k + firstband) / 4)
+            i_hi = round((i_hi - i_lo + 1) / grpsize) * grpsize + i_lo - 1
+        else:
+            grpsize = 1
+        tmp = x[i_lo - 1:i_hi, :]  # ** 2  # PSD coefficients
+        ncoeffs = i_hi - i_lo + 1
+
+        if k + firstband - 1 >= 0:  # Coefficient grouping
+            tmp2 = tmp[:grpsize:ncoeffs, :]
+            for g in range(2, grpsize + 1):
+                tmp2 += tmp[g - 1:grpsize:ncoeffs, :]
+            tmp = tmp2
+
+        # Actual calculation
+        ncoeffs /= grpsize
+        tmp += 1e-50  # avoid underflow for zero signals
+        gm_k = np.exp(np.sum(np.log(tmp), 1) / ncoeffs)  # log processing avoids overflow
+        gm.append(np.resize(gm_k, numbands))
+        am_k = np.sum(tmp, 1) / ncoeffs
+        am.append(np.resize(am_k, numbands))
+
+    return np.array(gm) / np.array(am)
 
 
 def main():
@@ -61,7 +90,7 @@ def main():
 
     # BASIC SPECTRAL DESCRIPTORS
 
-    freq_bands = get_freq_bands(62.5, 16000, 2 ** -2)
+    freq_bands = get_log_freq_bands(62.5, 16000, 2 ** -2)
 
     w = Windowing(type='hann')
     spectrum = Spectrum()  # FFT() would return the complex FFT, here we just want the magnitude spectrum
@@ -78,12 +107,19 @@ def main():
 
     for frame in FrameGenerator(audio, frameSize=1024, hopSize=1024, startFromZero=True):
         spec = spectrum(w(frame))
-        pool.add('ASF', bands_flatness(spec))
+        pool.add('Spec', spec)
+
+    asf = bands_flatness(pool['Spec'].T)
+
+    # with open('../sounds/sheep_ASF.txt') as file:
+    #     content = file.read().split()
+    #     asf = np.array(list(map(float, content)))
+    #     asf = asf.reshape((68, 24))
 
     fig, ax = pl.subplots(2, 2, figsize=(12, 8))
     fig.subplots_adjust(left=0.07, right=0.97, bottom=0.06, top=0.93)
 
-    ax[0, 0].imshow(pool['ASE'].T[:, :], aspect='auto', origin='lower', interpolation='none')
+    ax[0, 0].imshow(pool['ASE'].T, aspect='auto', origin='lower', interpolation='none')
     ax[0, 0].set_title('Audio Spectrum Envelope (ASE)')
 
     ax[0, 1].plot(pool['ASC'])
@@ -92,7 +128,7 @@ def main():
     ax[1, 0].plot(pool['ASS'])
     ax[1, 0].set_title('Audio Spectrum Spread (ASS)')
 
-    ax[1, 1].imshow(pool['ASF'].T[:, :], aspect='auto', origin='lower', interpolation='none')
+    ax[1, 1].imshow(asf, aspect='auto', origin='lower', interpolation='none')
     ax[1, 1].set_title('Audio Spectrum Flatness (ASF)')
 
     fig.show()
