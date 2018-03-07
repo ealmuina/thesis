@@ -1,0 +1,56 @@
+Las características incluidas en este grupo describen el grado de armonicidad de la señal, es decir, su composición en términos de señales puramente armónicas.
+
+\subsection{Fundamental Frequency}\label{subsec:fundamentalFrequency}
+
+Este descriptor provee una estimación de la \textit{frecuencia fundamental} (FF) de la señal en cada una de sus tramas.
+Es la frecuencia más baja del espectro de frecuencias tal que las frecuencias dominantes pueden expresarse como múltiplos de esta.
+Puede, por tanto, considerarse la FF como la frecuencia de la señal armónica que mejor representa a la señal en cuestión.
+
+Existen numerosas variantes para la estimación de la FF de una señal~\cite{Kim05}, siendo la propuesta en~\cite{Cheveigne02} una de las más populares.
+Esta técnica, también conocida como \textit{algoritmo YIN};
+se basa, a grandes rasgos, en encontrar el valor del período $\tau$ que minimiza la siguiente función para cada trama $t$~\cite{Gerhard03-2}:
+
+\begin{gather}
+    \label{eq:YIN}
+    d_t'(\tau) = \begin{cases}
+                     1 & \tau = 0 \\
+                     \frac{d_t(\tau)}{\frac{1}{\tau}{\sum_{j=1}^{\tau}{d_t(j)}}} & eoc.
+    \end{cases}\\
+    d_t(\tau) = \sum_{i=0}^{N-1}{(x[i]-x[i+\tau])^2}
+\end{gather}
+
+Luego, la frecuencia fundamental estará dada por la expresión $FF = 1/\tau$.
+
+\subsection{Inharmonicity}\label{subsec:inharmonicity}
+
+La \textit{inharmonicity} (INH) representa la divergencia de las frecuencias que componen la señal respecto a una señal puramente armónica.
+
+%TODO describe computation of inharmonicity
+
+Los valores de la INH varían entre 0 (señal puramente armónica) y 1 (señal no armónica).
+
+\subsection{Odd to Even Harmonic Energy Ratio}\label{subsec:oddToEvenHarmonicEnergyRatio}
+
+(OEHR)
+
+\subsection{Tristimulus}\label{subsec:tristimulus}
+
+(TR)
+
+\subsection{Harmonic Spectral Shape}\label{subsec:harmonicSpectralShape}
+
+% TODO Harmonic peaks
+
+\subsection{Harmonic Spectral Centroid}\label{subsec:harmonicSpectralCentroid}
+
+(HSC)
+
+\subsection{Harmonic Spectral Spread}\label{subsec:harmonicSpectralSpread}
+
+(HSS)
+
+\subsection{Harmonic Spectral Roll-off}\label{subsec:harmonicSpectralRoll-off}
+
+(HSRO)
+
+

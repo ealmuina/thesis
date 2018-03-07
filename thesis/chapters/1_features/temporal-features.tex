@@ -1,7 +1,7 @@
 Este tipo de características, que describen las propiedades de la señal en el dominio del tiempo, son muy simples;
 y se computan directamente a partir de la señal digitalizada.
 
-\subsubsection{Log-Attack Time}
+\subsection{Log-Attack Time}\label{subsec:log-attackTime}
 
 El \textit{attack} de una señal se define como el espacio de tiempo, al inicio de esta, en que su intensidad va en ascenso.
 
@@ -14,7 +14,7 @@ El \textit{log-attack time} (LAT) se calcula entonces como el logaritmo en base 
 
 Los momentos $stopAttack$ y $startAttack$ suelen definirse como los puntos en que la potencia de la señal alcanza el 20\% y el 90\% de su máximo respectivamente.
 
-\subsubsection{Audio Waveform}
+\subsection{Audio Waveform}\label{subsec:audioWaveform}
 
 Para computar esta característica se divide la señal en tramas no superpuestas ($M = N$), y se computan, por cada trama, los 2 valores siguientes:
 
@@ -29,7 +29,7 @@ La extracción de esta característica puede ser vista como un modo de <<compres
 Si se toma $N=1$ se obtendrá la propia señal, mientras que a medida que se seleccionen valores de $N$ más altos, el número de valores resultantes será cada vez menor, obteniéndose una representación reducida de la señal original.
 El AWF puede representarse gráficamente como un conjunto de segmentos con extremos en los valores de la tupla correspondiente y desplazados en el tiempo relativo a su posición en la señal (figura~\ref{img:awf+ap}).
 
-\subsubsection{Audio Power}
+\subsection{Audio Power}\label{subsec:audioPower}
 
 El \textit{audio power} (AP) describe el comportamiento de la potencia de la señal en cada instante de tiempo.
 Al igual que para la AWF, su cálculo requiere dividir la señal en tramas no superpuestas;
@@ -49,7 +49,7 @@ La representación gráfica del AP posibilita el análisis directo de la evoluci
     \label{img:awf+ap}
 \end{figure}
 
-\subsubsection{Temporal Centroid}
+\subsection{Temporal Centroid}\label{subsec:temporalCentroid}
 
 El \textit{temporal centroid} (TC) de la señal es el punto donde se localiza el centro de masas de su AP\@.
 Se calcula mediante la siguiente expresión:
@@ -62,12 +62,12 @@ Se calcula mediante la siguiente expresión:
 \noindent
 donde $T$ es la cantidad de tramas en que se descompuso la señal.
 
-\subsubsection{Effective Duration}
+\subsection{Effective Duration}\label{subsec:effectiveDuration}
 
 La \textit{effective duration} (ED) de una señal constituye la duración del intervalo de tiempo en que esta es perceptible.
 Generalmente se considera como el intervalo en que la amplitud de la señal permanece por encima del 40\% de su máximo valor.
 
-\subsubsection{Auto-correlation}
+\subsection{Auto-correlation}\label{subsec:auto-correlation}
 
 La \textit{auto-correlation} (AC) de la señal está dada por un vector de coeficientes que describen su distribución espectral en el dominio del tiempo.
 El coeficiente $k$-ésimo se calcula mediante la expresión:
@@ -77,7 +77,7 @@ El coeficiente $k$-ésimo se calcula mediante la expresión:
     AC_k = \frac{1}{x[0]^2}\sum_{n=0}^{N-k-1}{x[n]\cdot x[n+k]}
 \end{equation}
 
-\subsubsection{Zero Crossing Rate}
+\subsection{Zero Crossing Rate}\label{subsec:zeroCrossingRate}
 
 El \textit{zero crossing rate} (ZCR) es una medida del número de veces que la amplitud de la señal cambia de signo.
 Los sonidos periódicos tienden a tener un pequeño valor de ZCR, mientras que para los ruidos este valor suele ser alto.

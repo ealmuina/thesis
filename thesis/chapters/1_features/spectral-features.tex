@@ -21,6 +21,12 @@ La posición $k$-ésima del vector $X[k]$ contiene la amplitud correspondiente a
 Podemos definir $X[f,t]$ como la matriz compuesta por las DFTs correspondientes a cada una de las tramas de una señal, donde el valor en la posición $(f, t)$ corresponde a la amplitud de la frecuencia $f$ en la trama $t$.
 A partir de esta matriz se construye el espectrograma de la señal.
 
+\subsection{Spectral Shape}\label{subsec:spectralShape}
+
+Las características de este grupo describen la estructura de la representación de la señal en el dominio de las frecuencias;
+para ello se basan en criterios estadísticos como los \textit{momentos centrales}.
+A continuación se presentan tres de estas características.
+
 \subsubsection{Spectral Centroid}
 
 El \textit{spectral centroid} (SC) constituye el centro de masas del espectro de frecuencias de una trama, y permite describir la señal en términos del tipo de frecuencias predominantes (altas o bajas) en cada trama.
@@ -55,7 +61,14 @@ los valores altos (propios de ruidos), en cambio, muestran una dispersión de la
 
 El \textit{spectral roll-off} (SRO) se define como la frecuencia bajo la cual se encuentra un porcentaje específico (usualmente entre el 85\% y el 99\%) de la energía espectral total.
 
-\subsubsection{Spectral Flux}
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{spectral-features.png}
+    \caption{Características espectrales básicas de una señal de audio.}
+    \label{img:basic-spectral-descriptors}
+\end{figure}
+
+\subsection{Spectral Flux}\label{subsec:spectralFlux}
 
 Caracteriza la variación dinámica de la información espectral.
 El \textit{spectral flux} (SFX) se calcula como la norma de la diferencia entre los espectros de dos tramas consecutivas.
@@ -69,7 +82,7 @@ El coeficiente correspondiente a la trama $t$, $t\geq 1$, puede calcularse enton
 \noindent
 donde $\hat{X}_t$ es la transformada discreta de Fourier de la trama $t$-ésima de la señal.
 
-\subsubsection{Spectral Flatness}
+\subsection{Spectral Flatness}\label{subsec:spectralFlatness}
 
 El \textit{spectral flatness} (SF) de una señal refleja su similitud a una señal compuesta por ruido, caso en que su valor se aproxima a 1;
 mientras que si se trata de una señal armónica, el valor será próximo a 0.
@@ -83,10 +96,3 @@ El SF se calcula como la razón entre las medias geométrica y aritmética de la
 
 \noindent
 donde $X[k]$ es la DFT de la trama, de cardinalidad $K$.
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=0.95\textwidth]{spectral-features.png}
-    \caption{Características espectrales básicas de una señal de audio.}
-    \label{img:basic-spectral-descriptors}
-\end{figure}
