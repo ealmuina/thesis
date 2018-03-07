@@ -68,11 +68,33 @@ def plot_spectral_descriptors(audio):
     fig.show()
 
 
+def plot_mfccs(audio):
+    specs = []
+    mfccs = []
+    w = es.Windowing(type='hann')
+    spectrum = es.Spectrum()  # FFT() would return the complex FFT, here we just want the magnitude spectrum
+    mfcc = es.MFCC()
+
+    for frame in es.FrameGenerator(audio, frameSize=1024, hopSize=512, startFromZero=True):
+        spec = spectrum(w(frame))
+        _, mfcc_coeffs = mfcc(spec)
+        specs.append(spec)
+        mfccs.append(mfcc_coeffs)
+
+    mfccs = essentia.array(mfccs).T
+
+    fig, ax = pl.subplots(1, 1, figsize=(15, 6))
+    ax.imshow(mfccs[1:, :], aspect='auto', origin='lower', interpolation='none')
+    ax.set_title('MFCCs in frames')
+    fig.show()
+
+
 def main():
     audio = es.MonoLoader(filename='../sounds/sheep.wav')()
 
     plot_temporal_descriptors(audio)
     plot_spectral_descriptors(audio)
+    plot_mfccs(audio)
 
 
 if __name__ == '__main__':
