@@ -187,9 +187,9 @@ Asociamos a cada cluster los valores $\lambda_{birth}$ y $\lambda_{death}$, los 
 Y para cada punto $p$ definimos $\lambda_p$ como el valor de $\lambda$ en que $p$ es eliminado de su cluster.
 Luego, computamos la \textbf{estabilidad} de un cluster como:
 
-\[
+\begin{equation*}
     \sum_{p\in cluster}{\lambda_p - \lambda_{birth}}
-\]
+\end{equation*}
 
 Finalmente, inicializamos un conjunto de clusters seleccionados con las hojas del árbol condensado y recorremos el árbol en orden topológico aplicando el siguiente criterio:
 Si la suma de la estabilidad de los hijos es mayor que la estabilidad del cluster actual, sustituimos este valor por dicha suma.

@@ -1,12 +1,11 @@
 Las características incluidas en este grupo describen el grado de armonicidad de la señal, es decir, su composición en términos de señales puramente armónicas.
 
-\subsection{Fundamental Frequency}\label{subsec:fundamentalFrequency}
+La extracción de estos descriptores requiere la estimación de la \textbf{frecuencia fundamental} de la señal, así como de los llamados \textbf{picos armónicos} de esta.
 
-Este descriptor provee una estimación de la \textit{frecuencia fundamental} (FF) de la señal en cada una de sus tramas.
-Es la frecuencia más baja del espectro de frecuencias tal que las frecuencias dominantes pueden expresarse como múltiplos de esta.
-Puede, por tanto, considerarse la FF como la frecuencia de la señal armónica que mejor representa a la señal en cuestión.
+La frecuencia fundamental ($F_0$) es la frecuencia más baja del espectro de frecuencias tal que las frecuencias dominantes en la señal pueden expresarse como múltiplos de esta.
+Puede, por tanto, considerarse la $F_0$ como la frecuencia de la señal armónica que mejor representa a la señal en cuestión.
 
-Existen numerosas variantes para la estimación de la FF de una señal~\cite{Kim05}, siendo la propuesta en~\cite{Cheveigne02} una de las más populares.
+Existen numerosas variantes para la estimación de la $F_0$ de una señal~\cite{Kim05}, siendo la propuesta en~\cite{Cheveigne02} una de las más populares.
 Esta técnica, también conocida como \textit{algoritmo YIN};
 se basa, a grandes rasgos, en encontrar el valor del período $\tau$ que minimiza la siguiente función para cada trama $t$~\cite{Gerhard03-2}:
 
@@ -19,11 +18,43 @@ se basa, a grandes rasgos, en encontrar el valor del período $\tau$ que minimiz
     d_t(\tau) = \sum_{i=0}^{N-1}{(x[i]-x[i+\tau])^2}
 \end{gather}
 
-Luego, la frecuencia fundamental estará dada por la expresión $FF = 1/\tau$.
+Luego, la frecuencia fundamental estará dada por la expresión $F_0 = 1/\tau$.
+
+Conocida la frecuencia fundamental de la señal, podemos estimar sus picos armónicos, los que se localizan en torno a los múltiplos de $F_0$.
+De esta forma, podemos definir el $h$-ésimo pico armónico como el valor de la DFT de la señal, localizado en la posición $k_h$ tal que:
+
+\begin{equation}
+    \label{eq:harmonicPeaks}
+    k_h = \argmax_{k\in [a_h,b_h]}|X[k]|
+\end{equation}
+
+\noindent
+donde los extremos del intervalo $[a_h, b_h]$ están dados por las ecuaciones:
+
+\begin{gather*}
+    a_h = \text{floor}\left[ (h - nht)\frac{F_0}{\Delta F} \right] \\
+    b_h = \text{ceil}\left[ (h + nht)\frac{F_0}{\Delta F} \right]
+\end{gather*}
+
+\noindent
+donde $\Delta F = F_{s}/K$ es el intervalo de frecuencias entre dos posiciones consecutivas de la DFT de la señal, $K$ es cardinalidad de la DFT;
+y $nht$ es un valor denominado \textit{tolerancia no armónica}, usualmente tomado como $nht = 0.15$.
+
+El procedimiento presentado para la estimación de los picos armónicos no siempre produce buenos resultados si las características de la señal difieren en extremo de las de una señal armónica.
+Otras variantes más apropiadas para estos casos han sido diseñadas, basadas en la descomposición del proceso en dos pasos: primero la detección de \textit{picos espectrales} y luego los picos armónicos.
+En esencia, se detectan todos los picos presentes en la DFT de la señal y luego se comparan con los de la señal armónica correspondiente a la frecuencia fundamental;
+al final, se conservan los picos que mejor se ajusten a los de la señal armónica.~\cite{Kim05}.
+
 
 \subsection{Inharmonicity}\label{subsec:inharmonicity}
 
-La \textit{inharmonicity} (INH) representa la divergencia de las frecuencias que componen la señal respecto a una señal puramente armónica.
+La \textit{inharmonicity} (INH) representa la divergencia de las frecuencias que componen la señal respecto a los múltiplos de su frecuencia fundamental.
+Se calcula mediante la expresión:
+
+%\begin{equation}
+%    \label{eq:INH}
+%    INH = \frac{2}{F_0} \frac{\sum_{k=0}^{K}}
+%\end{equation}
 
 %TODO describe computation of inharmonicity
 
@@ -41,15 +72,15 @@ Los valores de la INH varían entre 0 (señal puramente armónica) y 1 (señal n
 
 % TODO Harmonic peaks
 
-\subsection{Harmonic Spectral Centroid}\label{subsec:harmonicSpectralCentroid}
+\subsubsection{Harmonic Spectral Centroid}\label{subsec:harmonicSpectralCentroid}
 
 (HSC)
 
-\subsection{Harmonic Spectral Spread}\label{subsec:harmonicSpectralSpread}
+\subsubsection{Harmonic Spectral Spread}\label{subsec:harmonicSpectralSpread}
 
 (HSS)
 
-\subsection{Harmonic Spectral Roll-off}\label{subsec:harmonicSpectralRoll-off}
+\subsubsection{Harmonic Spectral Roll-off}\label{subsec:harmonicSpectralRoll-off}
 
 (HSRO)
 

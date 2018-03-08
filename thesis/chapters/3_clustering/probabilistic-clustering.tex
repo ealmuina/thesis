@@ -143,15 +143,15 @@ Estos facilitan la decisión de los hiper-parámetros en correspondencia con el 
 \begin{enumerate}
     \item \textbf{Criterio de Información de Akaike} (AIC)~\cite{Akaike74}:
     Penaliza la cantidad de parámetros en el modelo, mediante la fórmula
-    \[
+    \begin{equation*}
         AIC = \log(\hat{L}) - d
-    \]
+    \end{equation*}
     donde $d$ es el número de parámetros libres del modelo, y $\hat L$ el valor de la función de log-verosimilitud asociada.
     \item \textbf{Criterio de Información Bayesiano} (BIC)~\cite{Schwarz78}: Al igual que AIC penaliza la complejidad del modelo, aunque en este caso la penalización es mayor.
     Su fórmula es
-    \[
+    \begin{equation*}
         BIC = \log(\hat{L}) - \frac{d}{2}\log(n)
-    \]
+    \end{equation*}
 \end{enumerate}
 
 Como se puede apreciar, ambos criterios se basan en la penalización de la función de verosimilitud (log-verosimilitud) a partir de la complejidad del modelo.

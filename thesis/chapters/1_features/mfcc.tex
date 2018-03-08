@@ -58,9 +58,9 @@ A partir de todo lo anterior podemos definir el algoritmo para el cálculo de lo
     \label{algorithm:MFCC}
     Descomponer la señal $s[n]$ en tramas $s[n]_m = x[n]$ aplicando una función ventana\;
     Por cada trama calcular la potencia espectral (periodograma) a partir de su DFT, cuya $k$-ésima componente se calcula mediante la ecuación
-    \[
+    \begin{equation*}
         P[k] = \frac{|X[k]|^2}{K}
-    \]
+    \end{equation*}
     donde $K$ es la dimensión de la DFT de la trama\;
     Aplicar el banco de filtros de Mel a $P[k]$ y sumar las energías de cada filtro.
     Aplicando $M$ filtros, se obtendrá entonces un vector de $M$ componentes (energías)\;

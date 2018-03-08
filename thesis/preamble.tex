@@ -1,0 +1,58 @@
+% Preamble
+\documentclass[11pt,twoside,openany]{book}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage[spanish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[width=150mm,top=25mm,bottom=25mm]{geometry}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{pdfpages}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[algoruled,noline,linesnumbered,spanish]{algorithm2e}
+\usepackage[fixlanguage]{babelbib}
+
+\DeclareMathOperator*{\argmax}{argmax}
+
+\usepackage[backref=page]{hyperref}
+\backrefspanish
+\renewcommand{\backref}[1]{}
+\renewcommand{\backrefalt}[4]{%
+\ifcase #1 \relax%
+\or (Citado en la página~#2).%
+\else (Citado en las páginas~#2).%
+\fi%
+}
+
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyfoot{}
+\fancyhead{}
+\renewcommand{\chaptermark}[1]{\markboth{\small \ \chaptername\ \thechapter. \ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection \ \ #1}}
+\fancyhead[L]{\slshape \leftmark}
+\fancyhead[R]{\thepage}
+\fancyhead[LO]{\slshape \rightmark}
+\fancyhead[RO,LE]{\textbf{\thepage}}
+\fancyhead[RE]{\slshape \leftmark}
+
+\renewcommand{\frontmatter}{%
+\pagenumbering{roman}
+\pagestyle{plain}
+}
+
+\renewcommand{\mainmatter}{%
+\cleardoublepage%
+\pagenumbering{arabic}
+\pagestyle{fancy}
+}
+
+\renewcommand{\backmatter}{%
+\pagestyle{plain}
+}
