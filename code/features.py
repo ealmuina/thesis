@@ -2,6 +2,7 @@ import essentia
 import essentia.standard as es
 import pylab as pl
 from matplotlib import collections as mc
+from matplotlib.ticker import MaxNLocator
 
 
 def plot_temporal_descriptors(audio):
@@ -68,6 +69,44 @@ def plot_spectral_descriptors(audio):
     fig.show()
 
 
+def plot_harmonic_descriptors(audio):
+    pool = essentia.Pool()
+    w = es.Windowing(type='hann')
+    spectrum = es.Spectrum()
+
+    pitch = es.PitchYin(frameSize=1024)
+    spectral_peaks = es.SpectralPeaks(minFrequency=1e-5)
+    harmonic_peaks = es.HarmonicPeaks()
+    inharmonicity = es.Inharmonicity()
+    oer = es.OddToEvenHarmonicEnergyRatio()
+    tristimulus = es.Tristimulus()
+
+    for frame in es.FrameGenerator(audio, frameSize=1024, hopSize=512, startFromZero=True):
+        spec = spectrum(w(frame))
+        f0, _ = pitch(frame)
+        freq_ep, amp_ep = spectral_peaks(spec)
+        freq_hp, amp_hp = harmonic_peaks(freq_ep, amp_ep, f0)
+
+        pool.add('INH', inharmonicity(freq_hp, amp_hp))
+        pool.add('OER', oer(freq_hp, amp_hp))
+        pool.add('T', tristimulus(freq_hp, amp_hp))
+
+    fig, (ax1, ax2, ax3) = pl.subplots(1, 3, figsize=(12, 4))
+    fig.subplots_adjust(left=0.055, right=0.98)
+
+    ax1.plot(pool['INH'])
+    ax1.set_title('Inharmonicity (INH)')
+
+    ax2.plot(pool['OER'])
+    ax2.set_title('Odd to Even Harmonic Energy Ratio (OER)')
+
+    ax3.imshow(pool['T'].T[:, :], aspect='auto', origin='lower', interpolation='none')
+    ax3.set_title('Tristimulus')
+    ax3.yaxis.set_major_locator(MaxNLocator(integer=True))
+
+    fig.show()
+
+
 def plot_mfccs(audio):
     specs = []
     mfccs = []
@@ -94,6 +133,7 @@ def main():
 
     plot_temporal_descriptors(audio)
     plot_spectral_descriptors(audio)
+    plot_harmonic_descriptors(audio)
     plot_mfccs(audio)
 
 

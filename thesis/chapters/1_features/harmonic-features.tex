@@ -45,43 +45,72 @@ Otras variantes más apropiadas para estos casos han sido diseñadas, basadas en
 En esencia, se detectan todos los picos presentes en la DFT de la señal y luego se comparan con los de la señal armónica correspondiente a la frecuencia fundamental;
 al final, se conservan los picos que mejor se ajusten a los de la señal armónica.~\cite{Kim05}.
 
-
 \subsection{Inharmonicity}\label{subsec:inharmonicity}
 
 La \textit{inharmonicity} (INH) representa la divergencia de las frecuencias que componen la señal respecto a los múltiplos de su frecuencia fundamental.
 Se calcula mediante la expresión:
 
-%\begin{equation}
-%    \label{eq:INH}
-%    INH = \frac{2}{F_0} \frac{\sum_{k=0}^{K}}
-%\end{equation}
+\begin{equation}
+    \label{eq:INH}
+    INH = \frac{2}{F_0} \frac{\sum_{h}{|f(h) - h\cdot F_0|\cdot |X[h]|^2}}{\sum_{h}{|X[h]|^2}}
+\end{equation}
 
-%TODO describe computation of inharmonicity
+\noindent
+donde $h$ itera por los picos armónicos de la señal, y $f(h)$ y $X[h]$ son respectivamente la frecuencia asociada al pico $h$-ésimo y el valor del coeficiente correspondiente de la DFT\@.
 
 Los valores de la INH varían entre 0 (señal puramente armónica) y 1 (señal no armónica).
 
 \subsection{Odd to Even Harmonic Energy Ratio}\label{subsec:oddToEvenHarmonicEnergyRatio}
 
-(OEHR)
+Este descriptor permite distinguir entre sonidos donde predominan los múltiplos pares de la frecuencia fundamental, de aquellos donde predominan los impares, o donde ambos tienen amplitudes equivalentes.
+Se computa como el cociente entre las posiciones de la DFT de la señal correspondientes a picos armónicos impares y las correspondientes a picos pares:
+
+\begin{equation}
+    OER = \frac{\sum_{h=2p+1}{|X[h]|^2}}{\sum_{h=2p}{|X[h]|^2}}, p\in\mathbb{N}\cup \{ 0 \}
+\end{equation}
 
 \subsection{Tristimulus}\label{subsec:tristimulus}
 
-(TR)
+El \textit{tristimulus} (TR) fue introducido como un equivalente a los atributos de color en la visión.
+Se calcula para tres conjuntos de picos armónicos, agrupados de forma equivalente al modo en que son percibidos en la audición humana.
+Las fórmulas para los tres coeficientes son las siguientes:
+
+% TODO Check this way of calling peaks with lower indices
+\begin{equation}
+    \begin{aligned}
+        T1 & = \frac{|X[h_0]|}{\sum_{h}{|X[h]|}} \\
+        T2 & = \frac{|X[h_1]|+|X[h_2]|+|X[h_3]|}{\sum_{h}{|X[h]|}} \\
+        T3 & = \frac{\sum_{h\in \{h_4, h_5, \ldots, h_{H-1}\}}{|X[h]|}}{\sum_{h}{|X[h]|}}
+    \end{aligned}
+\end{equation}
+
+\noindent
+donde $H$ es la cantidad total de picos armónicos en la señal, y $h_i$ el pico $i$-ésimo.
+El denominador es, en los tres casos, la suma de las amplitudes de las frecuencias de todos los picos armónicos.
+
+Como se puede observar, el primer coeficiente corresponde solamente a la proporción de la energía contenida en el primer pico, $T2$ a los picos del segundo al cuarto, y $T3$ a los restantes.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{harmonic-features.png}
+    \caption{Características armónicas básicas de una señal de audio.}
+    \label{img:harmonic-features}
+\end{figure}
 
 \subsection{Harmonic Spectral Shape}\label{subsec:harmonicSpectralShape}
 
-% TODO Harmonic peaks
+De un modo semejante al de la sección~\ref{subsec:spectralShape}, las características de este grupo describen mediante indicadores estadísticos, la representación de la señal a partir de sus picos armónicos.
 
 \subsubsection{Harmonic Spectral Centroid}\label{subsec:harmonicSpectralCentroid}
 
-(HSC)
+%TODO (HSC)
 
 \subsubsection{Harmonic Spectral Spread}\label{subsec:harmonicSpectralSpread}
 
-(HSS)
+%TODO (HSS)
 
 \subsubsection{Harmonic Spectral Roll-off}\label{subsec:harmonicSpectralRoll-off}
 
-(HSRO)
+%TODO (HSRO)
 
 
