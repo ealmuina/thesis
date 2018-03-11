@@ -1,8 +1,21 @@
 import essentia
 import essentia.standard as es
+import numpy as np
 import pylab as pl
 from matplotlib import collections as mc
-from matplotlib.ticker import MaxNLocator
+from matplotlib.ticker import MaxNLocator, FuncFormatter
+
+
+def delta(c, step=2):
+    result = []
+    for t in range(step, c.shape[1] - step):
+        num = np.zeros(c.shape[0])
+        den = 0
+        for n in range(1, step + 1):
+            num += n * (c[:, t + n] - c[:, t - n])
+            den += 2 * n ** 2
+        result.append(num / den)
+    return np.array(result).T
 
 
 def plot_temporal_descriptors(audio):
@@ -112,7 +125,7 @@ def plot_mfccs(audio):
     mfccs = []
     w = es.Windowing(type='hann')
     spectrum = es.Spectrum()  # FFT() would return the complex FFT, here we just want the magnitude spectrum
-    mfcc = es.MFCC()
+    mfcc = es.MFCC(inputSize=513)
 
     for frame in es.FrameGenerator(audio, frameSize=1024, hopSize=512, startFromZero=True):
         spec = spectrum(w(frame))
@@ -121,10 +134,17 @@ def plot_mfccs(audio):
         mfccs.append(mfcc_coeffs)
 
     mfccs = essentia.array(mfccs).T
+    # d_mfccs = delta(mfccs)
+    # dd_mfccs = delta(d_mfccs)
 
-    fig, ax = pl.subplots(1, 1, figsize=(15, 6))
+    fig, ax = pl.subplots(1, 1, figsize=(12, 4))
+    fig.subplots_adjust(left=0.05, right=0.97)
+
     ax.imshow(mfccs[1:, :], aspect='auto', origin='lower', interpolation='none')
-    ax.set_title('MFCCs in frames')
+    ax.set_title('MFCC')
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: int(x + 1)))
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+
     fig.show()
 
 
