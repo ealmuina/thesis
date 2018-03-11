@@ -39,6 +39,7 @@ def main(export=False):
     spectrum = es.Spectrum()
     mfcc = es.MFCC(inputSize=513)
 
+    start = time.time()
     for file in pathlib.Path('../sounds/testing').iterdir():
         audio = es.MonoLoader(filename=str(file))()
         filenames.append(file.name)
@@ -52,6 +53,7 @@ def main(export=False):
         X.append(mfccs.mean(1))
 
     X = np.array(X)
+    print('Features computed in %.3f seconds.' % (time.time() - start))
 
     le = LabelEncoder()
     le.fit(y)
@@ -68,7 +70,7 @@ def main(export=False):
     ]
 
     report = [
-        ('ALGORITHM', 'SCORE', 'TIME')
+        ('ALGORITHM', 'ARI', 'NMI', 'HOMOGENEITY', 'COMPLETENESS', 'TIME')
     ]
 
     for algorithm_name, algorithm in algorithms:
@@ -78,7 +80,10 @@ def main(export=False):
 
         report.append((
             algorithm_name,
-            '%.3f' % (metrics.adjusted_rand_score(y, labels)),
+            '%.3f' % metrics.adjusted_rand_score(y, labels),
+            '%.3f' % metrics.normalized_mutual_info_score(y, labels),
+            '%.3f' % metrics.homogeneity_score(y, labels),
+            '%.3f' % metrics.completeness_score(y, labels),
             '%.3f' % (time.time() - start)
         ))
 
