@@ -22,15 +22,26 @@ def print_table(table):
         print((" " * 3).join("{:{}}".format(x, col_width[i]) for i, x in enumerate(line)))
 
 
-def main():
+def export_results(labels, names, path):
+    results = list(zip(labels, names))
+    results.sort()
+
+    with open(path, 'w') as file:
+        for label, name in results:
+            file.write('%d\t%s\n' % (label, name))
+
+
+def main(export=False):
     X = []
     y = []
+    filenames = []
     w = es.Windowing(type='hann')
     spectrum = es.Spectrum()
     mfcc = es.MFCC(inputSize=513)
 
     for file in pathlib.Path('../sounds/testing').iterdir():
         audio = es.MonoLoader(filename=str(file))()
+        filenames.append(file.name)
         y.append(file.name.split('-')[0])
         mfccs = []
         for frame in es.FrameGenerator(audio, frameSize=1024, hopSize=512, startFromZero=True):
@@ -46,9 +57,9 @@ def main():
     le.fit(y)
     y = le.transform(y)
 
-    kmeans = KMeans(n_clusters=6)
-    gmm = GaussianMixture(n_components=6)
-    hdbscan = HDBSCAN(min_cluster_size=3, gen_min_span_tree=True)
+    kmeans = KMeans(n_clusters=len(le.classes_))
+    gmm = GaussianMixture(n_components=len(le.classes_))
+    hdbscan = HDBSCAN(min_cluster_size=5)
 
     algorithms = [
         ('KMeans', kmeans),
@@ -71,8 +82,11 @@ def main():
             '%.3f' % (time.time() - start)
         ))
 
+        if export:
+            export_results(labels, filenames, '%s.txt' % algorithm_name)
+
     print_table(report)
 
 
 if __name__ == '__main__':
-    main()
+    main(False)
