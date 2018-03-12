@@ -1,7 +1,6 @@
 import pathlib
 import time
 
-import essentia
 import essentia.standard as es
 import numpy as np
 from hdbscan import HDBSCAN
@@ -9,6 +8,8 @@ from sklearn import metrics
 from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import LabelEncoder
+
+from codes.features import FeaturesExtractor
 
 
 def print_table(table):
@@ -35,21 +36,14 @@ def main(export=False):
     X = []
     y = []
     filenames = []
-    w = es.Windowing(type='hann')
-    spectrum = es.Spectrum()
-    mfcc = es.MFCC(inputSize=513)
+    extractor = FeaturesExtractor()
 
     start = time.time()
     for file in pathlib.Path('../sounds/testing').iterdir():
         audio = es.MonoLoader(filename=str(file))()
         filenames.append(file.name)
         y.append(file.name.split('-')[0])
-        mfccs = []
-        for frame in es.FrameGenerator(audio, frameSize=1024, hopSize=512, startFromZero=True):
-            spec = spectrum(w(frame))
-            _, mfcc_coeffs = mfcc(spec)
-            mfccs.append(mfcc_coeffs)
-        mfccs = essentia.array(mfccs).T[1:, :]
+        mfccs, _, _ = extractor.mfcc_descriptors(audio)
         X.append(mfccs.mean(1))
 
     X = np.array(X)

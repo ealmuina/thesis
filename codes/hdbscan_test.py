@@ -1,7 +1,7 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import sklearn.datasets as data
 import hdbscan
+import matplotlib.pyplot as plt
+import numpy as np
+import sklearn.datasets as data
 
 np.random.seed(170)
 

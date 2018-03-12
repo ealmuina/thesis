@@ -1,8 +1,7 @@
 from itertools import cycle, islice
 
-import numpy as np
 import matplotlib.pyplot as plt
-
+import numpy as np
 from sklearn.cluster import KMeans, DBSCAN
 from sklearn.datasets.samples_generator import make_blobs
 
