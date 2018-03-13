@@ -38,15 +38,14 @@ class FeaturesExtractor:
 
     @staticmethod
     def _delta(c, step=2):
-        if c.shape[1] < 2 * step + 1:
-            return np.zeros(shape=c.shape)
-
         result = []
-        for t in range(step, c.shape[1] - step):
+        for t in range(c.shape[1]):
             num = np.zeros(c.shape[0])
             den = 0
             for n in range(1, step + 1):
-                num += n * (c[:, t + n] - c[:, t - n])
+                a = min(t + n, c.shape[1] - 1)
+                b = max(t - n, 0)
+                num += n * (c[:, a] - c[:, b])
                 den += 2 * n ** 2
             result.append(num / den)
         return np.array(result).T
