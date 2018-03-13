@@ -1,3 +1,5 @@
+import argparse
+import os
 import pathlib
 import time
 
@@ -27,7 +29,8 @@ def export_results(labels, names, path):
     results = list(zip(labels, names))
     results.sort()
 
-    with open(path, 'w') as file:
+    os.makedirs('out', exist_ok=True)
+    with open('out/' + path, 'w') as file:
         for label, name in results:
             file.write('%d\t%s\n' % (label, name))
 
@@ -88,4 +91,8 @@ def main(export=False):
 
 
 if __name__ == '__main__':
-    main(False)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--report', action='store_true')
+    args = parser.parse_args()
+
+    main(args.report)
