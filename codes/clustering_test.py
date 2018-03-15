@@ -5,24 +5,15 @@ import time
 
 import essentia.standard as es
 import numpy as np
+import pylab as pl
 from hdbscan import HDBSCAN
 from sklearn import metrics
 from sklearn.cluster import KMeans
+from sklearn.manifold import TSNE
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import LabelEncoder
 
 from codes.features import FeaturesExtractor
-
-
-def print_table(table):
-    """
-    Print a list of tuples as a pretty tabulated table.
-    :param table: List of tuples, each one will be a row of the printed table
-    """
-
-    col_width = [max(len(x) for x in col) for col in zip(*table)]
-    for line in table:
-        print((" " * 3).join("{:{}}".format(x, col_width[i]) for i, x in enumerate(line)))
 
 
 def export_results(labels, names, path):
@@ -35,7 +26,7 @@ def export_results(labels, names, path):
             file.write('%d\t%s\n' % (label, name))
 
 
-def main(export=False):
+def main(export=False, plot=False):
     X = []
     y = []
     filenames = []
@@ -55,6 +46,9 @@ def main(export=False):
     le = LabelEncoder()
     le.fit(y)
     y = le.transform(y)
+
+    if plot:
+        plot_data(X, y)
 
     kmeans = KMeans(n_clusters=len(le.classes_))
     gmm = GaussianMixture(n_components=len(le.classes_))
@@ -87,12 +81,39 @@ def main(export=False):
         if export:
             export_results(labels, filenames, '%s.txt' % algorithm_name)
 
+    print()
     print_table(report)
+
+
+def plot_data(X, y):
+    start = time.time()
+
+    X = X.astype(np.float64)
+    tsne = TSNE(n_components=2, random_state=0, init='pca')
+    results = tsne.fit(X)
+    coords = results.embedding_
+
+    print("Done t-distributed Stochastic Neighbor Embedding in %.3f seconds." % (time.time() - start))
+
+    pl.scatter(coords[:, 0], coords[:, 1], marker='.', c=y)
+    pl.show()
+
+
+def print_table(table):
+    """
+    Print a list of tuples as a pretty tabulated table.
+    :param table: List of tuples, each one will be a row of the printed table
+    """
+
+    col_width = [max(len(x) for x in col) for col in zip(*table)]
+    for line in table:
+        print((" " * 3).join("{:{}}".format(x, col_width[i]) for i, x in enumerate(line)))
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--report', action='store_true')
+    parser.add_argument('--plot', action='store_true')
     args = parser.parse_args()
 
-    main(args.report)
+    main(args.report, args.plot)
