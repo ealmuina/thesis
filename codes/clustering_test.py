@@ -4,8 +4,8 @@ import pathlib
 import time
 
 import essentia.standard as es
+import matplotlib.pyplot as plt
 import numpy as np
-import pylab as pl
 from hdbscan import HDBSCAN
 from sklearn import metrics
 from sklearn.cluster import KMeans
@@ -31,6 +31,7 @@ def main(export=False, plot=False):
     y = []
     filenames = []
     extractor = FeaturesExtractor()
+    embedding = None
 
     start = time.time()
     for file in pathlib.Path('../sounds/testing').iterdir():
@@ -48,7 +49,15 @@ def main(export=False, plot=False):
     y = le.transform(y)
 
     if plot:
-        plot_data(X, y)
+        start = time.time()
+
+        X = X.astype(np.float64)
+        tsne = TSNE(n_components=2, random_state=1994)
+        results = tsne.fit(X)
+        embedding = results.embedding_
+
+        print("Done t-distributed Stochastic Neighbor Embedding in %.3f seconds." % (time.time() - start))
+        plot_data(embedding, y, 'True')
 
     kmeans = KMeans(n_clusters=len(le.classes_))
     gmm = GaussianMixture(n_components=len(le.classes_))
@@ -80,23 +89,39 @@ def main(export=False, plot=False):
 
         if export:
             export_results(labels, filenames, '%s.txt' % algorithm_name)
+        if plot:
+            plot_data(embedding, labels, algorithm_name)
 
     print()
     print_table(report)
 
 
-def plot_data(X, y):
-    start = time.time()
+def plot_data(X, y, title):
+    # x_min, x_max = np.min(X, 0), np.max(X, 0)
+    # X = (X - x_min) / (x_max - x_min)
 
-    X = X.astype(np.float64)
-    tsne = TSNE(n_components=2, random_state=0, init='pca')
-    results = tsne.fit(X)
-    coords = results.embedding_
+    ax = plt.subplot(111)
 
-    print("Done t-distributed Stochastic Neighbor Embedding in %.3f seconds." % (time.time() - start))
+    # ax.scatter(X[:, 0], X[:, 1], marker='o', c=y, cmap=plt.get_cmap('hsv'))
+    ax.scatter(X[:, 0], X[:, 1], marker='o', c=y)
 
-    pl.scatter(coords[:, 0], coords[:, 1], marker='.', c=y)
-    pl.show()
+    # shown_images = np.array([[1., 1.]])  # just something big
+    # for i in range(X.shape[0]):
+    #     dist = np.sum((X[i] - shown_images) ** 2, 1)
+    #     if np.min(dist) < 4e-3:
+    #         # don't show points that are too close
+    #         continue
+    #     shown_images = np.r_[shown_images, [X[i]]]
+    #     imagebox = offsetbox.AnnotationBbox(
+    #         offsetbox.TextArea(y[i]),
+    #         X[i],
+    #         fontsize=5
+    #     )
+    #     ax.add_artist(imagebox)
+
+    plt.xticks([]), plt.yticks([])
+    plt.title(title)
+    plt.show()
 
 
 def print_table(table):

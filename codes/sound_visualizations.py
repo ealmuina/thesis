@@ -1,16 +1,20 @@
 import essentia
 import essentia.standard as es
-import matplotlib.pyplot as plt
-from pylab import plot, show, figure
+import pylab as pl
+import seaborn as sns
 
 
 def main():
-    plt.rcParams['figure.figsize'] = (15, 6)
+    sns.set()
 
     audio = es.MonoLoader(filename='../sounds/sheep.wav')()
-    plot(audio)
-    plt.title("Ovis orientalis aries")
-    show()
+
+    fig, ax = pl.subplots(1, 1, figsize=(12, 4))
+    fig.subplots_adjust(left=0.06, right=0.97)
+
+    ax.plot(audio)
+    ax.set_title("Ovis orientalis aries")
+    fig.show()
 
     w = es.Windowing(type='hamming')
     spectrum = es.Spectrum()  # FFT() would return the complex FFT, here we just want the magnitude spectrum
@@ -18,8 +22,9 @@ def main():
     frame = audio[20000: 20000 + 1024]
     spec = spectrum(w(frame))
 
-    fig = figure(figsize=(15, 6))
-    fig.subplots_adjust(left=0.06, right=0.97, bottom=0.07, top=0.93)
+    sns.set_style("white")
+    fig = pl.figure(figsize=(12, 4))
+    fig.subplots_adjust(left=0.07, right=0.97)
 
     ax = fig.add_subplot(1, 2, 1)
     ax.plot(spec[:250])
@@ -36,7 +41,7 @@ def main():
     specs = essentia.array(specs).T
 
     ax = fig.add_subplot(1, 2, 2)
-    ax.imshow(specs[:160, :], aspect='auto', origin='lower', interpolation='none')
+    ax.imshow(specs[:80, :], aspect='auto', origin='lower', interpolation='none')
     ax.set_title('(b)')
 
     fig.show()

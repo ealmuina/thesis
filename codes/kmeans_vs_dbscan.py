@@ -2,8 +2,12 @@ from itertools import cycle, islice
 
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 from sklearn.cluster import KMeans, DBSCAN
 from sklearn.datasets.samples_generator import make_blobs
+
+sns.set()
+sns.set_style('white')
 
 # #############################################################################
 # Generate sample data

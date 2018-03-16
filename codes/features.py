@@ -2,6 +2,7 @@ import essentia
 import essentia.standard as es
 import numpy as np
 import pylab as pl
+import seaborn as sns
 from matplotlib import collections as mc
 from matplotlib.ticker import MaxNLocator, FuncFormatter
 
@@ -224,6 +225,9 @@ def plot_mfccs(audio):
 
 
 def main():
+    sns.set()
+    sns.set_style('white')
+
     audio = es.MonoLoader(filename='../sounds/sheep.wav')()
 
     plot_temporal_descriptors(audio)
