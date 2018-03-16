@@ -68,13 +68,26 @@ y las operaciones de procesamiento y extracción de características que se menc
 \section{Mel Frequency Cepstral Coefficients}\label{sec:MFCC}
 \input{chapters/1_features/mfcc}
 
+%\section{Sumario}\label{sec:sumario}
+%
+%La tabla~\ref{table:features} resume las características de una señal sonora presentadas en este capítulo.
+%Estas pueden agruparse por el procedimiento necesario para su cálculo en globales o por tramas;
+%las primeras se computan para toda la señal, mientras que las segundas son determinadas para cada trama en que esta haya sido dividida.
+%
+%En el caso de ese segundo grupo, es necesario el uso de un procedimiento posterior para <<unificar>> los valores hallados para cada trama en uno que describa a la señal completa.
+%Esto tiene dos finalidades: reducir la cantidad de valores que identifican a la señal según la característica en cuestión a un monto que reduzca la complejidad computacional de las operaciones sobre él;
+%y producir un número fijo de valores por cada característica, lo que no es posible si se hace por tramas, dado que no todas las señales son divididas en igual cantidad de estas.
+%Para la aplicación de algoritmos de inteligencia artificial sobre la señal, el segundo objetivo mencionado es especialmente importante, pues dichos algoritmos requieren que los vectores de características asociados a cada elemento del conjunto de datos posean todos la misma dimensionalidad.
+%El modo en que se realiza este procedimiento varía desde la aplicación de complejas funciones específicas para la generación de nuevas características a partir de las ya calculadas~\cite{Giret11};
+%hasta la simple construcción, para cada característica que así lo requiera, de un nuevo vector con las medias y las varianzas de cada componente en los vectores asociados a las tramas.
+%
 %\begin{table}[]
 %    \centering
-%    \caption{My caption}
-%    \label{my-label}
+%    \caption{Descriptores de una señal de sonido.}
+%    \label{table:features}
 %    \begin{tabular}{|l|c|c|c|l}
 %        \cline{1-4}
-%        \multicolumn{1}{|c|}{\textbf{Característica}} & \textbf{Acrónimo} & \textbf{¿Basado en tramas?} & \textbf{Dimensión} &  \\ \cline{1-4}
+%        \multicolumn{1}{|c|}{\textbf{Característica}} & \textbf{Acrónimo} & \textbf{Por tramas} & \textbf{Dimensión} &  \\ \cline{1-4}
 %        Log-Attack Time & LAT & no & 1 &  \\ \cline{1-4}
 %        Audio Waveform & AWF & sí & 2 &  \\ \cline{1-4}
 %        Audio Power & AP & sí & 1 &  \\ \cline{1-4}

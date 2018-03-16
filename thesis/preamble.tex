@@ -56,3 +56,9 @@
 \renewcommand{\backmatter}{%
 \pagestyle{plain}
 }
+
+\AtBeginDocument{%
+% Renaming cuadro to tabla.
+\renewcommand{\listtablename}{Índice de tablas}%
+\renewcommand{\tablename}{Tabla}%
+}

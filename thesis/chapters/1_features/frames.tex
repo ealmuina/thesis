@@ -34,3 +34,8 @@ Dos de las variantes más conocidas para la función $w(n)$ son las siguientes:
 
 La elección de la ventana $w(n)$ tiene un efecto sobre los resultados de operaciones posteriores sobre las tramas obtenidas.
 En la práctica, algunos métodos de procesamiento, como la transformada de Fourier producen mejores resultados cuando se emplean funciones que se aproximan a cero en sus extremos, como la de Hamming.
+
+Una vez computados, los valores asociados a una característica de la señal para cada trama suelen ser <<generalizados>> para representar su comportamiento global.
+El procedimiento varía desde la generación de nuevas características a partir de las ya calculadas~\cite{Giret11}, hasta la simplificación de estas a la media y varianza de cada una de sus componentes.
+Esto es especialmente importante para el empleo de dichos vectores en algoritmos de inteligencia artificial, puesto que las señales no siempre se descomponen en un mismo número de tramas;
+mientras que aplicando este método, el tamaño de los vectores de características sí será igual para todas, lo cual es un requisito de muchos de dichos algoritmos.
