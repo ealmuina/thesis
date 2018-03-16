@@ -6,7 +6,9 @@ import time
 import essentia.standard as es
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 from hdbscan import HDBSCAN
+from matplotlib import offsetbox
 from sklearn import metrics
 from sklearn.cluster import KMeans
 from sklearn.manifold import TSNE
@@ -27,6 +29,9 @@ def export_results(labels, names, path):
 
 
 def main(export=False, plot=False):
+    sns.set()
+    sns.set_style('white')
+
     X = []
     y = []
     filenames = []
@@ -97,31 +102,29 @@ def main(export=False, plot=False):
 
 
 def plot_data(X, y, title):
-    # x_min, x_max = np.min(X, 0), np.max(X, 0)
-    # X = (X - x_min) / (x_max - x_min)
+    x_min, x_max = np.min(X, 0), np.max(X, 0)
+    X = (X - x_min) / (x_max - x_min)
 
-    ax = plt.subplot(111)
-
-    # ax.scatter(X[:, 0], X[:, 1], marker='o', c=y, cmap=plt.get_cmap('hsv'))
+    fig, ax = plt.subplots(1, 1)
     ax.scatter(X[:, 0], X[:, 1], marker='o', c=y)
 
-    # shown_images = np.array([[1., 1.]])  # just something big
-    # for i in range(X.shape[0]):
-    #     dist = np.sum((X[i] - shown_images) ** 2, 1)
-    #     if np.min(dist) < 4e-3:
-    #         # don't show points that are too close
-    #         continue
-    #     shown_images = np.r_[shown_images, [X[i]]]
-    #     imagebox = offsetbox.AnnotationBbox(
-    #         offsetbox.TextArea(y[i]),
-    #         X[i],
-    #         fontsize=5
-    #     )
-    #     ax.add_artist(imagebox)
+    shown_images = np.array([[1., 1.]])  # just something big
+    for i in range(X.shape[0]):
+        dist = np.sum((X[i] - shown_images) ** 2, 1)
+        if np.min(dist) < 4e-4:
+            # don't show points that are too close
+            continue
+        shown_images = np.r_[shown_images, [X[i]]]
+        imagebox = offsetbox.AnnotationBbox(
+            offsetbox.TextArea(y[i], textprops={'size': 5}),
+            X[i],
+            fontsize=5
+        )
+        ax.add_artist(imagebox)
 
-    plt.xticks([]), plt.yticks([])
-    plt.title(title)
-    plt.show()
+    ax.set_xticks([]), ax.set_yticks([])
+    ax.set_title(title)
+    fig.show()
 
 
 def print_table(table):
