@@ -1,0 +1,111 @@
+Las medidas de validación supervisadas o \textbf{externas}, parten de la premisa de que se disponen las categorías reales de los elementos del conjunto de datos sobre el que se aplicó el algoritmo de clustering.
+Haciendo uso de este conocimiento, pueden construirse clusters ideales, estableciendo una correspondencia biyectiva entre clusters y categorías.
+La tarea de los criterios de validación supervisados es comparar el resultado de la aplicación de un algoritmo de clustering con dicho conjunto de clusters ideales.
+
+De acuerdo al enfoque que adopta cada criterio para establecer la comparación, estos pueden agruparse en dos conjuntos:
+
+\begin{itemize}
+    \item \textbf{Orientados a la clasificación}: Son aquellas medidas que evalúan la composición de los clusters respecto a qué tan cerca se encuentran de contener elementos pertenecientes a una única clase.
+    \item \textbf{Orientados a la similaridad}: Estos criterios valoran cuánto se cumple que dos objetos de una misma categoría se encuentren en el mismo cluster y viceversa.
+\end{itemize}
+
+\subsection{Medidas orientadas a la clasificación}\label{subsec:medidasOrientadasALaClasificación}
+
+Este grupo de medidas constituye una adaptación de criterios empleados tradicionalmente para la evaluación de algoritmos de aprendizaje supervisado.
+A continuación se mencionan algunas de ellas.
+
+\subsubsection{Entropía}
+
+La \textit{entropía} de un conjunto es el grado en que este está constituido por elementos de una única clase.
+La entropía de un conjunto de datos $X$ cuyos elementos se encuentran categorizados por el conjunto de clases $L$ puede calcularse mediante la fórmula:
+
+\begin{equation}
+    \label{eq:entropy}
+    H(X, L) = -\sum_{l=1}^{|L|}{\frac{|X_l|}{|X|}\log{\left( \frac{|X_l|}{|X|} \right)}}
+\end{equation}
+
+\noindent
+donde $|L|$ es el total de categorías en que están agrupados los elementos del conjunto, $|X_l|$ la cantidad de elementos que pertenecen a la categoría $l$, y $|X|$ el total de elementos del conjunto.
+
+De igual manera, la entropía de un conjunto de clusters conocidas las categorías reales a las que pertenecen sus elementos, se puede calcular aplicando la siguiente expresión:
+
+\begin{equation}
+    \label{eq:clustering-entropy-conditional}
+    H(X, K|C) = -\sum_{i=1}^{|K|}\sum_{j=1}^{|C|}{\frac{n_{ij}}{n}\log \left( \frac{n_{ij}}{n_i} \right)}
+\end{equation}
+
+\noindent
+donde $K$ es el conjunto de clusters, $C$ el conjunto de categorías, $n$ total de elementos del conjunto de datos $X$, $n_i$ la cantidad de elementos del cluster $i$, y $n_{ij}$ el número de elementos que pertenecen simultáneamente al cluster $i$ y la categoría $j$.
+Esta expresión puede simplificarse si es vista como la suma de las entropías de cada uno de los clusters, ponderada por los tamaños de estos, convirtiéndose así en:
+
+\begin{equation}
+    \label{eq:clustering-entropy}
+    e = H(X, K|C) = \sum_{i=1}^{|K|}{\frac{n_i}{n}H(K_i,C)}
+\end{equation}
+
+\noindent
+donde $K_i$ es el subconjunto del conjunto de datos constituido por los elementos que forman parte del cluster $i$.
+
+%TODO Check this statement
+Los valores de este medidor se encuentran en el rango $[0, \log|C|]$, siendo 0 el indicador de que todos los elementos se agruparon correctamente.
+
+\subsubsection{Pureza, Precisión y Recobrado}
+
+La \textbf{pureza} de un cluster mide lo cerca que este se encuentra de contener objetos de una única categoría.
+Se define por las fórmulas:
+
+\begin{gather}
+    \label{eq:cluster-purity}
+    p_i =\max_{j}{p_{ij}} \\
+    \label{eq:purity}
+    purity = \sum_{i=1}^{K}{\frac{n_i}{n}p_i}
+\end{gather}
+
+\noindent
+donde  $p_{ij} = n_{ij}/n_i$ es la probabilidad de que un elemento del cluster $i$ pertenezca a la categoría $j$;
+(\ref{eq:cluster-purity}) determina la pureza de un cluster, y~(\ref{eq:purity}) la de un conjunto de clusters.
+
+La \textbf{precisión} es la fracción de los elementos de un cluster que pertenecen a la misma clase.
+La precisión del cluster $i$ respecto a la clase $j$ está dada por la expresión $precision(i,j) = $.
+
+El \textbf{recobrado} mide el grado en que un cluster contiene todos los elementos que pertenecen a una clase dada.
+Para el cluster $i$ y la categoría $j$, su expresión es $recall(i,j) = n_{ij}/n_j$, donde $n_j$ es el número de elementos del conjunto de datos incluidos en la clase $j$.
+
+Los tres criterios mencionados toman valores en el rango $(0,1]$, donde un valor más alto indica un mejor resultado.
+
+\subsubsection{Medida F}
+
+Haciendo uso de los conceptos de precisión y recobrado, se define la medida F como una combinación de estos, que busca medir el grado en que un cluster está constituido solamente por elementos de una única clase y a su vez contiene a todos los elementos de dicha clase.
+La medida F del cluster $i$ respecto a la clase $j$ está dada por:
+
+\begin{equation}
+    \label{eq:F-measure}
+    F(i,j) = \frac{2 \cdot precision(i,j) \cdot recall(i,j)}{precision(i,j) + recall(i,j)}
+\end{equation}
+
+Los valores de la medida F oscilan en el intervalo $(0,1]$, correspondiéndose los valores más altos con los mejores resultados.
+
+\subsubsection{Homogeneidad, Completitud y Medida V}
+
+Con propósitos semejantes a los trazados por la precisión y el recobrado, pero generalizando la información para todas las categorías, fueron diseñados los criterios de \textbf{homogeneidad} ($h$) y \textbf{completitud} ($c$) respectivamente.
+Estos están dados por las siguientes fórmulas:
+
+\begin{gather}
+    h = 1 - \frac{H(X, C|K)}{H(X, C)} \\
+    c = 1 - \frac{H(X, K|C)}{H(X, K)}
+\end{gather}
+
+\noindent
+donde $X$ es el conjunto de datos clasificados por las categorías $C$, y $K$ los clusters obtenidos sobre dicho conjunto.
+Para el cálculo de $H(C|K)$ se emplea~\ref{eq:clustering-entropy-conditional} de forma simétrica, es decir, considerando los clusters como categorías y viceversa.
+
+A partir de la homogeneidad y la completitud se puede definir la \textbf{Medida V}, de modo equivalente al que se definió la medida F;
+o sea, mediante la fórmula:
+
+\begin{equation}
+    \label{eq:V-measure}
+    V = \frac{2 \cdot h \cdot c}{h + c}
+\end{equation}
+
+De forma semejante a lo que sucede con los respectivos criterios equivalentes a la homogeneidad, completitud y medida V;
+estos criterios toman valores ubicados en el intervalo $[0,1]$ donde a medida que un valor es más alto, mejor ha sido evaluado el resultado.
