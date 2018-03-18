@@ -21,16 +21,16 @@ En la práctica, algunos métodos de procesamiento, como la transformada de Four
 
 \begin{table}[H]
     \centering
-    \caption{My caption}
-    \label{my-label}
+    \label{table:window-function}
     \begin{tabular}{ll}
         \hline
         Nombre & Fórmula                                                                                                               \\ \hline
-        Rectangular & $w(n) = 1$                                                                                                            \\
-        Hanning & $w(n) = 0.50 - 0.50 \cdot \cos \left( \frac{2\pi n}{N-1} \right)$                                                     \\
-        Hamming & $w(n) = 0.54 - 0.46 \cdot \cos \left( \frac{2\pi n}{N-1} \right)$                                                     \\
-        Blackman & $w(n) = 0.42 - 0.50 \cdot \cos \left( \frac{2\pi n}{N-1} \right) + 0.08 \cdot \cos \left( \frac{4\pi n}{N-1} \right)$
+        \textit{Rectangular} & $w(n) = 1$                                                                                                            \\
+        \textit{Hanning} & $w(n) = 0.50 - 0.50 \cdot \cos \left( \frac{2\pi n}{N-1} \right)$                                                     \\
+        \textit{Hamming} & $w(n) = 0.54 - 0.46 \cdot \cos \left( \frac{2\pi n}{N-1} \right)$                                                     \\
+        \textit{Blackman} & $w(n) = 0.42 - 0.50 \cdot \cos \left( \frac{2\pi n}{N-1} \right) + 0.08 \cdot \cos \left( \frac{4\pi n}{N-1} \right)$
     \end{tabular}
+    \caption{Variantes de ventana más comunes, definidas para $n\in[0, N-1]$.}
 \end{table}
 
 Una vez computados, los valores asociados a una característica de la señal para cada trama suelen ser <<generalizados>> para representar su comportamiento global.
