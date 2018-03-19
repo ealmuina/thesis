@@ -109,3 +109,93 @@ o sea, mediante la fórmula:
 
 De forma semejante a lo que sucede con los respectivos criterios equivalentes a la homogeneidad, completitud y medida V;
 estos criterios toman valores ubicados en el intervalo $[0,1]$ donde a medida que un valor es más alto, mejor ha sido evaluado el resultado.
+
+\subsubsection{Información Mutua}
+
+El indicador de información mutua proviene del campo de la Teoría de la Información, y mide el nivel en que una variable aleatoria describe otra.
+Puede aplicarse para evaluar la calidad del resultado de un algoritmo de clustering al considerar el propio resultado como una de las variables y las categorías reales como la otra.
+
+Dados $U$ y $V$, conjuntos de clusters y categorías respectivamente, y un conjunto de datos de $n$ elementos;
+esta medida se calcula a través de la siguiente expresión:
+
+\begin{equation}
+    \label{eq:mutual-information}
+    MI(U,V) = \sum_{i=1}^{|U|}\sum_{j=1}^{|V|}{P(i,j)\log{\left( \frac{P(i,j)}{P(i)P'(j)} \right)}}
+\end{equation}
+
+\noindent
+donde $P(i) = |U_i|/n$ es la probabilidad de que un objeto elegido aleatoriamente en el conjunto de datos pertenezca a la clase $U_i$, $P'(j) = |V_j|/n$ la probabilidad de que pertenezca a la clase $V_j$, y $P(i,j) = |U_i \cap V_j|/n$ la probabilidad de que forme parte de ambas.
+
+La expresión puede asimismo formularse como sigue:
+
+\begin{equation}
+    \label{eq:mutual-information-cardinality}
+    MI(U,V) = \sum_{i=1}^{|U|}\sum_{j=1}^{|V|}{\frac{|U_i \cap V_j|}{n}\log{\left( \frac{n|U_i \cap V_j|}{|U_i||V_j|} \right)}}
+\end{equation}
+
+Los valores de este medidor se encontrarán en el intervalo $(0,\log{|V|}]$;
+donde los valores próximos a 0 indican que ambas variables son independientes, y los cercanos a 1 que estas son significativamente acordes.
+
+Los valores de esta medida crecen a medida que aumenta el número de categorías o clusters, sin importar la relación real existente entre ambas variables~\cite{Vinh10}.
+Con el fin de resolver esta situación, se propuso una nueva medida denominada \textbf{información mutua ajustada}, dada por la siguiente fórmula:
+
+\begin{equation}
+    \label{eq:adjusted-mutual-information}
+    AMI(U,V) = \frac{MI(U,V) - E[MI(U,V)]}{\max{(H(X, U), H(X, V)) - E[MI(U,V)]}}
+\end{equation}
+
+\noindent
+donde $X$ es el conjunto de datos y $H(X,U)$ y $H(X,V)$ las entropías para los clusters y las categorías respectivamente.
+El valor esperado $E[MI(U,V)]$ del medidor de información mutua se calcula según:
+
+{\footnotesize
+\begin{equation*}
+    \label{eq:expected-value-mutual-information}
+    E[MI(U,V)] = \sum_{i=1}^{|U|}\sum_{j=1}^{|V|}\sum_{c_{ij}=(a_i+b_j-n)^{+}}^{\min{(a_i,b_j)}}
+    {
+    \frac{c_{ij}}{n}
+    \log{\left( \frac{n \cdot c_{ij}}{a_i b_j} \right)}
+    \frac{a_i ! b_j ! (n-a_i)!(n-b_j)!}{n!c_{ij}!(a_i-c_{ij})!(b_j-c_{ij})!(n-a_i-b_j+c_{ij})!}
+    }
+\end{equation*}
+}
+
+Este nuevo medidor se encuentra normalizado, por lo que toma valores en el intervalo $[0, 1]$, correspondiéndose los más altos a resultados de mejor calidad.
+
+\subsection{Medidas orientadas a la similaridad}\label{subsec:medidasOrientadasALaSimilaridad}
+
+Como se mencionó con anterioridad, las medidas de esta categoría se basan en la premisa de que todo par de objetos incluidos en un mismo cluster deben pertenecer a la misma categoría y viceversa.
+Esta aproximación para la validación del clustering puede ser vista como la comparación de dos matrices:
+
+\begin{itemize}
+    \item La matriz correspondiente al conjunto de clusters, donde aparece el valor 1 en la posición $(i,j)$ si los objetos $i$ y $j$ pertenecen al mismo cluster, y 0 en caso contrario.
+    \item La matriz correspondiente a las categorías de los objetos;
+    que tiene, de forma semejante, 1 en la posición $(i, j)$ si los objetos $i$ y $j$ forman parte de la misma clase, y 0 de lo contrario.
+\end{itemize}
+
+La correlación ($\Gamma$) entre estas dos matrices se puede tomar como una medida de la calidad del resultado del algoritmo de clustering.
+
+A partir de las $n(n-1)/2$ parejas de objetos que pueden formarse en el conjunto de datos, se computan los siguientes valores:
+
+\begin{itemize}
+    \item $f_{00}$: número de parejas de objetos que pertenecen a clases y clusters diferentes.
+    \item $f_{01}$: número de parejas de objetos que pertenecen a clases diferentes y un mismo cluster.
+    \item $f_{10}$: número de parejas de objetos que pertenecen a la misma clase y clusters diferentes.
+    \item $f_{11}$: número de parejas de objetos que pertenecen a clases y clusters iguales.
+\end{itemize}
+
+Empleando estos cuatro valores se definen tres de las medidas más usadas para la evaluación de algoritmos de clustering: el \textbf{índice de Rand}, el \textbf{coeficiente de Jaccard} y el \textbf{índice de Fowlkes-Mallows}, dados por las ecuaciones (\ref{eq:rand-index}), (\ref{eq:jaccard-coefficient}) y (\ref{eq:fowlkes-mallows-index}) respectivamente.
+
+\begin{align}
+    \label{eq:rand-index}
+    RI & = \frac{f_{00} + f_{11}}{f_{00}+f_{01}+f_{10}+f_{11}} \\
+    \label{eq:jaccard-coefficient}
+    JC & = \frac{f_{11}}{f_{01}+f_{10}+f_{11}} \\
+    \label{eq:fowlkes-mallows-index}
+    FMI & = \frac{f_{11}}{\sqrt{(f_{11}+f_{01})(f_{11}+f_{10})}}
+\end{align}
+
+Los valores de los tres criterios oscilan en el intervalo $[0,1]$, donde valores más altos indican mejores resultados.
+El índice de Fowlkes-Mallows además tiene la ventaja de que no sufre un crecimiento con el número de clusters, lo cual sí ocurre para los otros dos medidores;
+aunque estos pueden ser ajustados siguiendo un procedimiento semejante al aplicado al medidor de información mutua.
+
