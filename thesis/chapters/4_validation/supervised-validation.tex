@@ -46,8 +46,7 @@ Esta expresión puede simplificarse si es vista como la suma de las entropías d
 \noindent
 donde $K_i$ es el subconjunto del conjunto de datos constituido por los elementos que forman parte del cluster $i$.
 
-%TODO Check this statement
-Los valores de este medidor se encuentran en el rango $[0, \log|C|]$, siendo 0 el indicador de que todos los elementos se agruparon correctamente.
+Los valores de este medidor se encuentran en el rango $[0, \log|C|]$, siendo 0 el indicador de que todos los elementos se agruparon correctamente, mientras que mayores valores indican peor agrupamiento.
 
 \subsubsection{Pureza, Precisión y Recobrado}
 
@@ -71,7 +70,7 @@ La precisión del cluster $i$ respecto a la clase $j$ está dada por la expresi�
 El \textbf{recobrado} mide el grado en que un cluster contiene todos los elementos que pertenecen a una clase dada.
 Para el cluster $i$ y la categoría $j$, su expresión es $recall(i,j) = n_{ij}/n_j$, donde $n_j$ es el número de elementos del conjunto de datos incluidos en la clase $j$.
 
-Los tres criterios mencionados toman valores en el rango $(0,1]$, donde un valor más alto indica un mejor resultado.
+Los tres criterios mencionados toman valores entre 0 y 1, donde un valor más alto indica un mejor resultado.
 
 \subsubsection{Medida F}
 
@@ -83,7 +82,7 @@ La medida F del cluster $i$ respecto a la clase $j$ está dada por:
     F(i,j) = \frac{2 \cdot precision(i,j) \cdot recall(i,j)}{precision(i,j) + recall(i,j)}
 \end{equation}
 
-Los valores de la medida F oscilan en el intervalo $(0,1]$, correspondiéndose los valores más altos con los mejores resultados.
+Los valores de la medida F oscilan en el intervalo $[0,1]$, correspondiéndose los valores más altos con los mejores resultados.
 
 \subsubsection{Homogeneidad, Completitud y Medida V}
 
@@ -133,8 +132,8 @@ La expresión puede asimismo formularse como sigue:
     MI(U,V) = \sum_{i=1}^{|U|}\sum_{j=1}^{|V|}{\frac{|U_i \cap V_j|}{n}\log{\left( \frac{n|U_i \cap V_j|}{|U_i||V_j|} \right)}}
 \end{equation}
 
-Los valores de este medidor se encontrarán en el intervalo $(0,\log{|V|}]$;
-donde los valores próximos a 0 indican que ambas variables son independientes, y los cercanos a 1 que estas son significativamente acordes.
+Los valores de este medidor se encontrarán en el intervalo $[0,\log{|V|}]$;
+donde los valores próximos a 0 indican que ambas variables son independientes, mientras que valores más altos indican una mayor correspondencia entre estas.
 
 Los valores de esta medida crecen a medida que aumenta el número de categorías o clusters, sin importar la relación real existente entre ambas variables~\cite{Vinh10}.
 Con el fin de resolver esta situación, se propuso una nueva medida denominada \textbf{información mutua ajustada}, dada por la siguiente fórmula:
@@ -160,7 +159,7 @@ El valor esperado $E[MI(U,V)]$ del medidor de información mutua se calcula seg�
 \end{equation*}
 }
 
-Este nuevo medidor se encuentra normalizado, por lo que toma valores en el intervalo $[0, 1]$, correspondiéndose los más altos a resultados de mejor calidad.
+Este nuevo medidor se encuentra normalizado, por lo que toma valores en el intervalo $[0, 1]$, correspondiéndose, como antes, los más altos a resultados de mejor calidad.
 
 \subsection{Medidas orientadas a la similaridad}\label{subsec:medidasOrientadasALaSimilaridad}
 
@@ -196,6 +195,7 @@ Empleando estos cuatro valores se definen tres de las medidas más usadas para l
 \end{align}
 
 Los valores de los tres criterios oscilan en el intervalo $[0,1]$, donde valores más altos indican mejores resultados.
-El índice de Fowlkes-Mallows además tiene la ventaja de que no sufre un crecimiento con el número de clusters, lo cual sí ocurre para los otros dos medidores;
-aunque estos pueden ser ajustados siguiendo un procedimiento semejante al aplicado al medidor de información mutua.
+El índice de Fowlkes-Mallows además no sufre un crecimiento con el número de clusters, lo cual sí ocurre para los otros dos medidores;
+aunque, por otra parte, alcanza valores altos cuando la cantidad de clusters es relativamente pequeña~\cite{Wagner07}.
+El índice de Rand y el coeficiente de Jaccard pueden ser ajustados siguiendo un procedimiento semejante al aplicado al medidor de información mutua~\cite{Vinh10, Wagner07}.
 
