@@ -75,7 +75,7 @@ def main(export=False, plot=False):
     ]
 
     report = [
-        ('ALGORITHM', 'ARI', 'NMI', 'HOMOGENEITY', 'COMPLETENESS', 'TIME')
+        ('ALGORITHM', 'ARI', 'AMI', 'HOMOGENEITY', 'COMPLETENESS', 'TIME')
     ]
 
     for algorithm_name, algorithm in algorithms:
@@ -86,7 +86,7 @@ def main(export=False, plot=False):
         report.append((
             algorithm_name,
             '%.3f' % metrics.adjusted_rand_score(y, labels),
-            '%.3f' % metrics.normalized_mutual_info_score(y, labels),
+            '%.3f' % metrics.adjusted_mutual_info_score(y, labels),
             '%.3f' % metrics.homogeneity_score(y, labels),
             '%.3f' % metrics.completeness_score(y, labels),
             '%.3f' % (time.time() - start)

@@ -1,0 +1,57 @@
+Contrario a las medidas supervisadas, las de validación no supervisadas no requieren el conocimiento previo de las categorías reales a las que pertenecen los objetos del conjunto de datos.
+Esto las hace muy convenientes, especialmente considerando que en muchas ocasiones el uso de los algoritmos de clustering ocurre precisamente en escenarios en los que no se dispone de dichas categorías.
+Y es gracias a este tipo de medidas que los resultados pueden ser evaluados en tales situaciones.
+
+\section{Cohesión y Separación}\label{sec:cohesiónYSeparación}
+
+En general, para evaluar un conjunto de $K$ clusters suele emplearse la suma ponderada de las evaluaciones de los clusters individuales:
+
+\begin{equation}
+    \label{eq:overall-validity}
+    overall\ validity = \sum_{i=1}^{K}{w_i\ validity(C_i)}
+\end{equation}
+
+La función ($validity(C_i)$) usada para evaluar el cluster $C_i$, puede ser su \textit{cohesión}, \textit{separación}, o una combinación de estas medidas.
+Los pesos más comúnmente empleados aparecen reflejados en la tabla~\ref{table:validity-weights}, en correspondencia con la función utilizada.
+
+La cohesión y separación pueden ser vistas siguiendo dos criterios:
+
+\begin{itemize}
+    \item Entre pares de puntos:
+    \begin{align}
+        cohesion(C_i) & = \sum_{\substack{x\in C_i \\ y\in C_i}}{proximity(x,y)} \\
+        separation(C_i, C_j) & = \sum_{\substack{x\in C_i \\ y\in C_j}}{proximity(x,y)}
+    \end{align}
+
+    \item Entre cada punto y un punto <<distinguido>> $c_i$ que puede ser, por ejemplo, el centroide o la media de los puntos del cluster $C_i$:
+    \begin{align}
+        cohesion(C_i) & = \sum_{x\in C_i}{proximity(x,c_i)} \\
+        separation(C_i, C_j) & = proximity(c_i,c_j)
+    \end{align}
+\end{itemize}
+
+La función $proximity$ puede indicar la distancia, similaridad, o cualquier otro criterio que se desee emplear en correspondencia con el problema específico en que se aplique.
+
+% TODO Add table of weights here
+
+\section{Coeficiente de silueta}\label{sec:coeficienteDeSilueta}
+
+El coeficiente de silueta combina la cohesión y la separación en una medida común.
+Su cálculo se realiza independientemente para cada punto $x$ siguiendo los siguientes pasos:
+
+\begin{enumerate}
+    \item Calcular $a_x$, distancia promedio del punto a todos los demás puntos de su cluster.
+    \item Calcular, para cada cluster al que no pertenece el punto, la distancia promedio de este a sus integrantes, y conservar el menor de dichos promedios, $b_x$.
+    \item El coeficiente de silueta de $x$ estará dado entonces por la expresión:
+    \begin{equation}
+        \label{eq:silhouette-coefficient}
+        s_x = \frac{b_x - a_x}{\max{(a_x, b_x)}}
+    \end{equation}
+\end{enumerate}
+
+El valor de este medidor varía entre -1 y 1.
+Los valores negativos corresponden al caso en que $a_x$ es mayor que $b_x$, o sea que la distancia a los puntos de su cluster es mayor que la que lo separa del cluster más cercano.
+En cambio, cuando este valor es positivo, tenemos que el punto está mucho más próximo a puntos de su mismo cluster que a los de clusters diferentes.
+
+Una vez conocido los coeficientes de silueta de cada punto, el promedio de estos puede ser utilizado para medir la calidad general del conjunto de clusters.
+
