@@ -5,7 +5,7 @@ y se computan directamente a partir de la señal digitalizada.
 
 El \textit{attack} de una señal se define como el espacio de tiempo, al inicio de esta, en que su intensidad va en ascenso.
 
-El \textit{log-attack time} (LAT) se calcula entonces como el logaritmo en base 10 de la duración del intervalo de tiempo transcurrido entre los momentos en que la señal se hace audible ($startAttack$) y en que alcanza su máxima intensidad ($stopAttack$):
+El \textit{log-attack time} (LAT)~\cite{Kim05,Manjunath02,Peters04,Gunasekaran11} se calcula entonces como el logaritmo en base 10 de la duración del intervalo de tiempo transcurrido entre los momentos en que la señal se hace audible ($startAttack$) y en que alcanza su máxima intensidad ($stopAttack$):
 
 \begin{equation}
     \label{eq:LAT}
@@ -23,7 +23,7 @@ Para computar esta característica se divide la señal en tramas no superpuestas
     \item Mayor valor de amplitud de la señal presente en la trama.
 \end{itemize}
 
-El \textit{audio waveform} (AWF) de la señal consistirá en un vector con los pares calculados, correspondientes a cada una de dichas tramas.
+El \textit{audio waveform} (AWF)~\cite{Kim05,Manjunath02} de la señal consistirá en un vector con los pares calculados, correspondientes a cada una de dichas tramas.
 
 La extracción de esta característica puede ser vista como un modo de <<compresión>> de la señal.
 Si se toma $N=1$ se obtendrá la propia señal, mientras que a medida que se seleccionen valores de $N$ más altos, el número de valores resultantes será cada vez menor, obteniéndose una representación reducida de la señal original.
@@ -31,7 +31,7 @@ El AWF puede representarse gráficamente como un conjunto de segmentos con extre
 
 \subsection{Audio Power}\label{subsec:audioPower}
 
-El \textit{audio power} (AP) describe el comportamiento de la potencia de la señal en cada instante de tiempo.
+El \textit{audio power} (AP)~\cite{Kim05,Manjunath02} describe el comportamiento de la potencia de la señal en cada instante de tiempo.
 Al igual que para la AWF, su cálculo requiere dividir la señal en tramas no superpuestas;
 y se computa, para la trama $x[n]$ mediante la siguiente expresión:
 
@@ -51,7 +51,7 @@ La representación gráfica del AP posibilita el análisis directo de la evoluci
 
 \subsection{Temporal Centroid}\label{subsec:temporalCentroid}
 
-El \textit{temporal centroid} (TC) de la señal es el punto donde se localiza el centro de masas de su AP\@.
+El \textit{temporal centroid} (TC)~\cite{Kim05,Manjunath02,Peters04,Zamanian17} de la señal es el punto donde se localiza el centro de masas de su AP\@.
 Se calcula mediante la siguiente expresión:
 
 \begin{equation}
@@ -64,12 +64,12 @@ donde $T$ es la cantidad de tramas en que se descompuso la señal.
 
 \subsection{Effective Duration}\label{subsec:effectiveDuration}
 
-La \textit{effective duration} (ED) de una señal constituye la duración del intervalo de tiempo en que esta es perceptible;
+La \textit{effective duration} (ED)~\cite{Peters04} de una señal constituye la duración del intervalo de tiempo en que esta es perceptible;
 el que generalmente se considera como el intervalo en que la amplitud de la señal permanece por encima del 40\% de su valor máximo.
 
 \subsection{Auto-correlation}\label{subsec:auto-correlation}
 
-La \textit{auto-correlation} (AC) de la señal está dada por un vector de coeficientes que describen su distribución espectral en el dominio del tiempo.
+La \textit{auto-correlation} (AC)~\cite{Peters04,Gunasekaran11} de la señal está dada por un vector de coeficientes que describen su distribución espectral en el dominio del tiempo.
 El coeficiente $k$-ésimo se calcula mediante la expresión:
 
 \begin{equation}
@@ -79,7 +79,7 @@ El coeficiente $k$-ésimo se calcula mediante la expresión:
 
 \subsection{Zero Crossing Rate}\label{subsec:zeroCrossingRate}
 
-El \textit{zero crossing rate} (ZCR) es una medida del número de veces que la amplitud de la señal cambia de signo.
+El \textit{zero crossing rate} (ZCR)~\cite{Peters04,Fagerlund07,Gunasekaran11} es una medida del número de veces que la amplitud de la señal cambia de signo.
 Los sonidos periódicos tienden a tener un pequeño valor de ZCR, mientras que para los ruidos este valor suele ser alto.
 
 Puede ser computado de forma global, o para cada trama de la señal, aplicando la siguiente expresión:

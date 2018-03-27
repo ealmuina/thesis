@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 from hdbscan import HDBSCAN
-from matplotlib import offsetbox
 from sklearn import metrics
 from sklearn.cluster import KMeans
 from sklearn.manifold import TSNE
@@ -108,19 +107,19 @@ def plot_data(X, y, title):
     fig, ax = plt.subplots(1, 1)
     ax.scatter(X[:, 0], X[:, 1], marker='o', c=y)
 
-    shown_images = np.array([[1., 1.]])  # just something big
-    for i in range(X.shape[0]):
-        dist = np.sum((X[i] - shown_images) ** 2, 1)
-        if np.min(dist) < 4e-4:
-            # don't show points that are too close
-            continue
-        shown_images = np.r_[shown_images, [X[i]]]
-        imagebox = offsetbox.AnnotationBbox(
-            offsetbox.TextArea(y[i], textprops={'size': 5}),
-            X[i],
-            fontsize=5
-        )
-        ax.add_artist(imagebox)
+    # shown_images = np.array([[1., 1.]])  # just something big
+    # for i in range(X.shape[0]):
+    #     dist = np.sum((X[i] - shown_images) ** 2, 1)
+    #     if np.min(dist) < 4e-4:
+    #         # don't show points that are too close
+    #         continue
+    #     shown_images = np.r_[shown_images, [X[i]]]
+    #     imagebox = offsetbox.AnnotationBbox(
+    #         offsetbox.TextArea(y[i], textprops={'size': 5}),
+    #         X[i],
+    #         fontsize=5
+    #     )
+    #     ax.add_artist(imagebox)
 
     ax.set_xticks([]), ax.set_yticks([])
     ax.set_title(title)
