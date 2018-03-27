@@ -7,6 +7,57 @@ from matplotlib import collections as mc
 from matplotlib.ticker import MaxNLocator, FuncFormatter
 
 
+class Audio:
+    _w = es.Windowing(type='hamming')
+
+    def __init__(self, path):
+        self._audio = es.MonoLoader(filename=path)()
+
+        pool = essentia.Pool()
+        spectrum = es.Spectrum()
+
+        for frame in es.FrameGenerator(self._audio, frameSize=1024, hopSize=512, startFromZero=True):
+            pool.add('spectrum', spectrum(self._w(frame)))
+
+        self.spectrum = pool['spectrum'].T
+        self._spectrum_T = pool['spectrum']
+
+    def _compute_on_spectrum(self, func):
+        pool = essentia.Pool()
+        for spec in self._spectrum_T:
+            pool.add('result', func(spec))
+        return pool['result'].T
+
+    # Spectral Features
+    @property
+    def peak_frequency(self):
+        return self._compute_on_spectrum(es.maxMagFreq())
+
+    @property
+    def peak_amplitude(self):
+        return self._compute_on_spectrum(np.max)
+
+    @property
+    def centroid(self):
+        return self._compute_on_spectrum(es.Centroid())
+
+    @property
+    def moments(self):
+        return self._compute_on_spectrum(es.CentralMoments())
+
+    @property
+    def roll_off(self):
+        return self._compute_on_spectrum(es.RollOff())
+
+    @property
+    def flux(self):
+        return self._compute_on_spectrum(es.Flux())
+
+    @property
+    def flatness(self):
+        return self._compute_on_spectrum(es.Flatness())
+
+
 class FeaturesExtractor:
     def __init__(self):
         self.w = es.Windowing(type='hann')

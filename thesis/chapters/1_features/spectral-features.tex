@@ -21,6 +21,18 @@ La posición $k$-ésima del vector $X[k]$ contiene la amplitud correspondiente a
 Podemos definir $X[f,t]$ como la matriz compuesta por las DFTs correspondientes a cada una de las tramas de una señal, donde el valor en la posición $(f, t)$ corresponde a la amplitud de la frecuencia $f$ en la trama $t$.
 A partir de esta matriz se construye el espectrograma de la señal.
 
+Algunas de las características más simples que pueden ser obtenidas directamente a partir de la DFT son las siguientes:
+
+\begin{itemize}
+    \item \textbf{Frecuencia pico} (\textit{Peak Frequency}): Es la frecuencia que presenta mayor magnitud en el espectro de la señal.
+    \item \textbf{Amplitud pico} (\textit{Peak Amplitude}): Amplitud correspondiente a la frecuencia pico.
+    \item \textbf{Frecuencias mínima y máxima} (\textbf{Min-Max Frequencies}): Menor y mayor frecuencias respectivamente, cuyas amplitudes se encuentran por encima de un valor prefijado (por ejemplo, -20 dB~\footnote{El decibelio (dB) es una unidad de medida que permite comparar relativamente dos valores siguiendo una escala logarítmica.
+    La relación entre las amplitudes $A_1$ y $A_2$ está dada por la expresión $dB = 10\log(A_1/A_2)$} respecto a la amplitud pico).
+    \item \textbf{Bandwidth}: Diferencia entre las frecuencias máxima y mínima.
+    \item \textbf{Cuartiles}: Caracteriza la distribución de energía en torno al espectro.
+    Está compuesta por tres componentes, cada una correspondiente a la frecuencia por debajo de la cual se sitúa el 25\%, el 50\% y el 75\% de la energía total del espectro respectivamente.
+\end{itemize}
+
 \subsection{Spectral Shape}\label{subsec:spectralShape}
 
 Las características de este grupo describen la estructura de la representación de la señal en el dominio de las frecuencias;
@@ -84,7 +96,7 @@ donde $\hat{X}_t$ es la transformada discreta de Fourier de la trama $t$-ésima 
 
 \subsection{Spectral Flatness}\label{subsec:spectralFlatness}
 
-El \textit{spectral flatness} (SF)~\cite{Peters04,Fagerlund07,Zamanian17} de una señal refleja su similitud a una señal compuesta por ruido, caso en que su valor se aproxima a 1;
+El \textit{spectral flatness} (SF)~\cite{Peters04,Fagerlund07,Zamanian17} o \textit{entropía} de una señal refleja su similitud a una señal compuesta por ruido, caso en que su valor se aproxima a 1;
 mientras que si se trata de una señal armónica, el valor será próximo a 0.
 
 El SF se calcula como la razón entre las medias geométrica y aritmética de las amplitudes presentes en la DFT de la trama, es decir, mediante la expresión:

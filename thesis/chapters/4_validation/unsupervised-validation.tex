@@ -4,7 +4,7 @@ Y es gracias a este tipo de medidas que los resultados pueden ser evaluados en t
 
 \section{Cohesión y Separación}\label{sec:cohesiónYSeparación}
 
-En general, para evaluar un conjunto de $K$ clusters suele emplearse la suma ponderada de las evaluaciones de los clusters individuales:
+En general, para evaluar un conjunto de $K$ clusters suele emplearse la suma ponderada de las evaluaciones de los clusters individuales~\cite{Tan05}:
 
 \begin{equation}
     \label{eq:overall-validity}
@@ -32,23 +32,24 @@ La cohesión y separación pueden ser vistas siguiendo dos criterios:
 
 La función $proximity$ puede indicar la distancia, similaridad, o cualquier otro criterio que se desee emplear en correspondencia con el problema específico en que se aplique.
 
-% TODO Add table of weights here
-%\begin{table}[]
-%\centering
-%\caption{My caption}
-%\label{my-label}
-%\begin{tabular}{ll}
-%Medida                                                                                       & Peso                                                                                     \\
-%$\sum_{\substack{x\in C_i \\ y\in C_i}} proximity(x,y)$                                      & \frac\{1\}\{m\_i\}                                                                       \\
-%$\sum_{x\in C_i} proximity(x,c_i)$                                                           & 1                                                                                        \\
-%$proximity(c_i , c)$                                                                         & m\_i                                                                                     \\
-%$\sum_{\substack{j=1 \\ j\neq i}}^{K}\sum_{\substack{x\in C_i \\ y\in C_j}} proximity(x, y)$ & \frac\{1\}\{\sum\_\{\substack\{x\in C\_i \\textbackslash y\in C\_i\}\}\} proximity(x, y)
-%\end{tabular}
-%\end{table}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{rl}
+        \hline
+        Función de validación & Peso                                                                                    \\  \hline
+        $\sum_{\substack{x\in C_i \\ y\in C_i}} proximity(x,y)$                                      & $1/m_i$                                                                       \\
+        $\sum_{x\in C_i} proximity(x,c_i)$                                                           & 1                                                                                        \\
+        $proximity(c_i , c)$                                                                         & $m_i$                                                                                     \\
+        $\sum_{\substack{j=1 \\ j\neq i}}^{K}\sum_{\substack{x\in C_i \\ y\in C_j}} proximity(x, y)$ & $\frac{1}{\sum_{\substack{x\in C_i \\ y\in C_i}} proximity(x, y)}$
+    \end{tabular}
+    \caption{Pesos $w_i$ frecuentemente empleados en la evaluación no supervisada de los resultados de algoritmos de clustering.
+    Tomada de~\cite{Tan05}.}
+    \label{table:validity-weights}
+\end{table}
 
 \section{Coeficiente de silueta}\label{sec:coeficienteDeSilueta}
 
-El coeficiente de silueta combina la cohesión y la separación en una medida común.
+El coeficiente de silueta~\cite{Rousseeuw87, Tan05} combina la cohesión y la separación en una medida común.
 Su cálculo se realiza independientemente para cada punto $x$ siguiendo los siguientes pasos:
 
 \begin{enumerate}

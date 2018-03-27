@@ -21,7 +21,6 @@ En la práctica, algunos métodos de procesamiento, como la transformada de Four
 
 \begin{table}[H]
     \centering
-    \label{table:window-function}
     \begin{tabular}{ll}
         \hline
         Nombre & Fórmula                                                                                                               \\ \hline
@@ -31,6 +30,7 @@ En la práctica, algunos métodos de procesamiento, como la transformada de Four
         \textit{Blackman} & $w(n) = 0.42 - 0.50 \cdot \cos \left( \frac{2\pi n}{N-1} \right) + 0.08 \cdot \cos \left( \frac{4\pi n}{N-1} \right)$
     \end{tabular}
     \caption{Variantes de ventana más comunes, definidas para $n\in[0, N-1]$.}
+    \label{table:window-function}
 \end{table}
 
 Una vez computados, los valores asociados a una característica de la señal para cada trama suelen ser <<generalizados>> para representar su comportamiento global.
