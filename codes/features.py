@@ -2,60 +2,67 @@ import essentia
 import essentia.standard as es
 import numpy as np
 import pylab as pl
+import scipy.signal
 import seaborn as sns
 from matplotlib import collections as mc
 from matplotlib.ticker import MaxNLocator, FuncFormatter
 
 
-class Audio:
-    _w = es.Windowing(type='hamming')
+def _delta(data, width=9, order=1, axis=-1, mode='interp', **kwargs):
+    r"""Compute delta features: local estimate of the derivative
+    of the input data along the selected axis.
 
-    def __init__(self, path):
-        self._audio = es.MonoLoader(filename=path)()
+    Delta features are computed Savitsky-Golay filtering.
 
-        pool = essentia.Pool()
-        spectrum = es.Spectrum()
+    Parameters
+    ----------
+    data      : np.ndarray
+        the input data matrix (eg, spectrogram)
 
-        for frame in es.FrameGenerator(self._audio, frameSize=1024, hopSize=512, startFromZero=True):
-            pool.add('spectrum', spectrum(self._w(frame)))
+    width     : int, positive, odd [scalar]
+        Number of frames over which to compute the delta features.
+        Cannot exceed the length of `data` along the specified axis.
+        If `mode='interp'`, then `width` must be at least `data.shape[axis]`.
 
-        self.spectrum = pool['spectrum'].T
-        self._spectrum_T = pool['spectrum']
+    order     : int > 0 [scalar]
+        the order of the difference operator.
+        1 for first derivative, 2 for second, etc.
 
-    def _compute_on_spectrum(self, func):
-        pool = essentia.Pool()
-        for spec in self._spectrum_T:
-            pool.add('result', func(spec))
-        return pool['result'].T
+    axis      : int [scalar]
+        the axis along which to compute deltas.
+        Default is -1 (columns).
 
-    # Spectral Features
-    @property
-    def peak_frequency(self):
-        return self._compute_on_spectrum(es.maxMagFreq())
+    mode : str, {'interp', 'nearest', 'mirror', 'constant', 'wrap'}
+        Padding mode for estimating differences at the boundaries.
 
-    @property
-    def peak_amplitude(self):
-        return self._compute_on_spectrum(np.max)
+    kwargs : additional keyword arguments
+        See `scipy.signal.savgol_filter`
 
-    @property
-    def centroid(self):
-        return self._compute_on_spectrum(es.Centroid())
+    Returns
+    -------
+    delta_data   : np.ndarray [shape=(d, t)]
+        delta matrix of `data` at specified order
 
-    @property
-    def moments(self):
-        return self._compute_on_spectrum(es.CentralMoments())
+    See Also
+    --------
+    scipy.signal.savgol_filter
 
-    @property
-    def roll_off(self):
-        return self._compute_on_spectrum(es.RollOff())
+    """
+    data = np.atleast_1d(data)
 
-    @property
-    def flux(self):
-        return self._compute_on_spectrum(es.Flux())
+    if mode == 'interp' and width > data.shape[axis]:
+        raise ValueError("when mode='interp', width={} "
+                         "cannot exceed data.shape[axis]={}".format(width, data.shape[axis]))
 
-    @property
-    def flatness(self):
-        return self._compute_on_spectrum(es.Flatness())
+    if width < 3 or np.mod(width, 2) != 1:
+        raise ValueError('width must be an odd integer >= 3')
+
+    if order <= 0 or not isinstance(order, int):
+        raise ValueError('order must be a positive integer')
+
+    kwargs.pop('deriv', None)
+    kwargs.setdefault('polyorder', order)
+    return scipy.signal.savgol_filter(data, width, deriv=order, axis=axis, mode=mode, **kwargs)
 
 
 class FeaturesExtractor:
@@ -88,20 +95,6 @@ class FeaturesExtractor:
         # MFCC
         self.mfcc = es.MFCC(inputSize=513)
 
-    @staticmethod
-    def _delta(c, step=2):
-        result = []
-        for t in range(c.shape[1]):
-            num = np.zeros(c.shape[0])
-            den = 0
-            for n in range(1, step + 1):
-                a = min(t + n, c.shape[1] - 1)
-                b = max(t - n, 0)
-                num += n * (c[:, a] - c[:, b])
-                den += 2 * n ** 2
-            result.append(num / den)
-        return np.array(result).T
-
     def full_features(self, audio):
         pool_temp = self.temporal_descriptors(audio)
         pool_spec = self.spectral_descriptors(audio)
@@ -131,7 +124,7 @@ class FeaturesExtractor:
             pool_harm['OER'].mean(),
             *pool_harm['T'].mean(0),  # 3 values
 
-            # MFFCCs [19-58]
+            # MFFCCs [19-57]
             *mfccs.mean(1),  # 13 values
             *d_mfccs.mean(1),  # 13 values
             *dd_mfccs.mean(1)  # 13 values
@@ -162,8 +155,8 @@ class FeaturesExtractor:
             mfccs.append(mfcc_coeffs)
 
         mfccs = essentia.array(mfccs).T
-        d_mfccs = self._delta(mfccs)
-        dd_mfccs = self._delta(d_mfccs)
+        d_mfccs = _delta(mfccs, mode='nearest')
+        dd_mfccs = _delta(d_mfccs, mode='nearest')
 
         return mfccs, d_mfccs, dd_mfccs
 

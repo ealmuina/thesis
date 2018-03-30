@@ -12,9 +12,34 @@ from sklearn import metrics
 from sklearn.cluster import KMeans
 from sklearn.manifold import TSNE
 from sklearn.mixture import GaussianMixture
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, scale
 
 from codes.features import FeaturesExtractor
+
+FEATURE_INDICES = {
+    'LAT': (0, 1),
+    'AWF': (1, 2),
+    'AP': (3, 1),
+    'TC': (4, 1),
+    'ED': (5, 1),
+    'AC': (6, 1),
+    'ZCR': (7, 1),
+
+    'SC': (8, 1),
+    'SS': (9, 1),
+    'SRO': (10, 1),
+    'SFX': (11, 1),
+    'SF': (12, 1),
+
+    'F0': (13, 1),
+    'INH': (14, 1),
+    'OER': (15, 1),
+    'T': (16, 3),
+
+    'MFCC': (19, 13),
+    'D_MFCC': (32, 13),
+    'D2_MFCC': (45, 13),
+}
 
 
 def export_results(labels, names, path):
@@ -36,21 +61,33 @@ def main(export=False, plot=False):
     filenames = []
     extractor = FeaturesExtractor()
     embedding = None
+    features = ['MFCC']
 
     start = time.time()
     for file in pathlib.Path('../sounds/testing').iterdir():
         audio = es.MonoLoader(filename=str(file))()
+
         filenames.append(file.name)
         y.append(file.name.split('-')[0])
-        mfccs, _, _ = extractor.mfcc_descriptors(audio)
-        X.append(mfccs.mean(1))
 
-    X = np.array(X)
+        current = extractor.full_features(audio)
+        new_x = []
+        for feature in features:
+            a, b = FEATURE_INDICES[feature]
+            new_x.extend(current[a:a + b])
+        current = np.array(new_x)
+        X.append(current)
+
+    X = np.array(X, dtype=np.float64)
+    X = scale(X)
     print('Features computed in %.3f seconds.' % (time.time() - start))
 
     le = LabelEncoder()
     le.fit(y)
     y = le.transform(y)
+
+    if len(features) == 2:
+        plot_data(X, y, 'True')
 
     if plot:
         start = time.time()
@@ -65,7 +102,7 @@ def main(export=False, plot=False):
 
     kmeans = KMeans(n_clusters=len(le.classes_))
     gmm = GaussianMixture(n_components=len(le.classes_))
-    hdbscan = HDBSCAN(min_cluster_size=5)
+    hdbscan = HDBSCAN(min_cluster_size=3)
 
     algorithms = [
         ('KMeans', kmeans),
@@ -82,6 +119,14 @@ def main(export=False, plot=False):
         algorithm.fit(X)
         labels = algorithm.labels_ if hasattr(algorithm, 'labels_') else algorithm.predict(X)
 
+        if export:
+            export_results(labels, filenames, '%s.txt' % algorithm_name)
+        if plot:
+            plot_data(embedding, labels, algorithm_name)
+
+        y = [y[i] for i in range(len(y)) if labels[i] >= 0]
+        labels = [l for l in labels if l >= 0]
+
         report.append((
             algorithm_name,
             '%.3f' % metrics.adjusted_rand_score(y, labels),
@@ -90,11 +135,6 @@ def main(export=False, plot=False):
             '%.3f' % metrics.completeness_score(y, labels),
             '%.3f' % (time.time() - start)
         ))
-
-        if export:
-            export_results(labels, filenames, '%s.txt' % algorithm_name)
-        if plot:
-            plot_data(embedding, labels, algorithm_name)
 
     print()
     print_table(report)
