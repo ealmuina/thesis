@@ -7,6 +7,12 @@ import seaborn as sns
 from matplotlib import collections as mc
 from matplotlib.ticker import MaxNLocator, FuncFormatter
 
+FS = 44100
+
+
+def _decibels(a1, a2):
+    return 10 * np.log10(a1 / a2 + 1e-8)
+
 
 def _delta(data, width=9, order=1, axis=-1, mode='interp', **kwargs):
     r"""Compute delta features: local estimate of the derivative
@@ -80,6 +86,7 @@ class FeaturesExtractor:
         self.zero_crossing_rate = es.ZeroCrossingRate()
 
         # Spectral descriptors
+        self.peak_freq = es.MaxMagFreq()
         self.roll_off = es.RollOff()
         self.flux = es.Flux()
         self.flatness = es.Flatness()
@@ -94,6 +101,20 @@ class FeaturesExtractor:
 
         # MFCC
         self.mfcc = es.MFCC(inputSize=513)
+
+    @staticmethod
+    def _min_freq(spec, pa, frame_size=1024, threshold=-20):
+        for k in range(spec.shape[0]):
+            d = _decibels(spec[k], pa)
+            if d >= threshold:
+                return k * (FS / frame_size)
+
+    @staticmethod
+    def _max_freq(spec, pa, frame_size=1024, threshold=-20):
+        for k in range(spec.shape[0] - 1, -1, -1):
+            d = _decibels(spec[k], pa)
+            if d >= threshold:
+                return k * (FS / frame_size)
 
     def full_features(self, audio):
         pool_temp = self.temporal_descriptors(audio)
@@ -111,20 +132,25 @@ class FeaturesExtractor:
             pool_temp['AC'].mean(),
             pool_temp['ZCR'].mean(),
 
-            # Spectral features [8-12]
+            # Spectral features [8-17]
+            pool_spec['PF'].mean(),
+            pool_spec['PA'].mean(),
+            pool_spec['FMin'].mean(),
+            pool_spec['FMax'].mean(),
+            pool_spec['SB'].mean(),
             pool_spec['SC'].mean(),
             pool_spec['SS'].mean(),
             pool_spec['SRO'].mean(),
             pool_spec['SFX'].mean(),
             pool_spec['SF'].mean(),
 
-            # Harmonic features [13-18]
+            # Harmonic features [18-23]
             pool_harm['F0'].mean(),
             pool_harm['INH'].mean(),
             pool_harm['OER'].mean(),
             *pool_harm['T'].mean(0),  # 3 values
 
-            # MFFCCs [19-57]
+            # MFFCCs [24-62]
             *mfccs.mean(1),  # 13 values
             *d_mfccs.mean(1),  # 13 values
             *dd_mfccs.mean(1)  # 13 values
@@ -165,6 +191,16 @@ class FeaturesExtractor:
 
         for frame in es.FrameGenerator(audio, frameSize=1024, hopSize=512, startFromZero=True):
             spec = self.spectrum(self.w(frame))
+            pa = spec.max()
+            fmin = self._min_freq(spec, pa)
+            fmax = self._max_freq(spec, pa)
+
+            pool.add('PF', self.peak_freq(spec))
+            pool.add('PA', pa)
+            pool.add('FMin', fmin)
+            pool.add('FMax', fmax)
+            pool.add('SB', fmax - fmin)
+
             pool.add('SC', self.centroid(spec))
             pool.add('SS', self.moments(spec)[2])
             pool.add('SRO', self.roll_off(spec))

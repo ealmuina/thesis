@@ -26,20 +26,25 @@ FEATURE_INDICES = {
     'AC': (6, 1),
     'ZCR': (7, 1),
 
-    'SC': (8, 1),
-    'SS': (9, 1),
-    'SRO': (10, 1),
-    'SFX': (11, 1),
-    'SF': (12, 1),
+    'PF': (8, 1),
+    'PA': (9, 1),
+    'FMin': (10, 1),
+    'FMax': (11, 1),
+    'SB': (12, 1),
+    'SC': (13, 1),
+    'SS': (14, 1),
+    'SRO': (15, 1),
+    'SFX': (16, 1),
+    'SF': (17, 1),
 
-    'F0': (13, 1),
-    'INH': (14, 1),
-    'OER': (15, 1),
-    'T': (16, 3),
+    'F0': (18, 1),
+    'INH': (19, 1),
+    'OER': (20, 1),
+    'T': (21, 3),
 
-    'MFCC': (19, 13),
-    'D_MFCC': (32, 13),
-    'D2_MFCC': (45, 13),
+    'MFCC': (24, 13),
+    'D_MFCC': (37, 13),
+    'D2_MFCC': (50, 13),
 }
 TESTING_DIR = '../sounds/testing'
 
@@ -117,7 +122,9 @@ def main(export=False, plot=False):
 
     X, y = load()
     features = [
-        ('MFCC',)
+        ('MFCC', 'D_MFCC', 'D2_MFCC'),
+        ('FMin', 'FMax'),
+        ('PF', 'PA')
     ]
 
     for f in features:
