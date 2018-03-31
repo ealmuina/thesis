@@ -53,15 +53,15 @@ class ClusteringAlgorithm:
 
     def __add__(self, other):
         result = ClusteringAlgorithm(None, '%s+%s' % (self.name, other.name))
-        result.labels = self.labels
+        result.labels = np.zeros(len(self.labels), dtype=np.int)
         result.centroids = self.centroids
 
         order = metrics.pairwise_distances_argmin(self.centroids, other.centroids)
         for l in range(self.labels.max()):
             l1 = self.labels == l
-            l2 = self.labels == order[l]
-            for i in range(len(l1)):
-                result.labels[i] = -1 if l1[i] != l2 else self.labels[i]
+            l2 = other.labels == order[l]
+            result.labels += (l1 & l2) * (l + 1)
+        result.labels -= 1
 
         return result
 
@@ -70,14 +70,15 @@ class ClusteringAlgorithm:
         centroids = []
         for l in range(labels.max()):
             x = X[labels == l]
-            centroids.append(x.mean())
+            centroids.append(x.mean(0))
         return np.array(centroids)
 
     def fit(self, X):
-        self.clusterer.fit(X)
-        labels = self.clusterer.labels_ if hasattr(self.clusterer, 'labels_') else self.clusterer.predict(X)
-        self.labels = np.array(labels)
-        self.centroids = self._centroids(X, np.array(self.labels))
+        if self.clusterer:
+            self.clusterer.fit(X)
+            labels = self.clusterer.labels_ if hasattr(self.clusterer, 'labels_') else self.clusterer.predict(X)
+            self.labels = np.array(labels)
+            self.centroids = self._centroids(X, np.array(self.labels))
 
 
 def export_results(labels, names, path):
@@ -120,7 +121,7 @@ def main(export=False, plot=False):
     ]
 
     for f in features:
-        test(X, y, f)
+        test(X, y, f, export, plot)
 
 
 def plot_data(X, y, title, show_labels=False):
@@ -172,6 +173,29 @@ def print_table(table):
         print((" " * 3).join("{:{}}".format(x, col_width[i]) for i, x in enumerate(line)))
 
 
+def report_algorithm(X, y, algorithm, filenames, plt_X, export=False, plot=False):
+    start = time.time()
+    algorithm.fit(X)
+    labels = algorithm.labels
+
+    if export:
+        export_results(labels, filenames, '%s.txt' % algorithm.name)
+    if plot:
+        plot_data(plt_X, labels, algorithm.name)
+
+    current_y = [y[i] for i in range(len(y)) if labels[i] >= 0]
+    labels = [l for l in labels if l >= 0]
+
+    return (
+        algorithm.name,
+        '%.3f' % metrics.adjusted_rand_score(current_y, labels),
+        '%.3f' % metrics.adjusted_mutual_info_score(current_y, labels),
+        '%.3f' % metrics.homogeneity_score(current_y, labels),
+        '%.3f' % metrics.completeness_score(current_y, labels),
+        '%.3f' % (time.time() - start)
+    )
+
+
 def test(X, y, features, export=False, plot=False):
     print('\nTesting %s' % str(features))
     new_X = []
@@ -199,36 +223,20 @@ def test(X, y, features, export=False, plot=False):
     hdbscan = HDBSCAN(min_cluster_size=3)
 
     algorithms = [
-        ('KMeans', kmeans),
-        ('GaussianMixture', gmm),
-        ('HDBSCAN', hdbscan)
+        ClusteringAlgorithm(kmeans, 'KMeans'),
+        ClusteringAlgorithm(gmm, 'GaussianMixture'),
+        ClusteringAlgorithm(hdbscan, 'HDBSCAN')
     ]
 
     report = [
         ('ALGORITHM', 'ARI', 'AMI', 'HOMOGENEITY', 'COMPLETENESS', 'TIME')
     ]
 
-    for algorithm_name, algorithm in algorithms:
-        start = time.time()
-        algorithm.fit(X)
-        labels = algorithm.labels_ if hasattr(algorithm, 'labels_') else algorithm.predict(X)
+    for algorithm in algorithms:
+        report.append(report_algorithm(X, y, algorithm, filenames, plt_X, export, plot))
 
-        if export:
-            export_results(labels, filenames, '%s.txt' % algorithm_name)
-        if plot:
-            plot_data(plt_X, labels, algorithm_name)
-
-        y = [y[i] for i in range(len(y)) if labels[i] >= 0]
-        labels = [l for l in labels if l >= 0]
-
-        report.append((
-            algorithm_name,
-            '%.3f' % metrics.adjusted_rand_score(y, labels),
-            '%.3f' % metrics.adjusted_mutual_info_score(y, labels),
-            '%.3f' % metrics.homogeneity_score(y, labels),
-            '%.3f' % metrics.completeness_score(y, labels),
-            '%.3f' % (time.time() - start)
-        ))
+    merge = algorithms[2] + algorithms[0] + algorithms[1]
+    report.append(report_algorithm(X, y, merge, filenames, plt_X, export, plot))
 
     print_table(report)
 
