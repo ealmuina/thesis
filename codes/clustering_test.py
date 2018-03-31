@@ -122,7 +122,7 @@ def main(export=False, plot=False):
 
     X, y = load()
     features = [
-        ('MFCC', 'D_MFCC', 'D2_MFCC'),
+        ('MFCC',),
         ('FMin', 'FMax'),
         ('PF', 'PA')
     ]
