@@ -3,7 +3,6 @@ import os
 import pathlib
 import time
 
-import essentia.standard as es
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
@@ -15,37 +14,8 @@ from sklearn.manifold import TSNE
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import LabelEncoder, scale
 
-from codes.features import FeaturesExtractor
+from codes.features import Audio
 
-FEATURE_INDICES = {
-    'LAT': (0, 1),
-    'AWF': (1, 2),
-    'AP': (3, 1),
-    'TC': (4, 1),
-    'ED': (5, 1),
-    'AC': (6, 1),
-    'ZCR': (7, 1),
-
-    'PF': (8, 1),
-    'PA': (9, 1),
-    'FMin': (10, 1),
-    'FMax': (11, 1),
-    'SB': (12, 1),
-    'SC': (13, 1),
-    'SS': (14, 1),
-    'SRO': (15, 1),
-    'SFX': (16, 1),
-    'SF': (17, 1),
-
-    'F0': (18, 1),
-    'INH': (19, 1),
-    'OER': (20, 1),
-    'T': (21, 3),
-
-    'MFCC': (24, 13),
-    'D_MFCC': (37, 13),
-    'D2_MFCC': (50, 13),
-}
 TESTING_DIR = '../sounds/testing'
 
 
@@ -96,18 +66,19 @@ def export_results(labels, names, path):
             file.write('%d\t%s\n' % (label, name))
 
 
-def load():
+def load(features):
     X = []
     y = []
-    extractor = FeaturesExtractor()
 
     start = time.time()
     for file in pathlib.Path(TESTING_DIR).iterdir():
-        audio = es.MonoLoader(filename=str(file))()
+        audio = Audio(str(file))
 
         y.append(file.name.split('-')[0])
 
-        current = extractor.full_features(audio)
+        current = []
+        for feature in features:
+            current.extend(getattr(audio, feature))
         X.append(current)
 
     X = np.array(X, dtype=np.float64)
@@ -120,14 +91,14 @@ def main(export=False, plot=False):
     sns.set()
     sns.set_style('white')
 
-    X, y = load()
     features = [
-        ('MFCC',),
-        ('FMin', 'FMax'),
-        ('PF', 'PA')
+        ('mfcc',),
+        ('min_freq', 'max_freq'),
+        ('peak_freq', 'peak_ampl')
     ]
 
     for f in features:
+        X, y = load(f)
         test(X, y, f, export, plot)
 
 
@@ -204,17 +175,8 @@ def report_algorithm(X, y, algorithm, filenames, plt_X, export=False, plot=False
 
 
 def test(X, y, features, export=False, plot=False):
-    print('\nTesting %s' % str(features))
-    new_X = []
+    print('Testing %s' % str(features))
 
-    for i, x in enumerate(X):
-        current = []
-        for feature in features:
-            a, b = FEATURE_INDICES[feature]
-            current.extend(x[a:a + b])
-        new_X.append(current)
-
-    X = np.array(new_X)
     filenames = [file.name for file in pathlib.Path(TESTING_DIR).iterdir()]
 
     le = LabelEncoder()
@@ -246,6 +208,7 @@ def test(X, y, features, export=False, plot=False):
     report.append(report_algorithm(X, y, merge, filenames, plt_X, export, plot))
 
     print_table(report)
+    print()
 
 
 if __name__ == '__main__':

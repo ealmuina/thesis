@@ -10,6 +10,69 @@ from matplotlib.ticker import MaxNLocator, FuncFormatter
 FS = 44100
 
 
+class Audio:
+    def __init__(self, path):
+        self.audio = es.MonoLoader(filename=path)()
+
+        self._bandwidth = None
+        self._max_freq = None
+        self._mfcc = None
+        self._min_freq = None
+        self._peak_ampl = None
+        self._peak_freq = None
+
+        w = es.Windowing(type='hann')
+        spec = es.Spectrum()
+        pool = essentia.Pool()
+
+        for frame in es.FrameGenerator(self.audio, frameSize=1024, hopSize=512, startFromZero=True):
+            pool.add('spectrum', spec(w(frame)))
+        self.spectrum = pool['spectrum'].T
+
+    @property
+    def bandwidth(self):
+        if not self._bandwidth:
+            self._bandwidth = np.array([self.max_freq - self.min_freq])
+        return self._bandwidth
+
+    @property
+    def max_freq(self):
+        if not self._max_freq:
+            self._max_freq = np.apply_along_axis(_first_over_threshold, 0, self.spectrum[::-1, :])
+            self._max_freq = np.array([self._max_freq.mean()])
+        return self._max_freq
+
+    @property
+    def mfcc(self):
+        if not self._mfcc:
+            mfcc = es.MFCC(inputSize=513)
+            self._mfcc = np.apply_along_axis(lambda spec: mfcc(spec)[1], 0, self.spectrum)
+            self._mfcc = self._mfcc.mean(1)
+        return self._mfcc
+
+    @property
+    def min_freq(self):
+        if not self._min_freq:
+            self._min_freq = np.apply_along_axis(_first_over_threshold, 0, self.spectrum)
+            self._min_freq = np.array([self._min_freq.mean()])
+        return self._min_freq
+
+    @property
+    def peak_ampl(self):
+        if not self._peak_ampl:
+            self._peak_ampl = self.spectrum.max(0)
+            self._peak_ampl = np.array([self._peak_ampl.mean()])
+        return self._peak_ampl
+
+    @property
+    def peak_freq(self):
+        if not self._peak_freq:
+            max_mag_freq = es.MaxMagFreq()
+            self._peak_freq = np.apply_along_axis(max_mag_freq, 0, self.spectrum)
+            self._peak_freq = np.array([self._peak_freq.mean()])
+        return self._peak_freq
+
+
 def _decibels(a1, a2):
     return 10 * np.log10(a1 / a2 + 1e-8)
 
@@ -71,9 +134,18 @@ def _delta(data, width=9, order=1, axis=-1, mode='interp', **kwargs):
     return scipy.signal.savgol_filter(data, width, deriv=order, axis=axis, mode=mode, **kwargs)
 
 
+def _first_over_threshold(spectrum, threshold=-20):
+    peak_ampl = spectrum.max()
+    for k in range(spectrum.shape[0]):
+        d = _decibels(spectrum[k], peak_ampl)
+        if d >= threshold:
+            return k * (FS / 1024)
+
+
+# TODO: Deprecated
 class FeaturesExtractor:
     def __init__(self):
-        self.w = es.Windowing(type='hann')
+        self.w = es.Windowing(type='hamming')
         self.spectrum = es.Spectrum()
         self.centroid = es.Centroid()
         self.moments = es.CentralMoments()
@@ -309,11 +381,24 @@ def main():
     sns.set_style('white')
 
     audio = es.MonoLoader(filename='../sounds/sheep.wav')()
-
-    plot_temporal_descriptors(audio)
-    plot_spectral_descriptors(audio)
-    plot_harmonic_descriptors(audio)
+    #
+    # plot_temporal_descriptors(audio)
+    # plot_spectral_descriptors(audio)
+    # plot_harmonic_descriptors(audio)
     plot_mfccs(audio)
+
+    audio = Audio('../sounds/sheep.wav')
+    mfccs = getattr(audio, 'mfcc')
+
+    fig, ax = pl.subplots(1, 1, figsize=(12, 4))
+    fig.subplots_adjust(left=0.05, right=0.97)
+
+    ax.imshow(mfccs[1:, :], aspect='auto', origin='lower', interpolation='none')
+    ax.set_title('MFCC')
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: int(x + 1)))
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+
+    fig.show()
 
 
 if __name__ == '__main__':
