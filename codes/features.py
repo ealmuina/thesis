@@ -23,9 +23,9 @@ class Audio:
             pool.add('spectrum', spec(w(frame)))
         self.spectrum = pool['spectrum'].T
 
-    def _get_spectral_feature(self, name, func, spectrum):
+    def _get_spectral_feature(self, name, func):
         if name not in self.memo:
-            result = np.apply_along_axis(func, 0, spectrum)
+            result = np.apply_along_axis(func, 0, self.spectrum)
             self.memo[name] = np.array([result.mean()])
         return self.memo[name]
 
@@ -51,16 +51,14 @@ class Audio:
     def fundamental_freq(self):
         return self._get_spectral_feature(
             'fundamental_freq',
-            lambda spec: es.PitchYin(frameSize=1024)(spec),
-            self.spectrum
+            lambda spec: es.PitchYin(frameSize=1024)(spec)
         )
 
     @property
     def max_freq(self):
         return self._get_spectral_feature(
             'max_freq',
-            _first_over_threshold,
-            self.spectrum[::-1, :]
+            lambda spec: _first_over_threshold(spec, reverse=True),
         )
 
     @property
@@ -73,7 +71,7 @@ class Audio:
 
     @property
     def min_freq(self):
-        return self._get_spectral_feature('min_freq', _first_over_threshold, self.spectrum)
+        return self._get_spectral_feature('min_freq', _first_over_threshold)
 
     @property
     def peak_ampl(self):
@@ -84,23 +82,23 @@ class Audio:
 
     @property
     def peak_freq(self):
-        return self._get_spectral_feature('peak_freq', es.MaxMagFreq(), self.spectrum)
+        return self._get_spectral_feature('peak_freq', es.MaxMagFreq())
 
     @property
     def spectral_centroid(self):
-        return self._get_spectral_feature('spectral_centroid', es.Centroid(), self.spectrum)
+        return self._get_spectral_feature('spectral_centroid', es.Centroid())
 
     @property
     def spectral_flatness(self):
-        return self._get_spectral_feature('spectral_centroid', es.Flatness(), self.spectrum)
+        return self._get_spectral_feature('spectral_centroid', es.Flatness())
 
     @property
     def spectral_flux(self):
-        return self._get_spectral_feature('spectral_centroid', es.Flux(), self.spectrum)
+        return self._get_spectral_feature('spectral_centroid', es.Flux())
 
     @property
     def spectral_roll_off(self):
-        return self._get_spectral_feature('spectral_centroid', es.RollOff(), self.spectrum)
+        return self._get_spectral_feature('spectral_centroid', es.RollOff())
 
     @property
     def zcr(self):
@@ -168,9 +166,12 @@ def _delta(data, width=9, order=1, axis=-1, mode='interp', **kwargs):
     return scipy.signal.savgol_filter(data, width, deriv=order, axis=axis, mode=mode, **kwargs)
 
 
-def _first_over_threshold(spectrum, threshold=-20):
+def _first_over_threshold(spectrum, threshold=-20, reverse=False):
     peak_ampl = spectrum.max()
-    for k in range(spectrum.shape[0]):
+    order = range(spectrum.shape[0])
+    if reverse:
+        order = range(spectrum.shape[0] - 1, -1, -1)
+    for k in order:
         d = _decibels(spectrum[k], peak_ampl)
         if d >= threshold:
             return k * (FS / 1024)

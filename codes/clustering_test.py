@@ -1,4 +1,5 @@
 import argparse
+import itertools
 import os
 import pathlib
 import time
@@ -91,10 +92,12 @@ def main(export=False, plot=False):
     sns.set()
     sns.set_style('white')
 
+    single_features = [
+        'min_freq', 'max_freq', 'peak_freq', 'peak_ampl', 'fundamental_freq', 'bandwidth'
+    ]
     features = [
         ('mfcc',),
-        ('min_freq', 'max_freq'),
-        ('peak_freq', 'peak_ampl')
+        *[(f1, f2) for f1, f2 in itertools.combinations(single_features, 2)]
     ]
 
     for f in features:
