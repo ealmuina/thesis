@@ -389,7 +389,7 @@ def main():
     sns.set()
     sns.set_style('white')
 
-    audio = es.MonoLoader(filename='../sounds/sheep.wav')()
+    # audio = es.MonoLoader(filename='../sounds/sheep.wav')()
     #
     # plot_temporal_descriptors(audio)
     # plot_spectral_descriptors(audio)
