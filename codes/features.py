@@ -15,6 +15,7 @@ class Audio:
         self.audio = es.MonoLoader(filename=path)()
 
         self._bandwidth = None
+        self._fundamental_freq = None
         self._max_freq = None
         self._mfcc = None
         self._min_freq = None
@@ -34,6 +35,14 @@ class Audio:
         if not self._bandwidth:
             self._bandwidth = np.array([self.max_freq - self.min_freq])
         return self._bandwidth
+
+    @property
+    def fundamental_freq(self):
+        if not self._fundamental_freq:
+            pitch = es.PitchYin(frameSize=1024)
+            self._fundamental_freq = np.apply_along_axis(lambda spec: pitch(spec)[0], 0, self.spectrum)
+            self._fundamental_freq = np.array([self._fundamental_freq.mean()])
+        return self._fundamental_freq
 
     @property
     def max_freq(self):
@@ -385,20 +394,10 @@ def main():
     # plot_temporal_descriptors(audio)
     # plot_spectral_descriptors(audio)
     # plot_harmonic_descriptors(audio)
-    plot_mfccs(audio)
+    # plot_mfccs(audio)
 
     audio = Audio('../sounds/sheep.wav')
-    mfccs = getattr(audio, 'mfcc')
-
-    fig, ax = pl.subplots(1, 1, figsize=(12, 4))
-    fig.subplots_adjust(left=0.05, right=0.97)
-
-    ax.imshow(mfccs[1:, :], aspect='auto', origin='lower', interpolation='none')
-    ax.set_title('MFCC')
-    ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: int(x + 1)))
-    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
-
-    fig.show()
+    print(getattr(audio, 'fundamental_freq'))
 
 
 if __name__ == '__main__':
