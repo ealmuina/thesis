@@ -13,14 +13,7 @@ FS = 44100
 class Audio:
     def __init__(self, path):
         self.audio = es.MonoLoader(filename=path)()
-
-        self._bandwidth = None
-        self._fundamental_freq = None
-        self._max_freq = None
-        self._mfcc = None
-        self._min_freq = None
-        self._peak_ampl = None
-        self._peak_freq = None
+        self.memo = {}
 
         w = es.Windowing(type='hann')
         spec = es.Spectrum()
@@ -30,56 +23,88 @@ class Audio:
             pool.add('spectrum', spec(w(frame)))
         self.spectrum = pool['spectrum'].T
 
+    def _get_spectral_feature(self, name, func, spectrum):
+        if name not in self.memo:
+            result = np.apply_along_axis(func, 0, spectrum)
+            self.memo[name] = np.array([result.mean()])
+        return self.memo[name]
+
+    def _get_temporal_feature(self, name, func):
+        if name not in self.memo:
+            pool = essentia.Pool()
+            for frame in es.FrameGenerator(self.audio, frameSize=1024, hopSize=1024, startFromZero=True):
+                pool.add('result', func(frame))
+            self.memo['name'] = np.array([pool['result'].mean()])
+        return self.memo['name']
+
+    @property
+    def audio_power(self):
+        return self._get_temporal_feature('audio_power', es.InstantPower())
+
     @property
     def bandwidth(self):
-        if not self._bandwidth:
-            self._bandwidth = np.array([self.max_freq - self.min_freq])
-        return self._bandwidth
+        if 'bandwidth' not in self.memo:
+            self.memo['bandwidth'] = np.array([self.max_freq - self.min_freq])
+        return self.memo['bandwidth']
 
     @property
     def fundamental_freq(self):
-        if not self._fundamental_freq:
-            pitch = es.PitchYin(frameSize=1024)
-            self._fundamental_freq = np.apply_along_axis(lambda spec: pitch(spec)[0], 0, self.spectrum)
-            self._fundamental_freq = np.array([self._fundamental_freq.mean()])
-        return self._fundamental_freq
+        return self._get_spectral_feature(
+            'fundamental_freq',
+            lambda spec: es.PitchYin(frameSize=1024)(spec),
+            self.spectrum
+        )
 
     @property
     def max_freq(self):
-        if not self._max_freq:
-            self._max_freq = np.apply_along_axis(_first_over_threshold, 0, self.spectrum[::-1, :])
-            self._max_freq = np.array([self._max_freq.mean()])
-        return self._max_freq
+        return self._get_spectral_feature(
+            'max_freq',
+            _first_over_threshold,
+            self.spectrum[::-1, :]
+        )
 
     @property
     def mfcc(self):
-        if not self._mfcc:
+        if 'mfcc' not in self.memo:
             mfcc = es.MFCC(inputSize=513)
-            self._mfcc = np.apply_along_axis(lambda spec: mfcc(spec)[1], 0, self.spectrum)
-            self._mfcc = self._mfcc.mean(1)
-        return self._mfcc
+            mfcc = np.apply_along_axis(lambda spec: mfcc(spec)[1], 0, self.spectrum)
+            self.memo['mfcc'] = mfcc.mean(1)
+        return self.memo['mfcc']
 
     @property
     def min_freq(self):
-        if not self._min_freq:
-            self._min_freq = np.apply_along_axis(_first_over_threshold, 0, self.spectrum)
-            self._min_freq = np.array([self._min_freq.mean()])
-        return self._min_freq
+        return self._get_spectral_feature('min_freq', _first_over_threshold, self.spectrum)
 
     @property
     def peak_ampl(self):
-        if not self._peak_ampl:
-            self._peak_ampl = self.spectrum.max(0)
-            self._peak_ampl = np.array([self._peak_ampl.mean()])
-        return self._peak_ampl
+        if 'peak_ampl' not in self.memo:
+            peak_ampl = self.spectrum.max(0)
+            self.memo['peak_ampl'] = np.array([peak_ampl.mean()])
+        return self.memo['peak_ampl']
 
     @property
     def peak_freq(self):
-        if not self._peak_freq:
-            max_mag_freq = es.MaxMagFreq()
-            self._peak_freq = np.apply_along_axis(max_mag_freq, 0, self.spectrum)
-            self._peak_freq = np.array([self._peak_freq.mean()])
-        return self._peak_freq
+        return self._get_spectral_feature('peak_freq', es.MaxMagFreq(), self.spectrum)
+
+    @property
+    def spectral_centroid(self):
+        return self._get_spectral_feature('spectral_centroid', es.Centroid(), self.spectrum)
+
+    @property
+    def spectral_flatness(self):
+        return self._get_spectral_feature('spectral_centroid', es.Flatness(), self.spectrum)
+
+    @property
+    def spectral_flux(self):
+        return self._get_spectral_feature('spectral_centroid', es.Flux(), self.spectrum)
+
+    @property
+    def spectral_roll_off(self):
+        return self._get_spectral_feature('spectral_centroid', es.RollOff(), self.spectrum)
+
+    @property
+    def zcr(self):
+        return self._get_temporal_feature('audio_power', es.ZeroCrossingRate())
 
 
 def _decibels(a1, a2):
