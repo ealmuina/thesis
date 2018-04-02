@@ -15,7 +15,7 @@ from sklearn.manifold import TSNE
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import LabelEncoder, scale
 
-from codes.features import Audio
+from clusterapp.features import Audio
 
 TESTING_DIR = '../sounds/testing'
 
@@ -79,7 +79,7 @@ def load(features):
 
         current = []
         for feature in features:
-            current.extend(getattr(audio, feature))
+            current.extend(process(feature, getattr(audio, feature)))
         X.append(current)
 
     X = np.array(X, dtype=np.float64)
@@ -152,6 +152,12 @@ def print_table(table):
     col_width = [max(len(x) for x in col) for col in zip(*table)]
     for line in table:
         print((" " * 3).join("{:{}}".format(x, col_width[i]) for i, x in enumerate(line)))
+
+
+def process(feature_name, x):
+    if feature_name == 'mfcc':
+        return x.mean(1)
+    return np.array([x.mean()])
 
 
 def report_algorithm(X, y, algorithm, filenames, plt_X, export=False, plot=False):
