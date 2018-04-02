@@ -73,7 +73,7 @@ def load(features):
 
     start = time.time()
     for file in pathlib.Path(TESTING_DIR).iterdir():
-        audio = Audio(str(file))
+        audio = Audio(file)
 
         y.append(file.name.split('-')[0])
 

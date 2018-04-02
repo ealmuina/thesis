@@ -1,8 +1,9 @@
 from flask import Flask, request, render_template, jsonify
 
-from clusterapp.core import load_segments
+from clusterapp.core import Library
 
 app = Flask(__name__)
+LIBRARY = Library('/home/eddy/PycharmProjects/thesis/sounds/testing/')
 
 
 @app.route('/')
@@ -24,12 +25,23 @@ def index():
 def parameters_2d():
     x = request.args.get('x')
     y = request.args.get('y')
+    species = request.args.getlist('species[]')
+    return jsonify(segments=LIBRARY.get_features(species, (x, y)))
 
+
+@app.route('/search_for_species')
+def search_for_species():
+    q = request.args.get('q')
+    excluded_species = set(request.args.getlist('exclude[]'))
+    l = 10
+    species = [
+                  species for species in LIBRARY.categories if species not in excluded_species and q in species
+              ][:l]
     return jsonify({
-        'segments': load_segments(
-            path='/home/eddy/PycharmProjects/thesis/sounds/testing/',
-            features=(x, y)
-        )
+        'success': True,
+        'species': [
+            {'name': sp, 'id': sp} for sp in species
+        ]
     })
 
 

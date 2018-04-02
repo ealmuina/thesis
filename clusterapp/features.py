@@ -8,7 +8,8 @@ FS = 44100
 
 class Audio:
     def __init__(self, path):
-        self.audio = es.MonoLoader(filename=path)()
+        self.audio = es.MonoLoader(filename=str(path))()
+        self.name = path.name
         self.memo = {}
 
         w = es.Windowing(type='hann')
@@ -88,7 +89,7 @@ class Audio:
     def max_freq(self):
         return self._get_spectral_feature(
             'max_freq',
-            lambda spec: _first_over_threshold(spec, reverse=True),
+            lambda spec: _first_over_threshold(np.flip(spec, 0)),
         )
 
     @property
@@ -216,12 +217,9 @@ def _delta(data, width=9, order=1, axis=-1, mode='interp', **kwargs):
     return scipy.signal.savgol_filter(data, width, deriv=order, axis=axis, mode=mode, **kwargs)
 
 
-def _first_over_threshold(spectrum, threshold=-20, reverse=False):
+def _first_over_threshold(spectrum, threshold=-20):
     peak_ampl = spectrum.max()
-    order = range(spectrum.shape[0])
-    if reverse:
-        order = range(spectrum.shape[0] - 1, -1, -1)
-    for k in order:
+    for k in range(spectrum.shape[0]):
         d = _decibels(spectrum[k], peak_ampl)
         if d >= threshold:
             return k * (FS / 1024)

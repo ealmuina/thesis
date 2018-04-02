@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Highcharts Example</title>
+    <title>Segments Clustering Tool</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 </head>
@@ -37,14 +37,14 @@
                         </select>
                     </div>
                 </div>
-                {#                <div class="panel panel-info">#}
-                {#                    <div class="panel-heading">#}
-                {#                        <h3 class="panel-title">Filter by species</h3>#}
-                {#                    </div>#}
-                {#                    <div class="panel-body">#}
-                {#                        <select id="species-filter" class="form-control" multiple="multiple"></select>#}
-                {#                    </div>#}
-                {#                </div>#}
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Filter by species</h3>
+                    </div>
+                    <div class="panel-body">
+                        <select id="species-filter" class="form-control" multiple="multiple"></select>
+                    </div>
+                </div>
 
                 <div style="text-align: center; margin-top: 20px">
                     <button id="refresh-button">Refresh</button>
@@ -63,6 +63,16 @@
 <script src="{{ url_for('static', filename='js/exporting.js') }}"></script>
 
 <script type="text/javascript">
+    function getSelectedSpecies() {
+        var species = [];
+        $('#species-filter').find('option:selected').each(function (index, sp) {
+            species.push(sp.value);
+        });
+        return species;
+    }
+</script>
+
+<script type="text/javascript">
     $(function () {
         var chart;
 
@@ -75,7 +85,8 @@
 
             var query_dict = {
                 'x': x.value,
-                'y': y.value
+                'y': y.value,
+                'species[]': getSelectedSpecies()
             };
             $.get('{{ url_for('parameters_2d') }}', query_dict, function (data) {
                 chart = Highcharts.chart('scatter-chart', {
@@ -97,11 +108,7 @@
                         }
                     },
                     legend: {
-                        layout: 'vertical',
-                        align: 'right',
-                        verticalAlign: 'top',
-                        backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
-                        borderWidth: 1
+                        enabled: false
                     },
                     plotOptions: {
                         scatter: {
@@ -145,6 +152,51 @@
         });
         $('#y-axis').select2({
             containerCssClass: "no-border"
+        });
+
+        $('#species-filter').select2({
+            containerCssClass: "no-border",
+            tags: true,
+            tokenSeparators: [','],
+            ajax: {
+                url: "{{ url_for('search_for_species') }}",
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data, params) {
+                    params.species = data.species;
+                    return {results: data.species};
+                },
+                data: function (params) {
+                    return {
+                        q: params.term,
+                        exclude: getSelectedSpecies()
+                    };
+                }
+            },
+            createTag: function (params) {
+                if (params.species)
+                    return {
+                        id: params.term,
+                        text: params.term
+                    };
+                return null;
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            },
+            templateResult: function (species) {
+                if (species.text !== undefined) return null;
+                return [
+                    '<div class="select2-result">',
+                    '<span class="caption text-center">',
+                    species.name,
+                    '</span>',
+                    '</div>'
+                ].join('');
+            },
+            templateSelection: function (species) {
+                return species.name || species.text;
+            }
         });
 
         $('.no-border').css({
