@@ -16,8 +16,15 @@ def index():
         ('fundamental_freq', 'Fundamental Frequency (Hz)'),
         ('bandwidth', 'Bandwidth (Hz)')
     ]
+    clustering_algorithms = [
+        ('none', 'None'),
+        ('kmeans', 'K-Means'),
+        ('gmm', 'Gaussian Mixture Model'),
+        ('hdbscan', 'HDBSCAN')
+    ]
     return render_template('index.html', **{
-        'axis': axis
+        'axis': axis,
+        'clustering_algorithms': clustering_algorithms
     })
 
 
@@ -25,8 +32,9 @@ def index():
 def parameters_2d():
     x = request.args.get('x')
     y = request.args.get('y')
+    clustering_algorithm = request.args.get('clustering_algorithm')
     species = request.args.getlist('species[]')
-    return jsonify(segments=LIBRARY.get_features(species, (x, y)))
+    return jsonify(segments=LIBRARY.get_features(species, (x, y), clustering_algorithm))
 
 
 @app.route('/search_for_species')
@@ -37,6 +45,7 @@ def search_for_species():
     species = [
                   species for species in LIBRARY.categories if species not in excluded_species and q in species
               ][:l]
+    species.sort()
     return jsonify({
         'success': True,
         'species': [

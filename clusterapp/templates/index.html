@@ -13,6 +13,18 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-3">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Clustering algorithm</h3>
+                    </div>
+                    <div class="panel-body">
+                        <select id="clustering-algorithm">
+                            {% for name, verbose_name in clustering_algorithms %}
+                                <option value="{{ name }}">{{ verbose_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <h3 class="panel-title"><b>X</b> axis selector</h3>
@@ -53,6 +65,36 @@
 
             <div class="col-md-9">
                 <div id='scatter-chart'></div>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Username</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>@mdo</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                        <td>@fat</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Larry</td>
+                        <td>the Bird</td>
+                        <td>@twitter</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -79,6 +121,7 @@
         function refreshChart() {
             var x = $('#x-axis')[0];
             var y = $('#y-axis')[0];
+            var clustering_algorithm = $('#clustering-algorithm')[0];
 
             if (chart)
                 chart.destroy();
@@ -86,9 +129,11 @@
             var query_dict = {
                 'x': x.value,
                 'y': y.value,
+                'clustering_algorithm': clustering_algorithm.value,
                 'species[]': getSelectedSpecies()
             };
             $.get('{{ url_for('parameters_2d') }}', query_dict, function (data) {
+                console.log(data)
                 chart = Highcharts.chart('scatter-chart', {
                     chart: {
                         type: 'scatter',
@@ -127,7 +172,7 @@
                     tooltip: {
                         useHTML: true,
                         headerFormat: '<b>{point.key}</b><br>',
-                        pointFormat: ''
+                        pointFormat: '<span><b>class</b>: {series.name}</span>'
                     },
                     series: data.segments
                 });
@@ -147,6 +192,9 @@
 
 <script type="text/javascript">
     $(function () {
+        $('#clustering-algorithm').select2({
+            containerCssClass: "no-border"
+        });
         $('#x-axis').select2({
             containerCssClass: "no-border"
         });
