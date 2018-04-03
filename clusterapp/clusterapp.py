@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, jsonify
 
-from clusterapp.core import Library
+from clusterapp.core import Library, statistics
 
 app = Flask(__name__)
 LIBRARY = Library('/home/eddy/PycharmProjects/thesis/sounds/testing/')
@@ -34,7 +34,15 @@ def parameters_2d():
     y = request.args.get('y')
     clustering_algorithm = request.args.get('clustering_algorithm')
     species = request.args.getlist('species[]')
-    return jsonify(segments=LIBRARY.get_features(species, (x, y), clustering_algorithm))
+
+    clustering = LIBRARY.get_features(species, (x, y), clustering_algorithm)
+    stats = statistics(clustering)
+
+    return jsonify(segments=[{
+        'name': label,
+        'data': clustering[label],
+        'statistics': stats[label]
+    } for label in clustering.keys()])
 
 
 @app.route('/search_for_species')

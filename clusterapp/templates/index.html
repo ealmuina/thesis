@@ -69,12 +69,15 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Username</th>
+                        {#                        <th>Main class</th>#}
+                        {#                        <th>Proportion</th>#}
+                        <th id="x-mean-column">X mean</th>
+                        <th id="x-var-column">X var</th>
+                        <th id="y-mean-column">Y mean</th>
+                        <th id="y-var-column">Y var</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="statistics-table-body">
                     <tr>
                         <td>1</td>
                         <td>Mark</td>
@@ -115,76 +118,103 @@
 </script>
 
 <script type="text/javascript">
-    $(function () {
-        var chart;
+    var chart;
 
-        function refreshChart() {
-            var x = $('#x-axis')[0];
-            var y = $('#y-axis')[0];
-            var clustering_algorithm = $('#clustering-algorithm')[0];
+    function refreshChart(data, x_title, y_title) {
+        if (chart)
+            chart.destroy();
 
-            if (chart)
-                chart.destroy();
-
-            var query_dict = {
-                'x': x.value,
-                'y': y.value,
-                'clustering_algorithm': clustering_algorithm.value,
-                'species[]': getSelectedSpecies()
-            };
-            $.get('{{ url_for('parameters_2d') }}', query_dict, function (data) {
-                console.log(data)
-                chart = Highcharts.chart('scatter-chart', {
-                    chart: {
-                        type: 'scatter',
-                        zoomType: 'xy'
-                    },
-                    title: {
-                        text: 'Segments scatter chart'
-                    },
-                    xAxis: {
-                        title: {
-                            text: x[x.selectedIndex].text
+        chart = Highcharts.chart('scatter-chart', {
+            chart: {
+                type: 'scatter',
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'Segments scatter chart'
+            },
+            xAxis: {
+                title: {
+                    text: x_title
+                }
+            },
+            yAxis: {
+                title: {
+                    text: y_title
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                scatter: {
+                    marker: {
+                        radius: 5,
+                        states: {
+                            hover: {
+                                enabled: true,
+                                lineColor: 'rgb(100,100,100)'
+                            }
                         }
                     },
-                    yAxis: {
-                        title: {
-                            text: y[y.selectedIndex].text
-                        }
-                    },
-                    legend: {
-                        enabled: false
-                    },
-                    plotOptions: {
-                        scatter: {
-                            marker: {
-                                radius: 5,
-                                states: {
-                                    hover: {
-                                        enabled: true,
-                                        lineColor: 'rgb(100,100,100)'
-                                    }
-                                }
-                            },
-                            stickyTracking: false
-                        }
-                    },
-                    tooltip: {
-                        useHTML: true,
-                        headerFormat: '<b>{point.key}</b><br>',
-                        pointFormat: '<span><b>class</b>: {series.name}</span>'
-                    },
-                    series: data.segments
-                });
-            });
-        }
-
-        $('#refresh-button').click(function () {
-            refreshChart();
+                    stickyTracking: false
+                }
+            },
+            tooltip: {
+                useHTML: true,
+                headerFormat: '<b>{point.key}</b><br>',
+                pointFormat: '<span><b>class</b>: {series.name}</span>'
+            },
+            series: data.segments
         });
+    }
 
-        refreshChart();
+    function refreshTable(data, x_title, y_title) {
+        var segments = data.segments;
+        var table_body = "";
+
+        for (var i = 0; i < segments.length; i++) {
+            if (segments[i].name === '-1') continue;
+            table_body +=
+                "<tr>" +
+                "<td>" + segments[i].name + "</td>" +
+                "<td>" + segments[i].statistics.x_mean + "</td>" +
+                "<td>" + segments[i].statistics.x_var + "</td>" +
+                "<td>" + segments[i].statistics.y_mean + "</td>" +
+                "<td>" + segments[i].statistics.y_var + "</td>" +
+                "</tr>"
+        }
+        $('#statistics-table-body').html(table_body);
+
+        $('#x-mean-column').html(x_title + ' mean');
+        $('#x-var-column').html(x_title + ' var');
+        $('#y-mean-column').html(y_title + ' mean');
+        $('#y-var-column').html(y_title + ' var');
+    }
+
+    function refresh() {
+        var x = $('#x-axis')[0];
+        var y = $('#y-axis')[0];
+        var clustering_algorithm = $('#clustering-algorithm')[0];
+
+        var query_dict = {
+            'x': x.value,
+            'y': y.value,
+            'clustering_algorithm': clustering_algorithm.value,
+            'species[]': getSelectedSpecies()
+        };
+        $.get('{{ url_for('parameters_2d') }}', query_dict, function (data) {
+            refreshChart(data, x[x.selectedIndex].text, y[y.selectedIndex].text);
+            refreshTable(data, x[x.selectedIndex].text, y[y.selectedIndex].text);
+        });
+    }
+
+    $('#refresh-button').click(function () {
+        refresh();
     });
+
+    $(function () {
+        refresh();
+    })
 </script>
 
 <link href="{{ url_for('static', filename='css/select2.min.css') }}" rel="stylesheet"/>

@@ -72,7 +72,19 @@ class Library:
             })
             result[label] = items
 
-        return [{
-            'name': label,
-            'data': result[label]
-        } for label in result.keys()]
+        return result
+
+
+def statistics(clustering):
+    result = {}
+    for label in clustering.keys():
+        x = np.array([item['x'] for item in clustering[label]])
+        y = np.array([item['y'] for item in clustering[label]])
+
+        result[label] = {
+            'x_mean': x.mean().round(2),
+            'x_var': x.var().round(2),
+            'y_mean': y.mean().round(2),
+            'y_var': y.var().round(2)
+        }
+    return result
