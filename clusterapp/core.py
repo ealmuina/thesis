@@ -1,4 +1,5 @@
 import pathlib
+from collections import Counter
 
 import numpy as np
 from hdbscan import HDBSCAN
@@ -73,6 +74,7 @@ class Library:
             items = result.get(label, [])
             items.append({
                 'name': names[i],
+                'label_true': y[i],
                 'x': X[i, 0],
                 'y': X[i, 1],
             })
@@ -97,10 +99,19 @@ def evaluate(labels_pred, labels_true):
 def statistics(clustering):
     result = {}
     for label in clustering.keys():
-        x = np.array([item['x'] for item in clustering[label]])
-        y = np.array([item['y'] for item in clustering[label]])
+        cluster = clustering[label]
+
+        x = np.array([item['x'] for item in cluster])
+        y = np.array([item['y'] for item in cluster])
+
+        labels_true = [item['label_true'] for item in cluster]
+        counts = Counter(labels_true)
+        label_true, count = counts.most_common(1)[0]
 
         result[label] = {
+            'label_true': label_true,
+            'label_true_count': count,
+            'total': len(cluster),
             'x_mean': x.mean().round(2),
             'x_std': x.std().round(2),
             'y_mean': y.mean().round(2),

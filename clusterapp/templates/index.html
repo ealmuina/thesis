@@ -65,39 +65,20 @@
 
             <div class="col-md-9">
                 <div id='scatter-chart'></div>
-                <div id="scores" class="well"></div>
-                <table class="table table-striped">
+                {#                <div id="scores" class="well"></div>#}
+                <table class="table table-striped" style="margin-top: 10px">
                     <thead>
                     <tr>
                         <th>#</th>
-                        {#                        <th>Main class</th>#}
-                        {#                        <th>Proportion</th>#}
+                        <th>Main class</th>
+                        <th>Proportion</th>
                         <th id="x-mean-column">X mean</th>
                         <th id="x-std-column">X std</th>
                         <th id="y-mean-column">Y mean</th>
                         <th id="y-std-column">Y std</th>
                     </tr>
                     </thead>
-                    <tbody id="statistics-table-body">
-                    <tr>
-                        <td>1</td>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                        <td>@twitter</td>
-                    </tr>
-                    </tbody>
+                    <tbody id="statistics-table-body"></tbody>
                 </table>
             </div>
         </div>
@@ -178,6 +159,8 @@
             table_body +=
                 "<tr>" +
                 "<td>" + segments[i].name + "</td>" +
+                "<td>" + segments[i].statistics.label_true + "</td>" +
+                "<td>" + segments[i].statistics.label_true_count + '/' + segments[i].statistics.total + "</td>" +
                 "<td>" + segments[i].statistics.x_mean + "</td>" +
                 "<td>" + segments[i].statistics.x_std + "</td>" +
                 "<td>" + segments[i].statistics.y_mean + "</td>" +
