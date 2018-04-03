@@ -59,12 +59,13 @@
                 </div>
 
                 <div style="text-align: center; margin-top: 20px">
-                    <button id="refresh-button">Refresh</button>
+                    <button id="refresh-button" class="btn btn-default">Refresh</button>
                 </div>
             </div>
 
             <div class="col-md-9">
                 <div id='scatter-chart'></div>
+                <div id="scores" class="well"></div>
                 <table class="table table-striped">
                     <thead>
                     <tr>
@@ -72,9 +73,9 @@
                         {#                        <th>Main class</th>#}
                         {#                        <th>Proportion</th>#}
                         <th id="x-mean-column">X mean</th>
-                        <th id="x-var-column">X var</th>
+                        <th id="x-std-column">X std</th>
                         <th id="y-mean-column">Y mean</th>
-                        <th id="y-var-column">Y var</th>
+                        <th id="y-std-column">Y std</th>
                     </tr>
                     </thead>
                     <tbody id="statistics-table-body">
@@ -173,22 +174,22 @@
         var table_body = "";
 
         for (var i = 0; i < segments.length; i++) {
-            if (segments[i].name === '-1') continue;
+            if (segments[i].name === 'noise') continue;
             table_body +=
                 "<tr>" +
                 "<td>" + segments[i].name + "</td>" +
                 "<td>" + segments[i].statistics.x_mean + "</td>" +
-                "<td>" + segments[i].statistics.x_var + "</td>" +
+                "<td>" + segments[i].statistics.x_std + "</td>" +
                 "<td>" + segments[i].statistics.y_mean + "</td>" +
-                "<td>" + segments[i].statistics.y_var + "</td>" +
+                "<td>" + segments[i].statistics.y_std + "</td>" +
                 "</tr>"
         }
         $('#statistics-table-body').html(table_body);
 
         $('#x-mean-column').html(x_title + ' mean');
-        $('#x-var-column').html(x_title + ' var');
+        $('#x-std-column').html(x_title + ' std');
         $('#y-mean-column').html(y_title + ' mean');
-        $('#y-var-column').html(y_title + ' var');
+        $('#y-std-column').html(y_title + ' std');
     }
 
     function refresh() {
@@ -205,6 +206,13 @@
         $.get('{{ url_for('parameters_2d') }}', query_dict, function (data) {
             refreshChart(data, x[x.selectedIndex].text, y[y.selectedIndex].text);
             refreshTable(data, x[x.selectedIndex].text, y[y.selectedIndex].text);
+
+            $('#scores').html(
+                'ARI: ' + data.scores['ARI'] + ' | ' +
+                'AMI: ' + data.scores['AMI'] + ' | ' +
+                'Homogeneity: ' + data.scores['Homogeneity'] + ' | ' +
+                'Completeness: ' + data.scores['Completeness']
+            )
         });
     }
 
@@ -282,5 +290,48 @@
         })
     });
 </script>
+
+<script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/buttons.colVis.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dataTables.select.min.js') }}"></script>
+
+{#<script type="text/javascript">#}
+{#    $(function () {#}
+{#        $('#species-table').DataTable({#}
+{#            serverSide: true,#}
+{#            ajax: {#}
+{#                url: "{% url 'duetto:datasources' 'species' %}",#}
+{#                dataSrc: function (json) {#}
+{#                    var data = [];#}
+{#                    for (var i = 0; i < json.data.length; i++) {#}
+{#                        var species = json.data[i];#}
+{#                        data.push([#}
+{#                            species['thumbnail'],#}
+{#                            species['genus'] + ' ' + species['specific'] + ' ' + species['sub_specific'],#}
+{#                            species['kingdom'],#}
+{#                            species['phylum'],#}
+{#                            species['cls'],#}
+{#                            species['order'],#}
+{#                            species['family'],#}
+{#                            species['genus'],#}
+{#                            species['specific'],#}
+{#                            species['sub_specific']#}
+{#                        ])#}
+{#                    }#}
+{#                    return data;#}
+{#                }#}
+{#            },#}
+{#            columns: [#}
+{#                {'name': 'category'},#}
+{#                {'name': 'x mean'},#}
+{#                {'name': 'x std'},#}
+{#                {'name': 'y mean'},#}
+{#                {'name': 'y std'}#}
+{#            ]#}
+{#        })#}
+{#    })#}
+{#</script>#}
+
 </body>
 </html>

@@ -35,14 +35,17 @@ def parameters_2d():
     clustering_algorithm = request.args.get('clustering_algorithm')
     species = request.args.getlist('species[]')
 
-    clustering = LIBRARY.get_features(species, (x, y), clustering_algorithm)
+    clustering, scores = LIBRARY.cluster(species, (x, y), clustering_algorithm)
     stats = statistics(clustering)
 
-    return jsonify(segments=[{
-        'name': label,
-        'data': clustering[label],
-        'statistics': stats[label]
-    } for label in clustering.keys()])
+    return jsonify(
+        segments=[{
+            'name': label if label != '-1' else 'noise',
+            'data': clustering[label],
+            'statistics': stats[label]
+        } for label in clustering.keys()],
+        scores=scores
+    )
 
 
 @app.route('/search_for_species')

@@ -2,9 +2,10 @@ import pathlib
 
 import numpy as np
 from hdbscan import HDBSCAN
+from sklearn import metrics
 from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
-from sklearn.preprocessing import scale
+from sklearn.preprocessing import scale, LabelEncoder
 
 from clusterapp.features import Audio
 
@@ -14,7 +15,7 @@ class IdentityClustering:
         self.labels_ = None
 
     def fit(self, X, y):
-        self.labels_ = [name.split('-')[0] for name in y]
+        self.labels_ = y
 
 
 CLUSTERING = {
@@ -38,41 +39,59 @@ class Library:
 
         self.categories = set(self.segments.keys())
 
-    def get_features(self, categories, features, clusterer):
-        if clusterer in ('kmeans',):
-            clusterer = CLUSTERING[clusterer](n_clusters=len(categories))
-        elif clusterer in ('gmm',):
-            clusterer = CLUSTERING[clusterer](n_components=len(categories))
-        elif clusterer in ('hdbscan',):
-            clusterer = CLUSTERING[clusterer](min_cluster_size=3)
-        else:
-            clusterer = CLUSTERING[clusterer]()
+    @staticmethod
+    def _parse_clustering_algo(algorithm, categories):
+        if algorithm in ('kmeans',):
+            return CLUSTERING[algorithm](n_clusters=len(categories))
+        elif algorithm in ('gmm',):
+            return CLUSTERING[algorithm](n_components=len(categories))
+        elif algorithm in ('hdbscan',):
+            return CLUSTERING[algorithm](min_cluster_size=3)
+        return CLUSTERING[algorithm]()
 
-        X, y = [], []
+    def cluster(self, categories, features, algorithm):
+        algorithm = self._parse_clustering_algo(algorithm, categories)
+
+        X, y, names = [], [], []
         for cat in categories:
             for audio in self.segments[cat]:
                 X.append([
                     getattr(audio, features[0]).mean(),
                     getattr(audio, features[1]).mean()
                 ])
-                y.append(audio.name)
+                names.append(audio.name)
+                y.append(audio.name.split('-')[0])
         X = np.array(X, dtype=np.float64)
 
-        clusterer.fit(scale(X) if len(X) else X, y)
-        labels = clusterer.labels_ if hasattr(clusterer, 'labels_') else clusterer.predict(X)
+        scaled_X = scale(X) if len(X) else X
+        algorithm.fit(scaled_X, y)
+        labels = algorithm.labels_ if hasattr(algorithm, 'labels_') else algorithm.predict(scaled_X)
 
         result = {}
         for i, label in enumerate(labels):
             label = str(label)
             items = result.get(label, [])
             items.append({
-                'name': y[i],
+                'name': names[i],
                 'x': X[i, 0],
                 'y': X[i, 1],
             })
             result[label] = items
 
-        return result
+        return result, evaluate(labels, y)
+
+
+def evaluate(labels_pred, labels_true):
+    le = LabelEncoder()
+    le.fit(labels_true)
+    labels_true = le.transform(labels_true)
+
+    return {
+        'ARI': round(metrics.adjusted_rand_score(labels_true, labels_pred), 2),
+        'AMI': round(metrics.adjusted_mutual_info_score(labels_true, labels_pred), 2),
+        'Homogeneity': round(metrics.homogeneity_score(labels_true, labels_pred), 2),
+        'Completeness': round(metrics.completeness_score(labels_true, labels_pred), 2),
+    }
 
 
 def statistics(clustering):
@@ -83,8 +102,8 @@ def statistics(clustering):
 
         result[label] = {
             'x_mean': x.mean().round(2),
-            'x_var': x.var().round(2),
+            'x_std': x.std().round(2),
             'y_mean': y.mean().round(2),
-            'y_var': y.var().round(2)
+            'y_std': y.std().round(2)
         }
     return result
