@@ -153,6 +153,9 @@
     function refreshTable(data, x_title, y_title) {
         var segments = data.segments;
         var table_body = "";
+        segments = segments.sort(function (a, b) {
+            return a.name.localeCompare(b.name)
+        });
 
         for (var i = 0; i < segments.length; i++) {
             if (segments[i].name === 'noise') continue;
@@ -161,10 +164,10 @@
                 "<td>" + segments[i].name + "</td>" +
                 "<td>" + segments[i].statistics.label_true + "</td>" +
                 "<td>" + segments[i].statistics.label_true_count + '/' + segments[i].statistics.total + "</td>" +
-                "<td>" + segments[i].statistics.x_mean + "</td>" +
-                "<td>" + segments[i].statistics.x_std + "</td>" +
-                "<td>" + segments[i].statistics.y_mean + "</td>" +
-                "<td>" + segments[i].statistics.y_std + "</td>" +
+                "<td>" + segments[i].statistics.mean[0] + "</td>" +
+                "<td>" + segments[i].statistics.std[0] + "</td>" +
+                "<td>" + segments[i].statistics.mean[1] + "</td>" +
+                "<td>" + segments[i].statistics.std[1] + "</td>" +
                 "</tr>"
         }
         $('#statistics-table-body').html(table_body);

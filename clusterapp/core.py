@@ -15,16 +15,8 @@ class IdentityClustering:
     def __init__(self):
         self.labels_ = None
 
-    def fit(self, X, y):
+    def fit(self, _, y):
         self.labels_ = y
-
-
-CLUSTERING = {
-    'none': IdentityClustering,
-    'kmeans': KMeans,
-    'gmm': GaussianMixture,
-    'hdbscan': HDBSCAN
-}
 
 
 class Library:
@@ -42,13 +34,12 @@ class Library:
 
     @staticmethod
     def _parse_clustering_algo(algorithm, categories):
-        if algorithm in ('kmeans',):
-            return CLUSTERING[algorithm](n_clusters=len(categories))
-        elif algorithm in ('gmm',):
-            return CLUSTERING[algorithm](n_components=len(categories))
-        elif algorithm in ('hdbscan',):
-            return CLUSTERING[algorithm](min_cluster_size=3)
-        return CLUSTERING[algorithm]()
+        return {
+            'kmeans': KMeans(n_clusters=len(categories)),
+            'gmm': GaussianMixture(n_components=len(categories)),
+            'hdbscan': HDBSCAN(min_cluster_size=3),
+            'none': IdentityClustering()
+        }[algorithm]
 
     def cluster(self, categories, features, algorithm):
         algorithm = self._parse_clustering_algo(algorithm, categories)
@@ -57,8 +48,7 @@ class Library:
         for cat in categories:
             for audio in self.segments[cat]:
                 X.append([
-                    getattr(audio, features[0]).mean(),
-                    getattr(audio, features[1]).mean()
+                    getattr(audio, feature).mean() for feature in features
                 ])
                 names.append(audio.name)
                 y.append(audio.name.split('-')[0])
@@ -75,8 +65,7 @@ class Library:
             items.append({
                 'name': names[i],
                 'label_true': y[i],
-                'x': X[i, 0],
-                'y': X[i, 1],
+                'x': X[i, :],
             })
             result[label] = items
 
@@ -98,23 +87,22 @@ def evaluate(labels_pred, labels_true):
 
 def statistics(clustering):
     result = {}
+
     for label in clustering.keys():
         cluster = clustering[label]
-
-        x = np.array([item['x'] for item in cluster])
-        y = np.array([item['y'] for item in cluster])
 
         labels_true = [item['label_true'] for item in cluster]
         counts = Counter(labels_true)
         label_true, count = counts.most_common(1)[0]
 
+        x = np.array([item['x'] for item in cluster])
+
         result[label] = {
             'label_true': label_true,
             'label_true_count': count,
             'total': len(cluster),
-            'x_mean': x.mean().round(2),
-            'x_std': x.std().round(2),
-            'y_mean': y.mean().round(2),
-            'y_std': y.std().round(2)
+            'mean': x.mean(0).round(2).astype(float).tolist(),
+            'std': x.std(0).round(2).astype(float).tolist(),
         }
+
     return result

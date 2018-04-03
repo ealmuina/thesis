@@ -41,7 +41,11 @@ def parameters_2d():
     return jsonify(
         segments=[{
             'name': label if label != '-1' else 'noise',
-            'data': clustering[label],
+            'data': [{
+                'name': item['name'],
+                'x': item['x'][0],
+                'y': item['x'][1]
+            } for item in clustering[label]],
             'statistics': stats[label]
         } for label in clustering.keys()],
         scores=scores
