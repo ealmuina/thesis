@@ -5,155 +5,124 @@ import scipy.signal
 
 FS = 44100
 
+w = es.Windowing(type='hann')
+spectrum = es.Spectrum()
+centroid = es.Centroid()
+moments = es.CentralMoments()
+
+# Temporal descriptors
+power = es.InstantPower()
+log_attack_time = es.LogAttackTime()
+effective_duration = es.EffectiveDuration()
+auto_correlation = es.AutoCorrelation()
+zero_crossing_rate = es.ZeroCrossingRate()
+
+# Spectral descriptors
+peak_freq = es.MaxMagFreq()
+roll_off = es.RollOff()
+flux = es.Flux()
+flatness = es.Flatness()
+
+# Harmonic descriptors
+pitch = es.PitchYin(frameSize=1024)
+spectral_peaks = es.SpectralPeaks(minFrequency=1e-5)
+harmonic_peaks = es.HarmonicPeaks()
+inharmonicity = es.Inharmonicity()
+oer = es.OddToEvenHarmonicEnergyRatio()
+tristimulus = es.Tristimulus()
+
+# MFCC
+mfcc = es.MFCC(inputSize=513)
+
 
 class Audio:
     def __init__(self, path):
         self.audio = es.MonoLoader(filename=str(path))()
         self.name = path.name
-        self.memo = {}
+        self.pool = essentia.Pool()
 
-        w = es.Windowing(type='hann')
-        spectrum = es.Spectrum()
-        pitch = es.PitchYin(frameSize=1024)
-        spectral_peaks = es.SpectralPeaks(minFrequency=1e-5)
-        harmonic_peaks = es.HarmonicPeaks()
+        self._build_temporal_features()
+        self._build_spectral_features()
+        self._build_harmonic_features()
+        self._build_mfcc()
 
-        pool = essentia.Pool()
+        self._features = {
+            'audio_correlation': 'AC',
+            'audio_power': 'AP',
+            'audio_waveform': 'AWF',
+            'bandwidth': 'SB',
+            'effective_duration': 'ED',
+            'fundamental_freq': 'F0',
+            'inharmonicity': 'INH',
+            'log_attack_time': 'LAT',
+            'max_freq': 'FMax',
+            'mfcc': 'MFCC',
+            'min_freq': 'FMin',
+            'oer': 'OER',
+            'peak_ampl': 'PA',
+            'peak_freq': 'PF',
+            'spectral_centroid': 'SC',
+            'spectral_flatness': 'SF',
+            'spectral_flux': 'SFX',
+            'spectral_roll_off': 'SRO',
+            'spectral_spread': 'SS',
+            'temporal_centroid': 'TC',
+            'tristimulus': 'T',
+            'zcr': 'ZCR'
+        }
 
+    def __getattr__(self, item):
+        if item in self._features:
+            key = self._features[item]
+            return self.pool[key]
+        raise AttributeError(item)
+
+    def _build_harmonic_features(self):
         for frame in es.FrameGenerator(self.audio, frameSize=1024, hopSize=512, startFromZero=True):
             spec = spectrum(w(frame))
-            pool.add('spectrum', spec)
             f0, _ = pitch(frame)
             freq_ep, amp_ep = spectral_peaks(spec)
             freq_hp, amp_hp = harmonic_peaks(freq_ep, amp_ep, f0)
-            pool.add('harmonic_peaks_freq', freq_hp)
-            pool.add('harmonic_peaks_amp', amp_hp)
 
-        self.spectrum = pool['spectrum'].T
-        self.harmonic_peaks_freq = pool['harmonic_peaks_freq']
-        self.harmonic_peaks_amp = pool['harmonic_peaks_amp']
+            self.pool.add('F0', f0)
+            self.pool.add('INH', inharmonicity(freq_hp, amp_hp))
+            self.pool.add('OER', oer(freq_hp, amp_hp))
+            self.pool.add('T', tristimulus(freq_hp, amp_hp))
 
-    def _get_harmonic_feature(self, name, func):
-        if name not in self.memo:
-            pool = essentia.Pool()
-            for hp_freq, hp_amp in zip(self.harmonic_peaks_freq, self.harmonic_peaks_amp):
-                pool.add('result', func(hp_freq, hp_amp))
-            self.memo[name] = pool['result']
-        return self.memo[name]
+    def _build_mfcc(self):
+        for frame in es.FrameGenerator(self.audio, frameSize=1024, hopSize=512, startFromZero=True):
+            spec = spectrum(w(frame))
+            _, mfcc_coeffs = mfcc(spec)
+            self.pool.add('MFCC', mfcc_coeffs)
 
-    def _get_spectral_feature(self, name, func):
-        if name not in self.memo:
-            self.memo[name] = np.apply_along_axis(func, 0, self.spectrum)
-        return self.memo[name]
+    def _build_spectral_features(self):
+        for frame in es.FrameGenerator(self.audio, frameSize=1024, hopSize=512, startFromZero=True):
+            spec = spectrum(w(frame))
+            fmin = _first_over_threshold(spec)
+            fmax = _first_over_threshold(np.flip(spec, 0))
 
-    def _get_temporal_feature(self, name, func):
-        if name not in self.memo:
-            pool = essentia.Pool()
-            for frame in es.FrameGenerator(self.audio, frameSize=1024, hopSize=1024, startFromZero=True):
-                pool.add('result', func(frame))
-            self.memo['name'] = pool['result']
-        return self.memo['name']
+            self.pool.add('PF', peak_freq(spec))
+            self.pool.add('PA', spec.max())
+            self.pool.add('FMin', fmin)
+            self.pool.add('FMax', fmax)
+            self.pool.add('SB', fmax - fmin)
 
-    @property
-    def audio_power(self):
-        return self._get_temporal_feature('audio_power', es.InstantPower())
+            self.pool.add('SC', centroid(spec))
+            self.pool.add('SS', moments(spec)[2])
+            self.pool.add('SRO', roll_off(spec))
+            self.pool.add('SFX', flux(spec))
+            self.pool.add('SF', flatness(spec))
 
-    @property
-    def audio_waveform(self):
-        return self._get_temporal_feature(
-            'audio_waveform',
-            lambda frame: essentia.array([frame.min(), frame.max()])
-        )
+    def _build_temporal_features(self):
+        self.pool.add('LAT', log_attack_time(self.audio)[0])
+        self.pool.add('TC', centroid(self.audio))
+        self.pool.add('ED', effective_duration(self.audio))
+        self.pool.add('AC', auto_correlation(self.audio))
 
-    @property
-    def bandwidth(self):
-        if 'bandwidth' not in self.memo:
-            self.memo['bandwidth'] = np.array([self.max_freq - self.min_freq])
-        return self.memo['bandwidth']
-
-    @property
-    def fundamental_freq(self):
-        return self._get_spectral_feature(
-            'fundamental_freq',
-            lambda spec: es.PitchYin(frameSize=1024)(spec)
-        )
-
-    @property
-    def inharmonicity(self):
-        return self._get_harmonic_feature(
-            'inharmonicity',
-            es.Inharmonicity()
-        )
-
-    @property
-    def max_freq(self):
-        return self._get_spectral_feature(
-            'max_freq',
-            lambda spec: _first_over_threshold(np.flip(spec, 0)),
-        )
-
-    @property
-    def mfcc(self):
-        if 'mfcc' not in self.memo:
-            mfcc = es.MFCC(inputSize=513)
-            self.memo['mfcc'] = np.apply_along_axis(lambda spec: mfcc(spec)[1], 0, self.spectrum)
-        return self.memo['mfcc']
-
-    @property
-    def min_freq(self):
-        return self._get_spectral_feature('min_freq', _first_over_threshold)
-
-    @property
-    def oer(self):
-        return self._get_harmonic_feature(
-            'OER',
-            es.OddToEvenHarmonicEnergyRatio()
-        )
-
-    @property
-    def peak_ampl(self):
-        if 'peak_ampl' not in self.memo:
-            peak_ampl = self.spectrum.max(0)
-            self.memo['peak_ampl'] = np.array([peak_ampl.mean()])
-        return self.memo['peak_ampl']
-
-    @property
-    def peak_freq(self):
-        return self._get_spectral_feature('peak_freq', es.MaxMagFreq())
-
-    @property
-    def spectral_centroid(self):
-        return self._get_spectral_feature('spectral_centroid', es.Centroid())
-
-    @property
-    def spectral_flatness(self):
-        return self._get_spectral_feature('spectral_flatness', es.Flatness())
-
-    @property
-    def spectral_flux(self):
-        return self._get_spectral_feature('spectral_flux', es.Flux())
-
-    @property
-    def spectral_roll_off(self):
-        return self._get_spectral_feature('spectral_roll_off', es.RollOff())
-
-    @property
-    def spectral_spread(self):
-        return self._get_spectral_feature(
-            'spectral_spread',
-            lambda spec: es.CentralMoments()(spec)[2]
-        )
-
-    @property
-    def tristimulus(self):
-        return self._get_harmonic_feature(
-            'tristimulus',
-            es.Tristimulus()
-        )
-
-    @property
-    def zcr(self):
-        return self._get_temporal_feature('audio_power', es.ZeroCrossingRate())
+        for i, frame in enumerate(es.FrameGenerator(self.audio, frameSize=1024, hopSize=1024, startFromZero=True)):
+            self.pool.add('AP', power(frame))
+            self.pool.add('AWF', essentia.array([frame.min(), frame.max()]))
+            self.pool.add('ZCR', zero_crossing_rate(frame))
 
 
 def _decibels(a1, a2):
@@ -161,45 +130,6 @@ def _decibels(a1, a2):
 
 
 def _delta(data, width=9, order=1, axis=-1, mode='interp', **kwargs):
-    r"""Compute delta features: local estimate of the derivative
-    of the input data along the selected axis.
-
-    Delta features are computed Savitsky-Golay filtering.
-
-    Parameters
-    ----------
-    data      : np.ndarray
-        the input data matrix (eg, spectrogram)
-
-    width     : int, positive, odd [scalar]
-        Number of frames over which to compute the delta features.
-        Cannot exceed the length of `data` along the specified axis.
-        If `mode='interp'`, then `width` must be at least `data.shape[axis]`.
-
-    order     : int > 0 [scalar]
-        the order of the difference operator.
-        1 for first derivative, 2 for second, etc.
-
-    axis      : int [scalar]
-        the axis along which to compute deltas.
-        Default is -1 (columns).
-
-    mode : str, {'interp', 'nearest', 'mirror', 'constant', 'wrap'}
-        Padding mode for estimating differences at the boundaries.
-
-    kwargs : additional keyword arguments
-        See `scipy.signal.savgol_filter`
-
-    Returns
-    -------
-    delta_data   : np.ndarray [shape=(d, t)]
-        delta matrix of `data` at specified order
-
-    See Also
-    --------
-    scipy.signal.savgol_filter
-
-    """
     data = np.atleast_1d(data)
 
     if mode == 'interp' and width > data.shape[axis]:

@@ -67,16 +67,10 @@ def export_results(labels, names, path):
             file.write('%d\t%s\n' % (label, name))
 
 
-def load(features):
+def extract_features(audios, features):
     X = []
-    y = []
 
-    start = time.time()
-    for file in pathlib.Path(TESTING_DIR).iterdir():
-        audio = Audio(file)
-
-        y.append(file.name.split('-')[0])
-
+    for audio in audios:
         current = []
         for feature in features:
             current.extend(process(feature, getattr(audio, feature)))
@@ -84,8 +78,7 @@ def load(features):
 
     X = np.array(X, dtype=np.float64)
     X = scale(X)
-    print('Features computed in %.3f seconds.' % (time.time() - start))
-    return X, y
+    return X
 
 
 def main(export=False, plot=False):
@@ -100,8 +93,15 @@ def main(export=False, plot=False):
         *[(f1, f2) for f1, f2 in itertools.combinations(single_features, 2)]
     ]
 
+    audios, y = [], []
+    start = time.time()
+    for file in pathlib.Path(TESTING_DIR).iterdir():
+        audios.append(Audio(file))
+        y.append(file.name.split('-')[0])
+    print('Features computed in %.3f seconds.' % (time.time() - start))
+
     for f in features:
-        X, y = load(f)
+        X = extract_features(audios, f)
         test(X, y, f, export, plot)
 
 
@@ -156,7 +156,7 @@ def print_table(table):
 
 def process(feature_name, x):
     if feature_name == 'mfcc':
-        return x.mean(1)
+        return x.mean(0)
     return np.array([x.mean()])
 
 

@@ -1,3 +1,5 @@
+import pathlib
+
 import pylab as pl
 import seaborn as sns
 from matplotlib import collections as mc
@@ -67,7 +69,7 @@ def plot_mfccs(audio):
     fig, ax = pl.subplots(1, 1, figsize=(12, 4))
     fig.subplots_adjust(left=0.05, right=0.97)
 
-    ax.imshow(audio.mfcc[1:, :], aspect='auto', origin='lower', interpolation='none')
+    ax.imshow(audio.mfcc.T[1:, :], aspect='auto', origin='lower', interpolation='none')
     ax.set_title('MFCC')
     ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: int(x + 1)))
     ax.yaxis.set_major_locator(MaxNLocator(integer=True))
@@ -79,7 +81,7 @@ def main():
     sns.set()
     sns.set_style('white')
 
-    audio = Audio('../sounds/sheep.wav')
+    audio = Audio(pathlib.Path('../sounds/sheep.wav'))
 
     plot_temporal_descriptors(audio)
     plot_spectral_descriptors(audio)
