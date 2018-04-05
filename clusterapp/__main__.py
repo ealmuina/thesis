@@ -1,9 +1,13 @@
+import argparse
+import time
+
 from flask import Flask, request, render_template, jsonify
 
 from clusterapp.core import Library, statistics
 
 app = Flask(__name__)
-LIBRARY = Library('/home/eddy/PycharmProjects/thesis/sounds/testing/')
+if __name__ != '__main__':
+    LIBRARY = Library('/home/eddy/PycharmProjects/thesis/sounds/testing/')
 
 
 @app.route('/')
@@ -70,4 +74,14 @@ def search_for_species():
 
 
 if __name__ == '__main__':
-    app.run()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('path')
+    parser.add_argument('--host', default='127.0.0.1')
+    parser.add_argument('--port', type=int, default=5000)
+    args = parser.parse_args()
+
+    start = time.time()
+    LIBRARY = Library(args.path)
+    print('Features computed in %.3f seconds.' % (time.time() - start))
+
+    app.run(host=args.host, port=args.port)
