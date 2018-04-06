@@ -6,8 +6,6 @@ from flask import Flask, request, render_template, jsonify
 from clusterapp.core import Library, statistics
 
 app = Flask(__name__)
-if __name__ != '__main__':
-    LIBRARY = Library('/home/eddy/PycharmProjects/thesis/sounds/testing/')
 
 
 @app.route('/')
