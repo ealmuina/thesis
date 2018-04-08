@@ -1,1 +1,44 @@
-% TODO Do it!
+Los algoritmos de \textit{clustering espectral}, a diferencia de otros como K-Means o GMM, no generan necesariamente clusters de estructura convexa, por lo que pueden aplicarse en situaciones de mayor complejidad.
+
+Un algoritmo de clustering espectral se basa en el análisis del espectro (vectores propios) de la matriz laplaciana correspondiente a las similitudes (o distancias) del conjunto de datos.
+
+\begin{algorithm}
+    \caption{Clustering Espectral}
+    \label{algorithm:SpectralClustering}
+    Construir una matriz de similaridad para todos los puntos del conjunto de datos\;
+    Convertir el espacio de los puntos a otro, donde se encuentren mejor agrupados, empleando los valores propios de la matriz laplaciana\;
+    Emplear un algoritmo de clustering (por ejemplo, K-Means) para particionar la proyección obtenida en el paso anterior\;
+\end{algorithm}
+
+A la representación del conjunto de datos obtenida luego del paso 2 se le conoce como \textit{proyección espectral} (\textit{spectral embedding}), y puede asimismo ser empleada con otros fines, como la reducción de dimensiones.
+
+\subsection{Matriz de Similaridad}\label{subsec:matrizDeSimilaridad}
+
+La matriz de similitudes entre los puntos del conjunto de datos suele tomarse como la matriz de adyacencia correspondiente a uno de los siguientes grafos:
+
+\begin{enumerate}
+    \item \textbf{Grafo de KNN}: Se conectan los puntos $x_i$ y $x_j$ si uno se encuentra entre los $K$ puntos más cercanos al otro.
+    La distancia se computa empleando la representación original de los puntos;
+    a menudo se utilizan las normas $L_1$ o $L_2$, o la similitud coseno.
+    Esto puede hacerse tanto si ambos puntos son $K$-vecinos entre sí, como si uno solo lo es del otro.
+    Igualmente el peso de las aristas puede tomarse binario (1 si hay arista, 0 si no) o a partir de la distancia existente entre los puntos.
+
+    \item \textbf{Grafo de $\epsilon$-vecindades}: Dos puntos $x_i$ y $x_j$ se encuentran conectados solo cuando la distancia $|| x_i - x_j ||^2$ es menor que el valor $\epsilon$.
+
+    \item \textbf{Grafo completo}: Todos los puntos con similaridad positiva entre sí son conectados.
+    Frecuentemente los pesos de las aristas se definen mediante la función RBF\footnote{\textit{Radial basis function} o \textit{función de base radial} en español.}:
+    \[
+        W_{ij} = e^{-\sigma \cdot dist(x_i , x_j)^2}
+    \]
+    donde $dist(x_i , x_j)$ es la distancia euclidiana entre los puntos, y $\sigma$ es un parámetro que determina el decaimiento de la función a medida que los valores se acercan o alejan al 0.
+\end{enumerate}
+
+\subsection{Clustering Espectral No Normalizado}\label{subsec:clusteringEspectralNoNormalizado}
+
+Para cada punto $x_i$, su \textit{grado} puede definirse como la suma de los pesos de las aristas incidentes sobre él:
+
+\begin{equation*}
+    d_i = \sum_{j=1}^{n}{W_{ij}}
+\end{equation*}
+
+A partir de los grados, puede definirse entonces la \textit{matriz de grados} $D$, como la matriz diagonal que satisface $D_{ii}=d_i$.
