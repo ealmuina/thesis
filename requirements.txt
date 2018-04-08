@@ -1,3 +1,4 @@
+attrs==17.4.0
 click==6.7
 cycler==0.10.0
 Flask==0.12.2
@@ -6,9 +7,14 @@ itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
 matplotlib==2.1.2
+more-itertools==4.1.0
 numpy==1.14.0
 pandas==0.22.0
+pluggy==0.6.0
+py==1.5.3
+pyamg==3.3.2
 pyparsing==2.2.0
+pytest==3.5.0
 python-dateutil==2.6.1
 pytz==2017.3
 scikit-learn==0.19.1

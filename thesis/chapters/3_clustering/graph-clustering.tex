@@ -1,0 +1,120 @@
+Los algoritmos de \textit{clustering basado en grafos}, a diferencia de otros como K-Means o GMM, no aplican un modelo matemático particular para representar el conjunto de datos, o minimizan directamente una función objetivo.
+Esto les permite aplicarse en escenarios de mayor complejidad y, en algunos casos, pueden producir clusters de estructura no necesariamente convexa.
+
+La idea detrás de estos algoritmos consiste en construir un grafo no dirigido ponderado $W$, a partir de la matriz de similaridad (o distancias) correspondiente al conjunto de datos.
+Para encontrar una partición en $K$ clusters, $A_1,\dots,A_K$, se minimiza la expresión de \textbf{corte} de $W$~\cite{Murphy12}:
+
+\begin{equation}
+    \label{eq:graph-cut}
+    cut(A_1,\dots,A_K) = \frac{1}{2}\sum_{k=1}^{K}{W(A_k,\bar{A_k})}
+\end{equation}
+
+\noindent
+donde $V$ son los vértices del grafo (puntos del conjunto de datos), $\bar{A_k}=V\backslash A_k$ es el complemento de $A_k$, y $W(A,B) = \sum_{i\in A, j \in B}{w_{ij}}$.
+
+Frecuentemente ocurre que la solución óptima de~(\ref{eq:graph-cut}) particiona el conjunto separando un único punto del resto.
+Para garantizar particiones más razonables, se puede definir el \textbf{corte normalizado}~\cite{Murphy12}:
+
+\begin{equation}
+    \label{eq:normalized-cut}
+    Ncut(A_1,\dots,A_K) = \frac{1}{2}\sum_{k=1}^{K}{\frac{cut(A_k,\bar{A_k})}{vol(A_k)}}
+\end{equation}
+
+\noindent
+donde $vol(A_k)=\sum_{i\in A}\sum_{j=1}^{N}{w_{ij}}$.
+El problema puede formularse en términos de hallar los vectores de coeficientes binarios $c_i\in{0,1}^N$, donde $c_{ik} = 1$ si el punto $i$ pertenece al cluster $k$, tales que se minimiza $Ncut$.
+El modo de hallar los vectores $c_i$ distingue los dos algoritmos que más adelante se mencionan: \textbf{Affinity propagation} y \textbf{Clustering espectral}~\cite{Murphy12}.
+
+\subsection{Matriz de Similaridad}\label{subsec:matrizDeSimilaridad}
+
+La matriz de similitudes entre los puntos del conjunto de datos suele tomarse como la matriz de adyacencia correspondiente a uno de los siguientes grafos denotados por $G$~\cite{Luxburg07,Aggarawal13}:
+
+\begin{enumerate}
+    \item \textbf{Grafo de KNN}: Se conectan los puntos $x_i$ y $x_j$ si uno se encuentra entre los $K$ puntos más cercanos al otro.
+    La distancia se computa empleando la representación original de los puntos;
+    a menudo se utilizan las normas $L_1$ o $L_2$, o la similitud coseno.
+    Esto puede hacerse tanto si ambos puntos son $K$-vecinos entre sí, como si uno solo lo es del otro.
+    Igualmente el peso de las aristas puede tomarse binario (1 si hay arista, 0 si no) o a partir de la distancia existente entre los puntos.
+
+    \item \textbf{Grafo de $\epsilon$-vecindades}: Dos puntos $x_i$ y $x_j$ se encuentran conectados solo cuando la distancia $|| x_i - x_j ||^2$ es menor que el valor $\epsilon$.
+
+    \item \textbf{Grafo completo}: Todos los puntos con similaridad positiva entre sí son conectados.
+    Frecuentemente los pesos de las aristas se definen mediante la función RBF\footnote{\textit{Radial basis function} o \textit{función de base radial} en español.} Gaussiana:
+    \[
+        W_{ij} = e^{-\sigma \cdot dist(x_i , x_j)^2}
+    \]
+    donde $dist(x_i , x_j)$ es la distancia euclidiana entre los puntos, y $\sigma$ es un parámetro que determina el decaimiento de la función a medida que los valores se acercan o alejan al 0.
+\end{enumerate}
+
+\subsection{Affinity Propagation}\label{subsec:affinityPropagation}
+
+
+
+\subsection{Clustering Espectral}\label{subsec:clusteringEspectral}
+
+El clustering espectral se basa en relajar la restricción de que los vectores $c_i$ sean binarios, permitiéndoles tomar valores reales.
+Este enfoque convierte el problema en uno de análisis del espectro (vectores propios) de la \textbf{matriz laplaciana} asociada al grafo $W$.
+
+Para cada punto $x_i$, su \textit{grado} puede definirse como la suma de los pesos de las aristas incidentes sobre él:
+
+\begin{equation*}
+    d_i = \sum_{j=1}^{n}{W_{ij}}
+\end{equation*}
+
+A partir de los grados, puede definirse entonces la \textit{matriz de grados} $D$, como la matriz diagonal que satisface $D_{ii}=d_i$.
+
+Tomando el grafo $W$ como una matriz simétrica, es decir, donde $w_{ij}=w_{ji}\geq 0$, entonces puede definirse la matriz laplaciana asociada a $W$ como:
+
+\begin{equation}
+    \label{eq:laplacian-graph}
+    L = D - W
+\end{equation}
+
+Esta matriz cumple varias propiedades importantes~\cite{Luxburg07}:
+
+\begin{enumerate}
+    \item Para todo vector $f\in \mathbb{R}^n$, se cumple que
+    \[
+        f^T Lf = \frac{1}{2}\sum_{i,j=1}^{n}{W_{ij}(f_i - f_j)^2}
+    \]
+    \item $L$ es simétrica y semidefinida positiva.
+    \item El menor valor propio de $L$ es 0, y el vector propio correspondiente es el vector constante uno, $\mathbbm{1}$.
+    \item $L$ tiene $n$ valores propios reales no negativos $0=\lambda_1 \leq \lambda_2 \leq \dots \leq \lambda_n$.
+\end{enumerate}
+
+El conjunto de vectores propios, dado por los \textit{vectores indicadores} $\mathbbm{1}_{A_1}, \dots, \mathbbm{1}_{A_K}$, con valores propios 0, se corresponde con las $K$ componentes conexas del grafo.
+Si $K=1$, y $f$ es un vector propio con valor propio 0, entonces $0=\sum_{i,j}{w_{ij}(f_i - f_j)^2}$.
+Si dos nodos pertenecen a la misma componente conexa entonces $w_{ij}>0$ y por tanto $f_i = f_j$, por lo que se verifica que $f$ es constante para todos los vértices conectados por un camino en el grafo.
+En el caso de $K>1$, $L$ estará conformada por una matriz diagonal de bloques $L_k$, en cada uno de los cuales ocurre que existirá un mismo $f$ asociado a sus elementos~\cite{Luxburg07,Murphy12}.
+
+A partir de la observación anterior puede plantearse el algoritmo~\ref{algorithm:UnnormalizedSpectralClustering}.
+
+\begin{algorithm}
+    \caption{Clustering Espectral No Normalizado}
+    \label{algorithm:UnnormalizedSpectralClustering}
+    Construir las matrices $W$ y $D$, de similaridad y grados respectivamente\;
+    Computar la matriz laplaciana $L = D-W$\;
+    Determinar los primeros $K$ vectores propios $u_k$ de $L$, conformando con ellos la matriz $U = [u_1,\dots,u_k]$ de dimensiones $N\times K$\;
+    Aplicar K-Means (u otro algoritmo de clustering) a las filas $y_{i}\in \mathbb{R}^K$ de $U$\;
+\end{algorithm}
+
+En el caso ideal en que los clusters se hallen lo suficientemente separados entre sí como para encontrarse reflejados en las $K$ componentes conexas;
+entonces, como se mencionó con anterioridad, las filas correspondientes a elementos de una misma componente conexa serán idénticas.
+De lo contrario, pueden existir pequeñas perturbaciones que las hagan un poco diferentes, en correspondencia con qué tan distantes se encuentren los respectivos elementos en su espacio original.
+
+\subsubsection{Normalización}
+
+Existen otras dos variantes comunes para la matriz laplaciana que la normalizan~\cite{Aggarawal13}:
+
+\begin{align}
+    \label{eq:sym-laplacian}
+    L_{sym} & = D^{-\frac{1}{2}}LD^{-\frac{1}{2}} = I - D^{-\frac{1}{2}} W D^{-\frac{1}{2}} \\
+    \label{eq:rw-laplacian}
+    L_{rw} & = D^{-1}L = I - D^{-1}W
+\end{align}
+
+\noindent donde $I$ es la matriz identidad (1 en la diagonal principal y 0 en el resto de las posiciones).
+
+Si se emplea la matriz de~(\ref{eq:rw-laplacian}), el procedimiento es el mismo al mostrado en el algoritmo~\ref{algorithm:UnnormalizedSpectralClustering}, con el paso adicional del cálculo de $L_{rw}$ y empleando esta última en sustitución de $L$.
+
+El uso de $L_{sym}$ es más complicado pues los vectores propios serán de la forma $D^{\frac{1}{2}}\mathbbm{1}_{A_k}$; por ello, antes de aplicar K-Means sobre las filas de la matriz $U$, es necesario normalizarlas creando así la matriz $T$ con $t_{ij} = u_{ij}/\sqrt{\sum_{k}{u_{ik}^2}}$~\cite{Murphy12}.

@@ -23,7 +23,8 @@ def index():
         ('kmeans', 'K-Means'),
         ('spectral', 'Spectral Clustering'),
         ('gmm', 'Gaussian Mixture Model'),
-        ('hdbscan', 'HDBSCAN')
+        ('hdbscan', 'HDBSCAN'),
+        ('affinity', 'Affinity Propagation')
     ]
     return render_template('index.html', **{
         'axis': axis,
