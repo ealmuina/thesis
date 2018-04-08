@@ -4,7 +4,7 @@ from collections import Counter
 import numpy as np
 from hdbscan import HDBSCAN
 from sklearn import metrics
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans, SpectralClustering
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import scale, LabelEncoder
 
@@ -36,6 +36,7 @@ class Library:
     def _parse_clustering_algo(algorithm, categories):
         return {
             'kmeans': KMeans(n_clusters=len(categories)),
+            'spectral': SpectralClustering(n_clusters=len(categories)),
             'gmm': GaussianMixture(n_components=len(categories)),
             'hdbscan': HDBSCAN(min_cluster_size=3),
             'none': IdentityClustering()

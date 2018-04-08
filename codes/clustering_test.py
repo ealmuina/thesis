@@ -10,7 +10,7 @@ import seaborn as sns
 from hdbscan import HDBSCAN
 from matplotlib import offsetbox
 from sklearn import metrics
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans, SpectralClustering
 from sklearn.manifold import TSNE
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import LabelEncoder, scale
@@ -199,11 +199,13 @@ def test(X, y, features, export=False, plot=False):
     kmeans = KMeans(n_clusters=len(le.classes_))
     gmm = GaussianMixture(n_components=len(le.classes_))
     hdbscan = HDBSCAN(min_cluster_size=3)
+    spectral = SpectralClustering(n_clusters=len(le.classes_))
 
     algorithms = [
         ClusteringAlgorithm(kmeans, 'KMeans'),
         ClusteringAlgorithm(gmm, 'GaussianMixture'),
-        ClusteringAlgorithm(hdbscan, 'HDBSCAN')
+        ClusteringAlgorithm(hdbscan, 'HDBSCAN'),
+        ClusteringAlgorithm(spectral, 'SpectralClustering')
     ]
 
     report = [

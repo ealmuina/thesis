@@ -21,6 +21,7 @@ def index():
     clustering_algorithms = [
         ('none', 'None'),
         ('kmeans', 'K-Means'),
+        ('spectral', 'Spectral Clustering'),
         ('gmm', 'Gaussian Mixture Model'),
         ('hdbscan', 'HDBSCAN')
     ]
