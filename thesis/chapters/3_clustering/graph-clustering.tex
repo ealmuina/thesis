@@ -22,8 +22,8 @@ Para garantizar particiones más razonables, se puede definir el \textbf{corte n
 
 \noindent
 donde $vol(A_k)=\sum_{i\in A}\sum_{j=1}^{N}{w_{ij}}$.
-El problema puede formularse en términos de hallar los vectores de coeficientes binarios $c_i\in{0,1}^N$, donde $c_{ik} = 1$ si el punto $i$ pertenece al cluster $k$, tales que se minimiza $Ncut$.
-El modo de hallar los vectores $c_i$ distingue los dos algoritmos que más adelante se mencionan: \textbf{Affinity propagation} y \textbf{Clustering espectral}~\cite{Murphy12}.
+El problema puede formularse en términos de hallar los vectores de coeficientes binarios $c_i\in{0,1}^N$, donde $c_{ik} = 1$ si el punto $i$ pertenece al cluster $k$, tales que se minimiza $Ncut$~\cite{Murphy12}.
+El modo de hallar los vectores $c_i$ distingue los dos algoritmos que más adelante se mencionan: \textbf{Clustering espectral} y \textbf{Affinity propagation}.
 
 \subsection{Matriz de Similaridad}\label{subsec:matrizDeSimilaridad}
 
@@ -45,10 +45,6 @@ La matriz de similitudes entre los puntos del conjunto de datos suele tomarse co
     \]
     donde $dist(x_i , x_j)$ es la distancia euclidiana entre los puntos, y $\sigma$ es un parámetro que determina el decaimiento de la función a medida que los valores se acercan o alejan al 0.
 \end{enumerate}
-
-\subsection{Affinity Propagation}\label{subsec:affinityPropagation}
-
-
 
 \subsection{Clustering Espectral}\label{subsec:clusteringEspectral}
 
@@ -118,3 +114,81 @@ Existen otras dos variantes comunes para la matriz laplaciana que la normalizan~
 Si se emplea la matriz de~(\ref{eq:rw-laplacian}), el procedimiento es el mismo al mostrado en el algoritmo~\ref{algorithm:UnnormalizedSpectralClustering}, con el paso adicional del cálculo de $L_{rw}$ y empleando esta última en sustitución de $L$.
 
 El uso de $L_{sym}$ es más complicado pues los vectores propios serán de la forma $D^{\frac{1}{2}}\mathbbm{1}_{A_k}$; por ello, antes de aplicar K-Means sobre las filas de la matriz $U$, es necesario normalizarlas creando así la matriz $T$ con $t_{ij} = u_{ij}/\sqrt{\sum_{k}{u_{ik}^2}}$~\cite{Murphy12}.
+
+\subsubsection{Complejidad espacial y temporal}
+
+%TODO Do this!
+
+\subsection{Affinity Propagation}\label{subsec:affinityPropagation}
+
+\textit{Affinity Propagation} es un algoritmo que sigue la idea de que cada punto debe escoger a otro como su \textit{ejemplo} o \textit{centroide};
+algunos puntos se elegirán a sí mismos como centroides, y esto automáticamente determinará el número de clusters.
+
+Para este algoritmo se tiene un único vector de coeficientes $c_i \in {1,\dots,N}$ que representan el centroide del punto $i$-ésimo.
+El objetivo es maximizar la siguiente función:
+
+\begin{equation}
+    \label{eq:affinity-propagation}
+    S(c) = \sum_{i=1}^{N}s(i,c_i) + \sum_{k=1}^{K}{\delta_k(c)}
+\end{equation}
+
+\noindent
+donde $s(i, c_i)$ mide la similaridad entre el punto $i$ y el centroide correspondiente.
+El segundo término sirve para penalizar el resultado, siendo $-\infty$ si algún elemento $i$ ha elegido $k$ como centroide ($c_i = k$), pero $k$ no se ha elegido a sí mismo ($c_k \neq k$).
+En otras palabras:
+
+\begin{equation}
+    \label{affinity-propagation-penalty}
+    \delta_k(c) = \begin{cases}
+                      -\infty & \text{si $c_k \neq k$ pero $\exists i: c_i = k$} \\
+                      0 & \text{eoc.}
+    \end{cases}
+\end{equation}
+
+Los puntos se envían, con cada uno de los restantes puntos, mensajes que pertenecen a una de dos categorías:
+\begin{itemize}
+    \item \textit{Responsabilidad} $r(i, k)$: Mide cuánta importancia le asocia el punto $i$ a que $k$ sea su centroide, comparado con otros posibles centroides para $i$.
+    \item \textit{Disponibilidad} $a(i, k)$: Indica cuánta importancia le asocia el punto $k$ a ser el centroide de $i$, comparado con otros posibles puntos de los que puede ser centroide.
+\end{itemize}
+
+Las responsabilidades y disponibilidades se inicializan en cero para todos los pares de puntos y son actualizadas iterativamente siguiendo las siguientes fórmulas:
+
+\begin{align}
+    \label{eq:responsibility}
+    r(i,k) &= s(i,k) - \max_{k' \neq k}\left[ a(i, k') + s(i,k') \right] \\
+    \label{eq:availability}
+    a(i, k) &= \min\left[ 0, r(k,k) + \sum_{i'\notin \{i, k\}}{r(i', k)} \right]
+\end{align}
+
+Para evitar oscilaciones numéricas, en cada iteración las responsabilidades y disponibilidades son reajustadas respectivamente mediante las expresiones:
+
+\begin{align}
+    \label{eq:responsibility-damping}
+    r_{t+1}(i,k) &= \lambda \cdot r_t (i,k) + (1-\lambda)\cdot r_{t+1}(i,k) \\
+    \label{eq:availability-damping}
+    a_{t+1}(i,k) &= \lambda \cdot a_t (i,k) + (1-\lambda)\cdot a_{t+1}(i,k)
+\end{align}
+
+\noindent
+donde $t$ indica el número de la iteración correspondiente;
+y $\lambda$ ($0.5 \leq \lambda \leq 1$) es una constante conocida como \textit{damping factor}, que pondera la variación de un valor respecto a la iteración anterior.
+
+El número de clusters puede ser controlado ajustando los valores de la diagonal principal de la matriz de similaridad, pues $s(i,i)$ sirve como indicador de la preferencia que se le da a $i$ para que sea centroide.
+Frecuentemente el valor $s(i,i)$ se fija como la media de todas las similitudes, para todos los $i$.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{affinity-propagation.png}
+    \caption{Ejemplo de ejecución del algoritmo \textit{Affinity Propagation}. El color de cada punto indica cuán cerca se encuentra de ser centroide. La tonalidad de las flechas refleja la responsabilidad entre sus extremos. (Tomado de~\cite{Murphy12})}
+    \label{img:affinity-propagation}
+\end{figure}
+
+\subsubsection{Complejidad espacial y temporal}
+
+%TODO Elaborate on this
+
+El algoritmo Affinity Propagation tiene una complejidad temporal $O(N^2 \cdot T)$, con $N$ número de elementos del conjunto de datos y $T$ cantidad de iteraciones hasta converger, para grafos densos.
+Para matrices esparcidas (correspondientes a grafos densos), el comportamiento en tiempo del algoritmo es, en cambio, $O(E\cdot T)$, con $E$ número de aristas (valores distintos de cero).
+
+En el caso de la complejidad espacial, la memoria ocupada es $O(N^2)$ y $O(E)$ en dependencia si la matriz es esparcida o no, respectivamente~\cite{Murphy12}.
+
