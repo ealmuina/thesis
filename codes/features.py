@@ -31,18 +31,18 @@ def plot_spectral_descriptors(audio):
     fig, ax = pl.subplots(2, 2, figsize=(12, 8))
     fig.subplots_adjust(left=0.07, right=0.97)
 
-    ax[0, 0].plot(audio.spectral_centroid, label='SC')
-    ax[0, 0].plot(audio.spectral_spread, label='SS')
-    ax[0, 0].legend()
+    ax[0, 0].plot(audio.spectral_centroid.T, label='SC')
+    # ax[0, 0].plot(audio.spectral_spread, label='SS')
+    # ax[0, 0].legend()
     ax[0, 0].set_title('Spectral Centroid (SC) y Spectral Spread (SS)')
 
-    ax[0, 1].plot(audio.spectral_roll_off)
+    ax[0, 1].plot(audio.spectral_roll_off.T)
     ax[0, 1].set_title('Spectral Roll-off (SRO)')
 
-    ax[1, 0].plot(audio.spectral_flux)
+    # ax[1, 0].plot(audio.spectral_flux)
     ax[1, 0].set_title('Spectral Flux (SFX)')
 
-    ax[1, 1].plot(audio.spectral_flatness)
+    ax[1, 1].plot(audio.spectral_flatness.T)
     ax[1, 1].set_title('Spectral Flatness (SF)')
 
     fig.show()
@@ -83,9 +83,9 @@ def main():
 
     audio = Audio(pathlib.Path('../sounds/sheep.wav'))
 
-    plot_temporal_descriptors(audio)
+    # plot_temporal_descriptors(audio)
     plot_spectral_descriptors(audio)
-    plot_harmonic_descriptors(audio)
+    # plot_harmonic_descriptors(audio)
     plot_mfccs(audio)
 
 

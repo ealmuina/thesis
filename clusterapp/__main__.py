@@ -13,9 +13,9 @@ def index():
     axis = [
         ('min_freq', 'Min Frequency (Hz)'),
         ('max_freq', 'Max Frequency (Hz)'),
-        ('peak_freq', 'Peak Frequency (Hz)'),
+        ('zcr', 'Zero Crossing Rate'),
         ('peak_ampl', 'Peak Amplitude'),
-        ('fundamental_freq', 'Fundamental Frequency (Hz)'),
+        ('spectral_centroid', 'Spectral Centroid (Hz)'),
         ('bandwidth', 'Bandwidth (Hz)')
     ]
     clustering_algorithms = [

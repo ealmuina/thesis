@@ -86,10 +86,10 @@ def main(export=False, plot=False):
     sns.set_style('white')
 
     single_features = [
-        'min_freq', 'max_freq', 'peak_freq', 'peak_ampl', 'fundamental_freq', 'bandwidth'
+        'zcr', 'max_freq', 'min_freq', 'peak_ampl', 'spectral_centroid', 'bandwidth'
     ]
     features = [
-        ('mfcc',),
+        # ('mfcc',),
         *[(f1, f2) for f1, f2 in itertools.combinations(single_features, 2)]
     ]
 
@@ -211,8 +211,8 @@ def test(X, y, features, export=False, plot=False):
     for algorithm in algorithms:
         report.append(report_algorithm(X, y, algorithm, filenames, plt_X, export, plot))
 
-    merge = algorithms[2] + algorithms[0] + algorithms[1]
-    report.append(report_algorithm(X, y, merge, filenames, plt_X, export, plot))
+    # merge = algorithms[2] + algorithms[0] + algorithms[1]
+    # report.append(report_algorithm(X, y, merge, filenames, plt_X, export, plot))
 
     print_table(report)
     print()
