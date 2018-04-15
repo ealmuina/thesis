@@ -4,18 +4,21 @@ block_cipher = None
 
 
 a = Analysis(['clusterapp/__main__.py'],
-             pathex=['/home/eddy/PycharmProjects/thesis'],
-             binaries=[],
+             pathex=['C:/Users/Test/Desktop/thesis'],
+             binaries=[
+             	('C:/Users/Test/AppData/Local/Programs/Python/Python35/Lib/site-packages/scipy/extra-dll', '.'),
+             	('C:/Users/Test/AppData/Local/Programs/Python/Python35/Lib/site-packages/resampy/data', 'resampy/data')
+             ],
              datas=[
                 ('clusterapp/templates', 'templates'),
                 ('clusterapp/static', 'static')
              ],
              hiddenimports=[
-                'scipy._lib.messagestream',
+             	'scipy._lib.messagestream',
                 'sklearn.neighbors.typedefs',
                 'sklearn.neighbors.quad_tree',
                 'sklearn.tree',
-                'sklearn.tree._utils'
+				'sklearn.tree._utils'
              ],
              hookspath=[],
              runtime_hooks=[],
