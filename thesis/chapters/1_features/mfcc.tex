@@ -1,6 +1,6 @@
 Los \textit{Mel Frequency Cepstral Coefficients} (MFCC)~\cite{Davis80} son coeficientes para la representación del habla basados en la percepción auditiva humana.
 Su objetivo es caracterizar el contenido relevante de la señal, obviando aquellas características que poseen información poco valiosa como el ruido de fondo, emociones, volumen, tono, etc.
-Si bien fueron desarrollados para tareas asociadas al reconocimiento automático del habla, igualmente han tenido una amplia aplicación en áreas relacionadas al procesamiento de señales musicales y bioacústicas~\cite{McKinney03,Dufour14,Clemins05,Lee06,Li01,Cowling03,Mitrovic06,Fagerlund07}.
+Si bien fueron desarrollados para tareas asociadas al reconocimiento automático del habla, igualmente han tenido una amplia aplicación en áreas relacionadas al procesamiento de señales musicales y bioacústicas~\cite{Clemins05,Cowling03,Dufour14,Fagerlund07,Lee06,Li01,McKinney03,Mitrovic06}.
 
 Los MFCC se basan en la característica del sistema auditivo humano que provoca que para este sea más difícil discernir entre dos frecuencias cercanas cuanto más altas ellas sean.
 La \textbf{escala Mel} (figura~\ref{img:mel-scale}) fue desarrollada con el propósito de representar dicha propiedad, permitiendo medir las frecuencias de un modo más acorde a la percepción humana de estas, mediante el uso de la unidad de medida conocida como \textit{mel}.
@@ -101,7 +101,7 @@ Para calcular los coeficientes delta se aplica la siguiente fórmula:
 donde $d_t$ es el vector de coeficientes delta correspondiente a la trama $t$, y $c_{t+n}$ y $c_{t-n}$ son los MFCC de las tramas posteriores y anteriores respectivamente.
 El valor de la cantidad de tramas consecutivas a explorar ($T$) suele ser 2.
 
-Los coeficientes delta-delta pueden ser calculados de igual forma aplicando~(\ref{eq:delta}) empleando los delta en lugar de los MFCC.
+Los coeficientes delta-delta pueden ser calculados de igual forma aplicando~(\ref{eq:delta}) empleando los delta en lugar de los MFCC\@.
 
 A menudo sucede que un segmento de audio está compuesto por más de una trama, de manera que los procedimientos que se han descrito en esta sección producen no un único vector de características sino uno por cada trama del segmento.
-Una posible solución a esta situación consiste en construir un único vector, con los promedios componente a componente de todos los de la secuencia obtenida~\cite{Lee06,Fagerlund07}.
+Una posible solución a esta situación consiste en construir un único vector, con los promedios componente a componente de todos los de la secuencia obtenida~\cite{Fagerlund07,Lee06}.

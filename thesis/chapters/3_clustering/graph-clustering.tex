@@ -117,7 +117,11 @@ El uso de $L_{sym}$ es más complicado pues los vectores propios serán de la fo
 
 \subsubsection{Complejidad espacial y temporal}
 
-%TODO Do this!
+Dado un conjunto de datos de $n$ elementos, los algoritmos de clustering espectral construyen una matriz de similaridad de dimensión $n \times n$ sobre la que se computan los vectores propios.
+Esta operación tiene en general una complejidad temporal $O(n^3)$, aunque existen una variedad de métodos que pueden emplearse para escalar el algoritmo a conjuntos de datos de gran tamaño~\cite{Yan09}.
+
+El costo de memoria asociado al algoritmo es dominado por el espacio $O(n^2)$ requerido por la matriz de similitudes;
+que puede ser reducido a $O(E)$ en caso de emplear una matriz dispersa, donde $E$ es el número de valores distintos de cero.
 
 \subsection{Affinity Propagation}\label{subsec:affinityPropagation}
 
@@ -184,8 +188,6 @@ Frecuentemente el valor $s(i,i)$ se fija como la media de todas las similitudes,
 \end{figure}
 
 \subsubsection{Complejidad espacial y temporal}
-
-%TODO Elaborate on this
 
 El algoritmo Affinity Propagation tiene una complejidad temporal $O(N^2 \cdot T)$, con $N$ número de elementos del conjunto de datos y $T$ cantidad de iteraciones hasta converger, para grafos densos.
 Para matrices esparcidas (correspondientes a grafos densos), el comportamiento en tiempo del algoritmo es, en cambio, $O(E\cdot T)$, con $E$ número de aristas (valores distintos de cero).

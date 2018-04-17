@@ -5,7 +5,7 @@ y se computan directamente a partir de la señal digitalizada.
 
 El \textit{attack} de una señal se define como el espacio de tiempo, al inicio de esta, en que su intensidad va en ascenso.
 
-El \textit{log-attack time} (LAT)~\cite{Kim05,Manjunath02,Peters04,Gunasekaran11} se calcula entonces como el logaritmo en base 10 de la duración del intervalo de tiempo transcurrido entre los momentos en que la señal se hace audible ($startAttack$) y en que alcanza su máxima intensidad ($stopAttack$):
+El \textit{log-attack time} (LAT)~\cite{Gunasekaran11,Kim05,Manjunath02,Peters04} se calcula entonces como el logaritmo en base 10 de la duración del intervalo de tiempo transcurrido entre los momentos en que la señal se hace audible ($startAttack$) y en que alcanza su máxima intensidad ($stopAttack$):
 
 \begin{equation}
     \label{eq:LAT}
@@ -69,7 +69,7 @@ el que generalmente se considera como el intervalo en que la amplitud de la señ
 
 \subsection{Auto-correlation}\label{subsec:auto-correlation}
 
-La \textit{auto-correlation} (AC)~\cite{Peters04,Gunasekaran11} de la señal está dada por un vector de coeficientes que describen su distribución espectral en el dominio del tiempo.
+La \textit{auto-correlation} (AC)~\cite{Gunasekaran11,Peters04} de la señal está dada por un vector de coeficientes que describen su distribución espectral en el dominio del tiempo.
 El coeficiente $k$-ésimo se calcula mediante la expresión:
 
 \begin{equation}
@@ -79,7 +79,7 @@ El coeficiente $k$-ésimo se calcula mediante la expresión:
 
 \subsection{Zero Crossing Rate}\label{subsec:zeroCrossingRate}
 
-El \textit{zero crossing rate} (ZCR)~\cite{Peters04,Fagerlund07,Gunasekaran11} es una medida del número de veces que la amplitud de la señal cambia de signo.
+El \textit{zero crossing rate} (ZCR)~\cite{Fagerlund07,Gunasekaran11,Peters04} es una medida del número de veces que la amplitud de la señal cambia de signo.
 Los sonidos periódicos tienden a tener un pequeño valor de ZCR, mientras que para los ruidos este valor suele ser alto.
 
 Puede ser computado de forma global, o para cada trama de la señal, aplicando la siguiente expresión:

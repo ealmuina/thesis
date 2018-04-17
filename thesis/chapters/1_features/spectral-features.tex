@@ -41,7 +41,7 @@ A continuación se presentan tres de estas características.
 
 \subsubsection{Spectral Centroid}
 
-El \textit{spectral centroid} (SC)~\cite{Kim05,Manjunath02,Peters04,Fagerlund07,Lasseck14} constituye el centro de masas del espectro de frecuencias de una trama, y permite describir la señal en términos del tipo de frecuencias predominantes (altas o bajas) en cada trama.
+El \textit{spectral centroid} (SC)~\cite{Fagerlund07,Kim05,Lasseck14,Manjunath02,Peters04} constituye el centro de masas del espectro de frecuencias de una trama, y permite describir la señal en términos del tipo de frecuencias predominantes (altas o bajas) en cada trama.
 Puede computarse mediante la siguiente expresión:
 
 \begin{equation}
@@ -54,7 +54,7 @@ donde $K$ es la longitud del vector correspondiente a la DFT de la trama, y $f(k
 
 \subsubsection{Spectral Spread}
 
-También conocido como \textit{instantaneous bandwith} o \textit{spectral width}, el \textit{spectral spread} (SS)~\cite{Kim05,Manjunath02,Peters04,Fagerlund07} de una señal refleja la dispersión del espectro de frecuencias en torno a su centroide.
+También conocido como \textit{instantaneous bandwith} o \textit{spectral width}, el \textit{spectral spread} (SS)~\cite{Fagerlund07,Kim05,Manjunath02,Peters04} de una señal refleja la dispersión del espectro de frecuencias en torno a su centroide.
 
 Puede calcularse aplicando la siguiente expresión en cada trama:
 
@@ -71,7 +71,7 @@ los valores altos (propios de ruidos), en cambio, muestran una dispersión de la
 
 \subsubsection{Spectral Roll-off}
 
-El \textit{spectral roll-off} (SRO)~\cite{Peters04,Fagerlund07} se define como la frecuencia bajo la cual se encuentra un porcentaje específico (usualmente entre el 85\% y el 99\%) de la energía espectral total.
+El \textit{spectral roll-off} (SRO)~\cite{Fagerlund07,Peters04} se define como la frecuencia bajo la cual se encuentra un porcentaje específico (usualmente entre el 85\% y el 99\%) de la energía espectral total.
 
 \begin{figure}[!h]
     \centering
@@ -96,7 +96,7 @@ donde $\hat{X}_t$ es la transformada discreta de Fourier de la trama $t$-ésima 
 
 \subsection{Spectral Flatness}\label{subsec:spectralFlatness}
 
-El \textit{spectral flatness} (SF)~\cite{Peters04,Fagerlund07,Zamanian17} o \textit{entropía} de una señal refleja su similitud a una señal compuesta por ruido, caso en que su valor se aproxima a 1;
+El \textit{spectral flatness} (SF)~\cite{Fagerlund07,Peters04,Zamanian17} o \textit{entropía} de una señal refleja su similitud a una señal compuesta por ruido, caso en que su valor se aproxima a 1;
 mientras que si se trata de una señal armónica, el valor será próximo a 0.
 
 El SF se calcula como la razón entre las medias geométrica y aritmética de las amplitudes presentes en la DFT de la trama, es decir, mediante la expresión:

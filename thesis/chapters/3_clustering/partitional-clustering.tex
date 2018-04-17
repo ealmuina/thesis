@@ -1,6 +1,6 @@
-A continuación discutimos el algoritmo de clustering conocido como K-Means, el cual es uno de los más simples y eficientes existentes en la literatura.
-Luego de describir en detalle el algoritmo, analizamos algunos de los principales factores que influyen sobre sus resultados.
-Finalmente, presentamos una variación de K-Means que busca disminuir la complejidad computacional del algoritmo.
+A continuación es discutido el algoritmo de clustering conocido como K-Means, el cual es uno de los más simples y eficientes existentes en la literatura.
+Luego de describir en detalle el algoritmo, se analizan algunos de los principales factores que influyen sobre sus resultados.
+Finalmente, se presenta una variación de K-Means que busca disminuir la complejidad computacional del algoritmo.
 
 \subsection{K-Means}\label{subsec:k-means}
 
@@ -10,7 +10,7 @@ Cada punto del conjunto de datos es luego asignado al centroide más cercano bas
 Una vez se han formado los clusters, los centroides para cada cluster son actualizados a un nuevo punto.
 De manera iterativa, el algoritmo repite estos dos pasos hasta que los centroides no cambien o algún criterio de convergencia alternativo sea cumplido.
 K-Means es un algoritmo \textit{greedy} con convergencia garantizada a un mínimo local~\cite{Selim84} pero, visto como un problema de optimización, ha sido demostrado que hallar el mínimo de su función objetivo es NP-Hard~\cite{Manning08}.
-En la práctica, suele usarse como criterio de convergencia una versión relajada, continuándose las iteraciones hasta que el 1\% de los puntos cambian de cluster.
+En la práctica, suele usarse como criterio de convergencia una versión relajada, continuándose las iteraciones hasta que el 1\% de los puntos cambien de cluster.
 
 \begin{algorithm}
     \caption{K-Means}
@@ -26,18 +26,18 @@ La elección de la medida de proximidad para computar el centroide más próximo
 Medidas como la distancia Manhattan (norma $L_1$), la distancia euclidiana (norma $L_2$) y la similitud coseno son frecuentemente empleadas, especialmente la segunda.
 Tanto la medida de proximidad como el valor de $K$ son determinantes en la configuración de clusters producida por K-Means.
 
-Si visualizamos este algoritmo como un problema de optimización, entonces estaríamos minimizando la función objetivo de K-Means conocida como Suma de Errores Cuadráticos (SSE por sus siglas en inglés).
+Si se analiza este algoritmo como un problema de optimización, entonces estaría minimizándose la función objetivo de K-Means conocida como Suma de Errores Cuadráticos (SSE por sus siglas en inglés).
 A continuación presentamos su formulación matemática.
 
-Dado un conjunto de datos $D={x_1,x_2,\dots,x_N}$ de $N$ puntos, denotemos el conjunto de clusters obtenido tras aplicar K-Means como $C={C_1,C_2,\dots,C_k,\dots,C_K}$.
-La SSE para $C$ es definido en la ecuación~(\ref{eq:SSE}) donde $c_k$ es el centroide del cluster $C_k$.
+Dado un conjunto de datos $D={x_1,x_2,\dots,x_N}$ de $N$ puntos, y denotado el conjunto de clusters obtenido tras aplicar K-Means como $C={C_1,C_2,\dots,C_k,\dots,C_K}$;
+la SSE para $C$ es definida en la ecuación~(\ref{eq:SSE}) donde $c_k$ es el centroide del cluster $C_k$.
 
 \begin{equation}
     \label{eq:SSE}
     SSE(C)=\sum_{k=1}^{K}{\sum_{x_{i}\in C_k}{dist(x_i, c_k)^2}}
 \end{equation}
 
-En otras palabras, se calcula el error de cada punto de los datos, es decir, su distancia al centroide más próximo, y luego computamos la suma total de los errores al cuadrado.
+En otras palabras, se calcula el error de cada punto de los datos, es decir, su distancia al centroide más próximo, y luego es computada la suma total de los errores al cuadrado.
 Dados dos conjuntos de clusters obtenidos aplicando dos diferentes corridas de K-Means, sería preferible conservar el de menor SSE puesto que esto significaría que los centroides obtenidos en esa corrida constituyen una mejor representación de los puntos en sus clusters.
 De ahí que el resultado de minimizar la función SSE represente el conjunto de clusters óptimo.
 
@@ -51,7 +51,7 @@ El centroide del $k$-ésimo cluster, $c_k$, quedaría entonces definido según l
 
 Los pasos 3 y 4 del algoritmo~\ref{algorithm:KMeans} directamente intentan minimizar la SSE. El paso 3 forma clusters asignando los puntos al centroide más cercano, lo que minimiza el SSE de dicho conjunto de centroides.
 Asimismo, el paso 4 recomputa los centroides, produciendo un nuevo conjunto de menor SSE, en correspondencia con la ecuación ~(\ref{eq:centroid}).
-Sin embargo, como mencionamos anteriormente, estos pasos solamente garantizan la convergencia de K-Means a un mínimo local de la función SSE, puesto que la optimizan partiendo de una selección específica de centroides y cantidad de estos, en lugar de todas las posibles opciones.
+Sin embargo, como se mencionó anteriormente, estos pasos solamente garantizan la convergencia de K-Means a un mínimo local de la función SSE, puesto que la optimizan partiendo de una selección específica de centroides y cantidad de estos, en lugar de todas las posibles opciones.
 
 \subsubsection{Selección de centroides iniciales}
 
@@ -71,7 +71,7 @@ Luego, se selecciona el punto más alejado de los centroides formados con anteri
 K-Means es un algoritmo extremadamente dependiente del valor de $K$ seleccionado por el usuario.
 La decisión de tal número constituye uno de los mayores desafíos, si no el mayor, al hacer uso de este algoritmo.
 Es por esto que numerosos trabajos se han enfocado en el área de determinar el $K$ más apropiado, y varios métodos han sido desarrollados con tal propósito.
-En esta subsección mencionamos algunos de los más generalizados.
+A continuación se mencionan algunos de los más generalizados.
 
 \begin{enumerate}
     \item \textbf{Índice de Calinski-Harabasz}~\cite{Calinski74}: Está definido por la ecuación~(\ref{eq:CH}):
@@ -84,7 +84,7 @@ En esta subsección mencionamos algunos de los más generalizados.
     $B(K)$ y $W(K)$ constituyen las sumas de los cuadrados de las distancias intra e inter-cluster respectivamente (dados $K$ clusters).
 
     \item \textbf{Estadística de Brecha}\footnote{\textit{Gap Statistic} en inglés.}~\cite{Tibshirani01}: En este método se generan $B$ conjuntos de datos que sigan una distribución uniforme en el mismo intervalo que el original.
-    Sea $W_{b}^{*}(K)$ la suma de los cuadrados de las distancias intra-cluster del $b$-ésimo conjunto de datos, definimos entonces la siguiente ecuación:
+    Sea $W_{b}^{*}(K)$ la suma de los cuadrados de las distancias intra-cluster del $b$-ésimo conjunto de datos, se plantea entonces la siguiente ecuación:
     \begin{equation}
         Gap(K) = \frac{1}{B} \times\sum_{b}{\log(W_{b}^{*}(K)) - \log(W(K))}
     \end{equation}
@@ -102,8 +102,8 @@ En esta subsección mencionamos algunos de los más generalizados.
     \end{equation}
 
     \item \textbf{Coeficiente de Silueta}\footnote{\textit{Silhouette Coefficient} en inglés.}~\cite{Kaufman90}: Su formulación considera tanto la distancia intra-cluster como la inter-cluster.
-    Para un punto dado $x_i$, primero calculamos el promedio de las distancias de este a todos los puntos del mismo cluster ($a_i$).
-    Luego por cada cluster que no contiene a $x_i$, calculamos el promedio de las distancias de $x_i$ a sus integrantes ($b_i$).
+    Para un punto dado $x_i$, primero se calcula el promedio de las distancias de este a todos los puntos del mismo cluster ($a_i$).
+    Luego por cada cluster que no contiene a $x_i$, se computa el promedio de las distancias de $x_i$ a sus integrantes ($b_i$).
     Usando estos dos valores, se estima el coeficiente de silueta de un punto como el cociente entre su diferencia y el mayor de ambos.
     El promedio de todos los coeficientes en el conjunto de datos puede ser empleado para evaluar la calidad de un clustering.
     Mayores valores se corresponden con modelos cuyos clusters se encuentran mejor definidos.
@@ -149,6 +149,5 @@ Estos reducen drásticamente la cantidad de cómputo necesario para converger a 
 
 Al recomputar los centroides durante cada iteración se tienen en cuenta tanto los puntos de la muestra recién asignados como los asignados durante las iteraciones anteriores.
 
-El algoritmo Mini-batch K-Means converge a mayor velocidad que K-Means,
-aunque la calidad de sus resultados es menor.
+El algoritmo Mini-batch K-Means converge a mayor velocidad que K-Means, aunque la calidad de sus resultados es menor.
 No obstante, para aplicaciones prácticas, esta diferencia en calidad suele ser poco significativa~\cite{Sculley10}.

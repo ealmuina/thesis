@@ -1,6 +1,6 @@
 Algoritmos como K-Means presentan dificultades para identificar clusters cuando las distancias entre elementos de un mismo conjunto es mayor que la de elementos de conjuntos distintos.
 En estos casos, puesto que K-Means busca minimizar la distancia entre los elementos dentro de un mismo cluster, producirá clusters que difieran significativamente de los grupos <<correctos>>.
-Podemos observar un ejemplo en el escenario de la figura~\ref{img:kmeans-dbscan}.
+Puede observarse un ejemplo en el escenario de la figura~\ref{img:kmeans-dbscan}.
 
 \begin{figure}[!h]
     \centering
@@ -9,8 +9,8 @@ Podemos observar un ejemplo en el escenario de la figura~\ref{img:kmeans-dbscan}
     \label{img:kmeans-dbscan}
 \end{figure}
 
-En la imagen podemos observar asimismo el comportamiento de otro algoritmo sobre el mismo conjunto de datos.
-En esta sección abordamos el algoritmo en cuestión, denominado \textit{DBSCAN}\footnote{Siglas en inglés de \textit{Density-based spatial clustering of applications with noise}.}, que forma parte del conjunto de algoritmos de clustering basados en la densidad de los datos.
+En la imagen se puede apreciar asimismo el comportamiento de otro algoritmo sobre el mismo conjunto de datos.
+En esta sección se aborda el algoritmo en cuestión, denominado \textit{DBSCAN}\footnote{Siglas en inglés de \textit{Density-based spatial clustering of applications with noise}.}, que forma parte del conjunto de algoritmos de clustering basados en la densidad de los datos.
 
 Un cluster basado en el criterio de densidad de los puntos consiste en un área densa de puntos conectados, separado de otros clusters por áreas de menor densidad.
 
@@ -24,7 +24,7 @@ En este caso número de puntos alrededor de $A$ es 7.
 El valor del radio es determinante en la densidad de un punto.
 Si este valor es suficientemente grande, entonces todos los puntos tendrán una densidad de $n$, el número de puntos en el conjunto de datos.
 En cambio, si el radio es demasiado pequeño, la densidad de todos los puntos será igual a 1.
-Más adelante discutiremos algunas estrategias para la selección de valores apropiados para el radio.
+Más adelante se discutirán algunas estrategias para la selección de valores apropiados para el radio.
 
 \begin{figure}[!h]
     \centering
@@ -47,7 +47,7 @@ De acuerdo con la densidad de un punto, estos pueden ser clasificados de la sigu
 
 \subsection{Algoritmo DBSCAN}\label{subsec:DBSCAN}
 
-A partir de las definiciones dadas de puntos núcleos, fronteras y de ruido, podemos describir el algoritmo DBSCAN del siguiente modo: Todo par de puntos núcleos cuya distancia sea no mayor que $Eps$ son asignados al mismo cluster.
+A partir de las definiciones dadas de puntos núcleos, fronteras y de ruido, se puede describir el algoritmo DBSCAN del siguiente modo: Todo par de puntos núcleos cuya distancia sea no mayor que $Eps$ son asignados al mismo cluster.
 De igual forma, los puntos fronteras son asignados al cluster de los puntos núcleos cuya distancia a estos sea menor o igual que $Eps$.
 (En caso de estar en la vecindad de núcleos pertenecientes a clusters diferentes, un criterio específico debe ser determinado al programar el algoritmo).
 Los puntos de ruido son descartados y no asignados a ningún cluster.
@@ -73,12 +73,12 @@ No obstante, este uso de memoria depende igualmente del comportamiento de la est
 
 \subsubsection{Selección de parámetros para DBSCAN}\label{subsubsec:paramsDBSCAN}
 
-Un criterio para determinar los parámetros es mediante la observación del comportamiento de la distancia de los puntos a su $k$-ésimo vecino más cercano, que llamaremos $k$-distancia\footnote{En la bibliografía en inglés suele nombrársele \textit{core distance}.}.
+Un criterio para determinar los parámetros es mediante la observación del comportamiento de la distancia de los puntos a su $k$-ésimo vecino más cercano, llamada $k$-distancia\footnote{En la bibliografía en inglés también suele nombrársele \textit{core distance}.}.
 Si un punto pertenece a un cluster, entonces su $k$-distancia debe ser un valor relativamente pequeño, siempre que $k$ no sea mayor que el tamaño del cluster.
 Siempre que las densidades de los clusters no difieran radicalmente, en promedio, los valores de la $k$-distancias para puntos que pertenezcan a algún cluster no mostrarán un rango de valores muy amplio.
 En cambio, para puntos que no pertenezcan a ningún cluster, es decir, de ruido, este valor sí estará situado muy por encima del rango antes mencionado.
-De esta forma, si tomamos todos los puntos de un conjunto de datos, los ordenamos por su $k$-distancia y estas las representamos en una gráfica (ver figura~\ref{img:dbscan-k-dist}), deberíamos obtener una imagen donde existirá un punto de inflexión que se corresponda con el valor de la $k$-distancia a partir del cual los puntos se encuentran fuera de algún cluster.
-Podemos entonces tomar dicho valor como el $Eps$ adecuado para el problema en cuestión.
+De esta forma, si se toman todos los puntos de un conjunto de datos, se les ordena por su $k$-distancia y estas se representan en una gráfica (ver figura~\ref{img:dbscan-k-dist}), se debería obtener una imagen donde existirá un punto de inflexión que se corresponda con el valor de la $k$-distancia a partir del cual los puntos se encuentran fuera de algún cluster.
+Puede entonces tomarse dicho valor como el $Eps$ adecuado para el problema en cuestión.
 En cuanto al valor de $MinPts$, este sería precisamente el $k$ seleccionado para calcular las distancias, pues los puntos cuya $k$-distancia sea menor que $Eps$ serán etiquetados como núcleos, mientras los demás serán fronteras o ruido.
 
 \begin{figure}[!h]
@@ -93,9 +93,9 @@ Si $k$ es demasiado pequeño, algunos puntos de ruido situados muy próximos ent
 Por otra parte, si $k$ es demasiado grandes, aquellos clusters cuya cantidad de elementos sea menor que $k$ no serán identificados correctamente.
 
 Un defecto del algoritmo DBSCAN es que requiere que las densidades de los clusters (y del espacio de datos en general) muestren comportamientos semejantes.
-Un ejemplo de esta afirmación podemos observarlo en la figura~\ref{img:density-issues}.
+Un ejemplo de esta afirmación puede ser observado en la figura~\ref{img:density-issues}.
 El ruido alrededor de los clusters $A$ y $B$ presenta la misma densidad que los clusters $C$ y $D$.
-Si seleccionamos un $Eps$ suficientemente bajo para detectar a $C$ y $D$, sucederá entonces que $A$, $B$ y el ruido a su alrededor constituirán un mismo cluster.
+Si se selecciona un $Eps$ suficientemente bajo para detectar a $C$ y $D$, sucederá entonces que $A$, $B$ y el ruido a su alrededor constituirán un mismo cluster.
 En cambio si el $Eps$ es tan alto como para distinguir a $A$ y $B$ como clusters independientes, entonces los puntos que forman parte de $C$ y $D$ serán considerados ruido.
 
 \begin{figure}[!h]
@@ -137,7 +137,7 @@ A continuación, se construye la nueva matriz de distancias, empleando la funci�
 
 \noindent
 donde $dist(a,b)$ es la distancia original entre los puntos $a$ y $b$.
-Como mencionamos anteriormente, bajo esta nueva métrica, los puntos de regiones densas permanecen a la misma distancia, pues sus $k$-distancias tienen valores relativamente pequeños y siendo entonces su distancia entre sí quien domina en la ecuación~(\ref{eq:d_mreach}).
+Como se mencionó con anterioridad, bajo esta nueva métrica, los puntos de regiones densas permanecen a la misma distancia, pues sus $k$-distancias tienen valores relativamente pequeños y siendo entonces su distancia entre sí quien domina en la ecuación~(\ref{eq:d_mreach}).
 Lo contrario ocurre en puntos localizados en regiones esparcidas, en dichos casos se impone su $k$-distancia y por tanto son alejados del resto de los puntos a al menos dicho valor.
 
 El uso de la distancia de alcanzabilidad mutua como alternativa a la medida de distancia tradicional mejora significativamente los resultados obtenidos al aproximar mediante una jerarquía la distribución de las densidades de los puntos del conjunto de datos~\cite{Eldridge15}.
@@ -150,7 +150,7 @@ El uso de la distancia de alcanzabilidad mutua como alternativa a la medida de d
 \end{figure}
 
 Una vez obtenido el árbol abarcador de costo mínimo, el siguiente paso consiste en construir una jerarquía de componentes conexas (clusters) a partir de este.
-Para ello eliminamos todas las aristas del grafo y las añadimos en orden ascendente según su peso, cada componente conexa que unen constituye el cluster padre de los clusters correspondientes en la jerarquía.
+Para ello se eliminan todas las aristas del grafo y se las añade en orden ascendente según su peso, cada componente conexa que unen constituye el cluster padre de los clusters correspondientes en la jerarquía.
 
 \begin{figure}[!h]
     \centering
@@ -165,8 +165,8 @@ Mientras el primero opta por producir una respuesta donde los parámetros $Eps$ 
 HDBSCAN no corta el árbol a un nivel dado, sino que selecciona los clusters a diferentes niveles, permitiendo así detectar agrupaciones de densidad variable.
 
 El paso 4 del algoritmo <<condensa>> el árbol de la jerarquía del paso anterior, lo que permite asociar a cada nodo una mayor cantidad de información.
-A menudo, mientras descendemos en la jerarquía observamos que, al dividirse un cluster, solo se separan unos pocos puntos mientras el grueso de sus elementos permanecen en el otro cluster hijo.
-Si no consideramos estas divisiones donde se pierden \textit{pocos} puntos y en su lugar simplemente eliminamos tales puntos del cluster en cuestión, obtendremos una versión simplificada del árbol de la jerarquía;
+A menudo, mientras se desciende en la jerarquía se observa que, al dividirse un cluster, solo se separan unos pocos puntos mientras el grueso de sus elementos permanecen en el otro cluster hijo.
+Si no se consideran estas divisiones donde se pierden \textit{pocos} puntos y en su lugar simplemente se eliminan tales puntos del cluster en cuestión, se obtendrá una versión simplificada del árbol de la jerarquía;
 donde las ramas realmente implican una división del cluster más que la eliminación de puntos de ruido.
 Esta es precisamente la versión condensada de la jerarquía.
 Y para lograr diferenciar entre las ramificaciones, HDBSCAN recibe un parámetro conocido como \textbf{tamaño mínimo de cluster}, que sirve como cota inferior para los clusters que son incluidos en el árbol condensado.
@@ -183,17 +183,17 @@ El último paso consiste en extraer la partición de los clusters a partir del �
 Con este propósito, HDBSCAN define un criterio para seleccionar aquellos clusters que persisten por más tiempo en la jerarquía.
 
 Como medida alternativa al peso de las aristas (distancia de alcanzabilidad mutua), se define $\lambda=\frac{1}{distancia}$.
-Asociamos a cada cluster los valores $\lambda_{birth}$ y $\lambda_{death}$, los valores de $\lambda$ en que surge el cluster y se divide respectivamente.
-Y para cada punto $p$ definimos $\lambda_p$ como el valor de $\lambda$ en que $p$ es eliminado de su cluster.
-Luego, computamos la \textbf{estabilidad} de un cluster como:
+Se asocia a cada cluster los valores $\lambda_{birth}$ y $\lambda_{death}$, los valores de $\lambda$ en que surge el cluster y se divide respectivamente.
+Y para cada punto $p$ se define $\lambda_p$ como el valor de $\lambda$ en que $p$ es eliminado de su cluster.
+Luego, se computa la \textbf{estabilidad} de un cluster como:
 
 \begin{equation*}
     \sum_{p\in cluster}{\lambda_p - \lambda_{birth}}
 \end{equation*}
 
-Finalmente, inicializamos un conjunto de clusters seleccionados con las hojas del árbol condensado y recorremos el árbol en orden topológico aplicando el siguiente criterio:
-Si la suma de la estabilidad de los hijos es mayor que la estabilidad del cluster actual, sustituimos este valor por dicha suma.
-Si, por el contrario, la estabilidad del cluster es mayor que la suma de las de sus hijos entonces lo añadimos al conjunto de clusters seleccionados y eliminamos de este a sus descendientes.
+Finalmente, se inicializa un conjunto de clusters seleccionados con las hojas del árbol condensado y se recorre el árbol en orden topológico aplicando el siguiente criterio:
+Si la suma de la estabilidad de los hijos es mayor que la estabilidad del cluster actual, se sutituye este valor por dicha suma.
+Si, por el contrario, la estabilidad del cluster es mayor que la suma de las de sus hijos entonces es añadido al conjunto de clusters seleccionados y se eliminan de este a sus descendientes.
 Una vez alcanzado el nodo raíz, el algoritmo ha concluido y su resultado son los clusters que hayan quedado en el conjunto.
 
 Cualquier punto que no forme parte de los clusters seleccionados será considerado ruido.
@@ -201,7 +201,7 @@ Además HDBSCAN permite, debido al funcionamiento del algoritmo, establecer un v
 
 \subsubsection{Complejidad espacial y temporal}
 
-Asumiendo que la distancia entre dos puntos se calcula en un tiempo $O(m)$, siendo $m$ la cantidad de dimensiones, podemos afirmar entonces que el primer paso del algoritmo~\ref{algorithm:HDBSCAN} toma un tiempo $O(m n^2)$.
+Asumiendo que la distancia entre dos puntos se calcula en un tiempo $O(m)$, siendo $m$ la cantidad de dimensiones, puede afirmarse entonces que el primer paso del algoritmo~\ref{algorithm:HDBSCAN} toma un tiempo $O(m n^2)$.
 Aplicando el algoritmo de Prim implementado con una lista, es posible construir el árbol abarcador de costo mínimo del paso 2 se realiza en $O(n^2+|E|) = O(n^2)$, pues $E$ conjunto de aristas del grafo y $|E|=O(n^2)$ por ser completo el grafo.
 El paso 3 requiere que las aristas sean ordenadas, tomando esto un tiempo $O(n\log n)$.
 El paso 4 puede ser realizado de conjunto con el 3, construyendo directamente la jerarquía condensada, lo que tarda un tiempo total $O(n^2)$.
@@ -214,4 +214,4 @@ En cuanto al espacio de memoria, se necesita $O(m n)$ para almacenar el conjunto
 El paso 2, teniendo en cuenta que el grafo no requiere ser computado y almacenado en memoria por completo, sino arista por arista;
 requiere una cantidad de memoria $O(n)$.
 Los siguientes pasos, solo necesitan tener en memoria en un mismo momento un nivel dado de la jerarquía, lo que ocupa un espacio $O(n)$.
-De esta forma, concluimos que la complejidad de memoria del algoritmo es $O(m n)$~\cite{Campello15}.
+De esta forma, se concluye que la complejidad de memoria del algoritmo es $O(m n)$~\cite{Campello15}.

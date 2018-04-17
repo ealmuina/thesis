@@ -2,13 +2,13 @@ Los algoritmos de clustering probabilísticos modelan el conjunto de datos a par
 Estos algoritmos transforman el problema de clustering en el de estimar los parámetros para $K$ distribuciones de probabilidad.
 Luego los puntos del conjunto de datos que se correspondan con una misma distribución se asociarán al mismo cluster.
 
-En esta sección analizamos un modelo de clustering probabilístico ampliamente estudiado, conocido como \textit{Gaussian Mixture Model} (GMM) y la técnica \textit{Expectation-maximization}, empleada para estimarlo computacionalmente.
+En esta sección se analiza un modelo de clustering probabilístico ampliamente estudiado, conocido como \textit{Gaussian Mixture Model} (GMM) y la técnica \textit{Expectation-maximization}, empleada para estimarlo computacionalmente.
 
 \subsection{Combinación de modelos}\label{subsec:mixtureModels}
 
 Sea $X={x_1,\dots,x_N}$ un conjunto de datos de $N$ observaciones de una variable aleatoria $x$ con $D$ dimensiones.
-Asumimos que la variable $x_i$ sigue una distribución consistente con la combinación de $K$ \textit{distribuciones componentes} (clusters), cada una instancia de una distribución para determinados parámetros.
-Podemos definir entonces la función de densidad de $x_i$ como:
+Se asume que la variable $x_i$ sigue una distribución consistente con la combinación de $K$ \textit{distribuciones componentes} (clusters), cada una instancia de una distribución para determinados parámetros.
+Puede definirse entonces la función de densidad de $x_i$ como:
 
 \begin{equation}
     \label{eq:mixtureModels}
@@ -47,14 +47,14 @@ Para el caso de $D$ dimensiones, la función toma la forma:
 donde $\mu$ es el vector $D$-dimensional de medias y $\Sigma$, de dimensión $D\times D$, la matriz de covarianza con determinante $|\Sigma|$.
 
 En GMM cada componente corresponde a una distribución normal con determinados valores asociados a sus parámetros $\mu$ y $\Sigma$.
-A partir de la ecuación~(\ref{eq:mixtureModels}) podemos entonces formular este modelo como:
+A partir de la ecuación~(\ref{eq:mixtureModels}) se puede entonces formular este modelo como:
 
 \begin{equation}
     \label{eq:GMM}
     p(x_i|\Theta) = p(x_i|\pi,\mu,\Sigma)= \sum_{k=1}^{K}{\pi_k \mathcal{N}(x_i|\mu_k,\Sigma_k)}
 \end{equation}
 
-Para estimar los parámetros de un modelo, podemos emplear el método de máxima verosimilitud.
+Para estimar los parámetros de un modelo, puede emplearse el método de máxima verosimilitud.
 Dado un conjunto de observaciones $X$, la función de log-verosimilitud se define como:
 
 \begin{equation}
@@ -63,8 +63,8 @@ Dado un conjunto de observaciones $X$, la función de log-verosimilitud se defin
 \end{equation}
 
 El método de máxima verosimilitud estima $\Theta$ como el valor que maximiza~(\ref{eq:log-likelihood}).
-Para encontrar dicho valor, podemos computar las derivadas parciales de~(\ref{eq:log-likelihood}) respecto a $\pi_k$, $\mu_k$, y $\Sigma_k$ respectivamente.
-Si igualamos a cero la derivada respecto a $\mu_k$ podemos despejar la siguiente expresión:
+Para encontrar dicho valor, se pueden computar las derivadas parciales de~(\ref{eq:log-likelihood}) respecto a $\pi_k$, $\mu_k$, y $\Sigma_k$ respectivamente.
+Si se iguala a cero la derivada respecto a $\mu_k$, puede despejarse la siguiente expresión:
 
 \begin{equation}
     \label{eq:mu_k}
@@ -81,7 +81,7 @@ donde
 
 $\gamma(z_{ik})$ es conocida como la \textbf{responsabilidad} de la componente $k$ sobre la observación $i$-ésima $x_i$.
 
-De igual forma, igualando a cero la derivada de~(\ref{eq:log-likelihood}) respecto a $\Sigma_k$, obtendremos
+De igual forma, igualando a cero la derivada de~(\ref{eq:log-likelihood}) respecto a $\Sigma_k$, se obtendrá
 
 \begin{equation}
     \label{eq:Sigma_k}
@@ -103,7 +103,7 @@ Generalmente solo pueden ser obtenidos mínimos locales aplicando algoritmos de 
 El algoritmo \textit{Expectation-maximization} (EM) permite estimar parámetros de máxima verosimilitud para un modelo.
 Sigue un proceso iterativo que alterna dos etapas: se infieren valores para los parámetros (\textit{expectation}), y luego se optimizan dichos valores para el conjunto de datos dado (\textit{maximization}).
 
-En el caso particular de GMM, podemos aplicarlo empleando para ello las ecuaciones que obtenidas en la sección~\ref{subsec:GMM} como se explica en el algoritmo~\ref{algorithm:EM}.
+En el caso particular de GMM, se puede aplicar empleando para ello las ecuaciones que obtenidas en la sección~\ref{subsec:GMM} como se explica en el algoritmo~\ref{algorithm:EM}.
 
 \begin{algorithm}
     \caption{Expectation-maximization para GMM}
@@ -137,7 +137,7 @@ Asimismo, debe decidirse cuál emplear entre los diferentes patrones existentes 
     \item \textbf{Esférica}: De dimensión $K\times 1$.
     Cada componente tiene un único valor de varianza que le es propio.
 \end{itemize}
-A continuación mencionamos dos criterios ampliamente usados para la evaluación de la calidad de un GMM con parámetros calculados aplicando este algoritmo.
+A continuación se mencionan dos criterios ampliamente usados para la evaluación de la calidad de un GMM con parámetros calculados aplicando este algoritmo.
 Estos facilitan la decisión de los hiper-parámetros en correspondencia con el problema que se intenta modelar.
 
 \begin{enumerate}
