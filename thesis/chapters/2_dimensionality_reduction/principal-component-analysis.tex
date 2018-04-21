@@ -1,1 +1,31 @@
-% TODO Do it!
+El \textit{análisis de componentes principales} (PCA\footnote{\textit{Principal component analysis} en inglés.}) es un procedimiento estadístico ampliamente empleado para la reducción de dimensiones de un conjunto de datos.
+
+La \textit{covarianza} mide la dependencia lineal entre dos variables aleatorias $x,y\in \mathbb{R}^N$.
+Valores muy grandes o muy pequeños indican una fuerte dependencia entre las variables, respectivamente directa (a grandes valores de una corresponden grandes valores de la otra) o inversa (a grandes valores de una corresponden pequeños valores de la otra).
+Puede calcularse como:
+
+\begin{equation}
+    \label{eq:covariance}
+    \sigma_{x,y} = \frac{1}{N}\sum_{i=1}^{N}{(x_i - \bar{x})(y_i - \bar{y})}
+\end{equation}
+
+En un conjunto de datos, cada componente de sus elementos puede ser considerada desde el punto de vista estadístico como una variable aleatoria, y por tanto usada para el análisis de las covarianzas entre ella y el resto de componentes.
+Para ello se construye la llamada \textit{matriz de covarianza}, que tiene la siguiente forma:
+
+\begin{equation}
+    \label{eq:covariance-matrix}
+    \Sigma_X = \begin{bmatrix}
+                   \sigma_{1,1} & \sigma_{1,2} & \ldots & \sigma_{1,n} \\
+                   \sigma_{2,1} & \sigma_{2,2} & \ldots & \sigma_{2,n} \\
+                   \vdots & \vdots & \ldots & \vdots \\
+                   \sigma_{n,1} & \sigma_{n,2} & \ldots & \sigma_{n,n}
+    \end{bmatrix}
+\end{equation}
+
+\noindent
+donde $\sigma_{i,j}$ es el valor de la covarianza entre las componentes $i$ y $j$ del conjunto de datos $X$.
+
+Los valores en las diagonales de la matriz corresponden a la varianza de cada una de las dimensiones.
+El objetivo del PCA es transformar el conjunto de datos a un espacio donde las componentes sean linealmente independientes unas de otras, lo que implica que la matriz correspondiente sea una matriz diagonal.
+En otras palabras, se persigue encontrar la matriz $W$ tal que $\Sigma_Y = \Sigma_X W^T$, donde $Y$ es la nueva representación conjunto de datos.
+
