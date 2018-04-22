@@ -11,12 +11,19 @@ from sklearn.preprocessing import LabelEncoder, scale
 from clusterapp.features import Audio
 
 TESTING_DIR = '../sounds/testing'
+CATEGORIES = [
+    'bufo bufo A',
+    'crex crex A',
+    'eumodicogryllus burdigalensis A',
+    'jynx torquilla A',
+    'nyctalus noctula A'
+]
 
 
-def load_data(categories):
+def load_data():
     X, y = [], []
 
-    for c in categories:
+    for c in CATEGORIES:
         for i in range(1, 11):
             path = pathlib.Path(os.path.join(TESTING_DIR, '%s-%d.wav' % (c, i)))
             audio = Audio(path)
@@ -28,6 +35,7 @@ def load_data(categories):
     le = LabelEncoder()
     le.fit(y)
     y = le.transform(y)
+    print(le.classes_)
 
     return scale(X), y
 
@@ -35,22 +43,13 @@ def load_data(categories):
 def main():
     sns.set()
     sns.set_style('white')
-    sns.set_palette('husl')
-
     np.random.seed(170)
 
-    categories = [
-        'bufo bufo A',
-        'crex crex A',
-        'eumodicogryllus burdigalensis A',
-        'jynx torquilla A',
-        'nyctalus noctula A'
-    ]
-    X, y = load_data(categories)
+    X, y = load_data()
 
     fig, ax = pl.subplots(1, 1, figsize=(8, 4))
     fig.subplots_adjust(left=0.05, right=0.97)
-    plot(X, y, PCA(n_components=2), ax, 'PCA')
+    plot(X, y, PCA(n_components=2), ax, 'PCA', True)
     fig.show()
 
     fig, ax = pl.subplots(2, 2, figsize=(12, 8))
@@ -68,10 +67,16 @@ def main():
     fig.show()
 
 
-def plot(X, y, algorithm, ax, title):
+def plot(X, y, algorithm, ax, title, show_legend=False):
     X = algorithm.fit_transform(X)
-    ax.scatter(X[:, 0], X[:, 1], c=y)
+
+    for label in set(y):
+        x = X[y == label, :]
+        ax.plot(x[:, 0], x[:, 1], 'o', label=CATEGORIES[label])
+
     ax.set_title(title)
+    if show_legend:
+        ax.legend()
 
 
 if __name__ == '__main__':
