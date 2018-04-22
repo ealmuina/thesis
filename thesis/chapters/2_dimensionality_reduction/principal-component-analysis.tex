@@ -55,3 +55,10 @@ Luego, asumiendo que la media de cada atributo de la matriz $X$ es 0, se cumple 
 Los nuevos atributos son conocidos como \textbf{componentes principales}, y usualmente diferentes criterios pueden utilizarse para reducir la cantidad de dimensiones a partir de estas.
 Puesto que la cantidad de varianza decrece con cada componente principal, usualmente basta con seleccionar solamente las primeras hasta cierta posición.
 Una variante muy popular para decidir la cantidad de componentes principales a mantener (y por ende la cantidad de dimensiones del conjunto de datos transformado), es seleccionarlas hasta el punto en que la suma de sus varianzas sobrepasa una fracción predefinida de la varianza total (por ejemplo, el 95\%).
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{pca.png}
+    \caption{Resultado de aplicar PCA para reducir a dos las dimensiones de los MFCC de un conjunto de sonidos de 5 especies animales.}
+    \label{img:pca}
+\end{figure}
