@@ -1,1 +1,23 @@
-% TODO Do it!
+El análisis de componentes principales no produce resultados de calidad si la relación entre las variables aleatorias es no lineal.
+Los algoritmos de \textit{manifold learning} convierten los conjuntos de datos en otros de menor dimensionalidad conocidos como \textbf{manifolds}, obtenidos aplicando transformaciones no lineales sobre el espacio original de estos.
+
+A continuación se mencionan algunos de los algoritmos de manifold learning más conocidos:
+
+\begin{itemize}
+    \item \textbf{Multi-dimensional scaling} (MDS): es una técnica que tiene como objetivo obtener una representación del conjunto de datos en un espacio de menos dimensiones, preservando las distancias existentes entre los elementos en el espacio original.\\
+    En otras palabras, se busca minimizar la expresión:
+    \[
+        \sum_{i=1}^{N}\sum_{j=i+1}^{N}{d_{ij} - \hat{d}_{ij}}
+    \]
+    dado un conjunto de datos de $N$ elementos, donde $d_{ij}$ y $\hat{d}_{ij}$ son las distancias entre los elementos $i$ y $j$ en los espacios original y reducido respectivamente.
+
+    \item \textbf{Isomap}: Puede considerarse como una extensión de MDS; que a diferencia de este último, se basa en la distancia \textit{geodésica} entre los puntos.\\
+    Para ello se construye un grafo donde existirá una arista entre los puntos $i$ y $j$ si estos son \textit{vecinos} en el espacio original, que tendrá un peso igual a la distancia euclidiana entre los puntos.
+    Luego la distancia geodésica entre cualquier par de puntos se corresponderá con el camino de costo mínimo entre estos en el grafo.
+    Y empleando esta se aplica MDS\@.
+
+    \item \textbf{Locally Linear Embedding} (LLE):
+\end{itemize}
+
+
+
