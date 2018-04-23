@@ -22,7 +22,7 @@ Puesto que MDS se basa en las distancias entre los elementos y no utiliza la rep
 \subsection{Isomap}\label{subsec:isomap}
 
 Al igual que PCA, MDS tampoco produce buenos resultados cuando la relación entre los puntos no es lineal.
-Isomap puede considerarse como una extensión de MDS, desarrollada para procesar ese tipo de conjuntos de datos; y que a diferencia de MDS, se basa en la distancia \textit{geodésica} entre los puntos.
+\textit{Isomap} puede considerarse como una extensión de MDS, desarrollada para procesar ese tipo de conjuntos de datos; y que a diferencia de MDS, se basa en la distancia \textit{geodésica} entre los puntos.
 
 Para ello se construye un grafo donde existirá una arista entre los puntos $i$ y $j$ si estos son \textit{vecinos} en el espacio original, que tendrá un peso igual a la distancia euclidiana entre los puntos.
 
@@ -31,11 +31,18 @@ Finalmente, empleando esta nueva distancia, se aplica MDS\@.
 
 El modo en que se determina si dos puntos son vecinos entre sí, está sujeto a variaciones.
 Generalmente suele definirse un cierto radio para el que si dos puntos se encuentran a una distancia menor que este, se consideran vecinos.
-Otro enfoque comúnmente empleado es el de, dado un valor $k$, fijar como vecinos de un punto los $k$ puntos más próximos a este.
+Otro enfoque consiste en, dado un valor $k$, fijar como vecinos de un punto los $k$ puntos más próximos a este.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{manifold-learning.png}
+    \caption{Resultado de aplicar diferentes algoritmos de \textit{manifold learning} para reducir a dos las dimensiones del mismo conjunto de datos usado en la figura~\ref{img:pca}.}
+    \label{img:manifold-learning}
+\end{figure}
 
 \subsection{Locally Linear Embedding}\label{subsec:LLE}
 
-Locally Linear Embedding (LLE) es una técnica para la reducción de dimensiones basada en la idea de analizar regiones locales de puntos superpuestas, para determinar la estructura local de los datos.
+\textit{Locally Linear Embedding} (LLE) es una técnica para la reducción de dimensiones basada en la idea de analizar regiones locales de puntos superpuestas, para determinar la estructura local de los datos.
 
 El primer paso del algoritmo consiste en hallar los puntos más cercanos a cada punto $x_i$, expresando luego a $x_i$ como una combinación lineal de estos.
 De modo que se cumpla que $x_i =\sum_j {w_{ij}x_j}$, donde $\sum_j w_{ij}=1$ y $w_{ij} = 0$ si $x_j$ no es un vecino cercano de $x_i$.
@@ -55,17 +62,11 @@ entonces se busca $Y$ tal que minimice la siguiente expresión:
 
 Es decir, la nueva representación del conjunto de datos minimiza el error cuadrático medio a partir de los pesos encontrados para la representación original.
 
-\subsection{t-distributed Stochastic Neighbor Embedding}\label{subsec:TSNE}
-
-% TODO Do this
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.
-Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=\textwidth]{manifold-learning.png}
-    \caption{Resultado de aplicar diferentes algoritmos de \textit{manifold learning} para reducir a dos las dimensiones del mismo conjunto de datos usado en la figura~\ref{img:pca}.}
-    \label{img:manifold-learning}
-\end{figure}
+% TODO Consider to remove this
+%\subsection{t-distributed Stochastic Neighbor Embedding}\label{subsec:TSNE}
+%
+%\textit{t-distributed Stochastic Neighbor Embedding} (t-SNE)~\cite{vanderMaaten08} es un algoritmo de manifold learning especialmente diseñado para la visualización en dos o tres dimensiones de conjuntos de datos multidimensionales.
+%t-SNE representa las similitudes de los datos en su espacio original como probabilidades condicionales, que siguen una distribución Gaussiana;
+%y modela la similitud entre los datos en el espacio transformado (de menor dimensión) utilizando probabilidades condicionales que siguen una distribución t-Student.
+%
+%Para determinar la representación del conjunto de datos en el nuevo espacio, el algoritmo minimiza la \textit{divergencia de Kullback-Leibler}~\cite{vanderMaaten08} entre las probabilidades

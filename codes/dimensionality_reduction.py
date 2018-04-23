@@ -5,7 +5,7 @@ import numpy as np
 import pylab as pl
 import seaborn as sns
 from sklearn.decomposition import PCA
-from sklearn.manifold import MDS, Isomap, LocallyLinearEmbedding, TSNE
+from sklearn.manifold import MDS, Isomap, LocallyLinearEmbedding
 from sklearn.preprocessing import LabelEncoder, scale
 
 from clusterapp.features import Audio
@@ -35,7 +35,6 @@ def load_data():
     le = LabelEncoder()
     le.fit(y)
     y = le.transform(y)
-    print(le.classes_)
 
     return scale(X), y
 
@@ -47,19 +46,18 @@ def main():
 
     X, y = load_data()
 
-    fig, ax = pl.subplots(1, 1, figsize=(8, 4))
+    fig, ax = pl.subplots(1, 1, figsize=(10, 4))
     fig.subplots_adjust(left=0.05, right=0.97)
     plot(X, y, PCA(n_components=2), ax, 'PCA', True)
     fig.show()
 
-    fig, ax = pl.subplots(2, 2, figsize=(12, 8))
-    fig.subplots_adjust(left=0.07, right=0.97)
+    fig, ax = pl.subplots(1, 3, figsize=(12, 4))
+    fig.subplots_adjust(left=0.055, right=0.98)
 
     algorithms = [
-        (MDS, 'MDS', (0, 0)),
-        (Isomap, 'Isomap', (0, 1)),
-        (LocallyLinearEmbedding, 'LLE', (1, 0)),
-        (TSNE, 't-SNE', (1, 1))
+        (MDS, 'MDS', 0),
+        (Isomap, 'Isomap', 1),
+        (LocallyLinearEmbedding, 'LLE', 2)
     ]
 
     for algorithm, name, pos in algorithms:
