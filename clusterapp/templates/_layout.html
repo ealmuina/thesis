@@ -23,8 +23,8 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">2-Dimensions</a></li>
-                <li><a href="#about">n-Dimensions</a></li>
+                <li id="2d-bar"><a href="{{ url_for('index', dimensions='2d') }}">2-dimensions</a></li>
+                <li id="nd-bar"><a href="{{ url_for('index', dimensions='nd') }}">n-dimensions</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>

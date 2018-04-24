@@ -62,7 +62,7 @@ class Library:
         labels = algorithm.labels_ if hasattr(algorithm, 'labels_') else algorithm.predict(scaled_X)
 
         if X.shape[1] > 2:
-            mds = MDS(n_components=2)
+            mds = MDS(n_components=2, random_state=0)
             X = mds.fit_transform(X)
 
         result = {}

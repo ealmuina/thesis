@@ -1,18 +1,18 @@
 import argparse
 import time
 
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify, abort
 
 from clusterapp.core import Library, statistics
 
 app = Flask(__name__)
 
 
-def get_parameters(dimensions):
+def get_parameters(features):
     clustering_algorithm = request.args.get('clustering_algorithm')
     species = request.args.getlist('species[]')
 
-    clustering, scores = LIBRARY.cluster(species, dimensions, clustering_algorithm)
+    clustering, scores = LIBRARY.cluster(species, features, clustering_algorithm)
     stats = statistics(clustering)
 
     return jsonify(
@@ -29,8 +29,8 @@ def get_parameters(dimensions):
     )
 
 
-@app.route('/')
-def index():
+@app.route('/<dimensions>/')
+def index(dimensions):
     axis = [
         ('min_freq', 'Min Frequency (Hz)'),
         ('max_freq', 'Max Frequency (Hz)'),
@@ -47,26 +47,31 @@ def index():
         ('hdbscan', 'HDBSCAN'),
         ('affinity', 'Affinity Propagation')
     ]
-    return render_template('2d.html', **{
+
+    dimensions = dimensions.lower()
+    if dimensions not in ('2d', 'nd'):
+        abort(404)
+
+    return render_template('%s.html' % dimensions, **{
         'axis': axis,
         'clustering_algorithms': clustering_algorithms
     })
 
 
-@app.route('/parameters_2d')
+@app.route('/parameters_2d/')
 def parameters_2d():
     x = request.args.get('x')
     y = request.args.get('y')
     return get_parameters((x, y))
 
 
-@app.route('/parameters_nd')
+@app.route('/parameters_nd/')
 def parameters_nd():
-    dimensions = request.args.getlist('dimensions[]')
-    return get_parameters(dimensions)
+    features = request.args.getlist('features[]')
+    return get_parameters(features)
 
 
-@app.route('/search_for_species')
+@app.route('/search_for_species/')
 def search_for_species():
     q = request.args.get('q')
     excluded_species = set(request.args.getlist('exclude[]'))

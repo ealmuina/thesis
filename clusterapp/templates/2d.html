@@ -88,18 +88,14 @@
             $.get('{{ url_for('parameters_2d') }}', query_dict, function (data) {
                 refreshChart(data, x[x.selectedIndex].text, y[y.selectedIndex].text);
                 refreshTable(data, x[x.selectedIndex].text, y[y.selectedIndex].text);
-
-                $('#scores').html(
-                    'ARI: ' + data.scores['ARI'] + ' | ' +
-                    'AMI: ' + data.scores['AMI'] + ' | ' +
-                    'Homogeneity: ' + data.scores['Homogeneity'] + ' | ' +
-                    'Completeness: ' + data.scores['Completeness']
-                )
             });
         }
     </script>
 
     <script type="text/javascript">
+        $('#nd-bar').removeClass('active');
+        $('#2d-bar').addClass('active');
+
         $('#x-axis').select2({
             containerCssClass: "no-border"
         });

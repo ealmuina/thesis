@@ -1,0 +1,50 @@
+{% extends '_layout.html' %}
+
+{% block dimensions %}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Features selector</h3>
+        </div>
+        <div class="panel-body">
+            <select id="features-filter" class="form-control" multiple="multiple">
+                {% for name, verbose_name in axis %}
+                    <option value="{{ name }}">{{ verbose_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        function getSelectedFeatures() {
+            var features = [];
+            $('#features-filter').find('option:selected').each(function (index, sp) {
+                features.push(sp.value);
+            });
+            return features;
+        }
+
+        function refresh() {
+            var clustering_algorithm = $('#clustering-algorithm')[0];
+
+            var query_dict = {
+                'features[]': getSelectedFeatures(),
+                'clustering_algorithm': clustering_algorithm.value,
+                'species[]': getSelectedSpecies()
+            };
+            $.get('{{ url_for('parameters_nd') }}', query_dict, function (data) {
+                refreshChart(data, null, null);
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+        $('#2d-bar').removeClass('active');
+        $('#nd-bar').addClass('active');
+
+        $('#features-filter').select2({
+            containerCssClass: "no-border"
+        });
+    </script>
+{% endblock %}
