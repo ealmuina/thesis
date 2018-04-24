@@ -5,6 +5,7 @@ import numpy as np
 from hdbscan import HDBSCAN
 from sklearn import metrics
 from sklearn.cluster import KMeans, SpectralClustering, AffinityPropagation
+from sklearn.manifold import MDS
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import scale, LabelEncoder
 
@@ -59,6 +60,10 @@ class Library:
         scaled_X = scale(X) if len(X) else X
         algorithm.fit(scaled_X, y)
         labels = algorithm.labels_ if hasattr(algorithm, 'labels_') else algorithm.predict(scaled_X)
+
+        if X.shape[1] > 2:
+            mds = MDS(n_components=2)
+            X = mds.fit_transform(X)
 
         result = {}
         for i, label in enumerate(labels):

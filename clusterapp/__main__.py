@@ -8,6 +8,27 @@ from clusterapp.core import Library, statistics
 app = Flask(__name__)
 
 
+def get_parameters(dimensions):
+    clustering_algorithm = request.args.get('clustering_algorithm')
+    species = request.args.getlist('species[]')
+
+    clustering, scores = LIBRARY.cluster(species, dimensions, clustering_algorithm)
+    stats = statistics(clustering)
+
+    return jsonify(
+        segments=[{
+            'name': label if label != '-1' else 'noise',
+            'data': [{
+                'name': item['name'],
+                'x': item['x'][0],
+                'y': item['x'][1]
+            } for item in clustering[label]],
+            'statistics': stats[label]
+        } for label in clustering.keys()],
+        scores=scores
+    )
+
+
 @app.route('/')
 def index():
     axis = [
@@ -36,24 +57,13 @@ def index():
 def parameters_2d():
     x = request.args.get('x')
     y = request.args.get('y')
-    clustering_algorithm = request.args.get('clustering_algorithm')
-    species = request.args.getlist('species[]')
+    return get_parameters((x, y))
 
-    clustering, scores = LIBRARY.cluster(species, (x, y), clustering_algorithm)
-    stats = statistics(clustering)
 
-    return jsonify(
-        segments=[{
-            'name': label if label != '-1' else 'noise',
-            'data': [{
-                'name': item['name'],
-                'x': item['x'][0],
-                'y': item['x'][1]
-            } for item in clustering[label]],
-            'statistics': stats[label]
-        } for label in clustering.keys()],
-        scores=scores
-    )
+@app.route('/parameters_nd')
+def parameters_nd():
+    dimensions = request.args.getlist('dimensions[]')
+    return get_parameters(dimensions)
 
 
 @app.route('/search_for_species')
