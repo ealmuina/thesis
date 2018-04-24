@@ -9,6 +9,27 @@
 </head>
 <body>
 
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Segments Clustering Tool</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">2-Dimensions</a></li>
+                <li><a href="#about">n-Dimensions</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
 <div class="container" style="margin-top: 50px">
     <div class="container-fluid">
         <div class="row">
@@ -25,30 +46,9 @@
                         </select>
                     </div>
                 </div>
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h3 class="panel-title"><b>X</b> axis selector</h3>
-                    </div>
-                    <div class="panel-body">
-                        <select id="x-axis">
-                            {% for name, verbose_name in axis %}
-                                <option value="{{ name }}">{{ verbose_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h3 class="panel-title"><b>Y</b> axis selector</h3>
-                    </div>
-                    <div class="panel-body">
-                        <select id="y-axis">
-                            {% for name, verbose_name in axis %}
-                                <option value="{{ name }}">{{ verbose_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
+
+                {% block dimensions %}{% endblock %}
+
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <h3 class="panel-title">Filter by species</h3>
@@ -65,21 +65,7 @@
 
             <div class="col-md-9">
                 <div id='scatter-chart'></div>
-                {#                <div id="scores" class="well"></div>#}
-                <table class="table table-striped" style="margin-top: 10px">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Main class</th>
-                        <th>Proportion</th>
-                        <th id="x-mean-column">X mean</th>
-                        <th id="x-std-column">X std</th>
-                        <th id="y-mean-column">Y mean</th>
-                        <th id="y-std-column">Y std</th>
-                    </tr>
-                    </thead>
-                    <tbody id="statistics-table-body"></tbody>
-                </table>
+                {% block table %}{% endblock %}
             </div>
         </div>
     </div>
@@ -89,6 +75,14 @@
 <script src="{{ url_for('static', filename='js/highcharts.js') }}"></script>
 <script src="{{ url_for('static', filename='js/exporting.js') }}"></script>
 
+<link href="{{ url_for('static', filename='css/select2.min.css') }}" rel="stylesheet"/>
+<script src="{{ url_for('static', filename='js/select2.full.min.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/buttons.colVis.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dataTables.select.min.js') }}"></script>
+
 <script type="text/javascript">
     function getSelectedSpecies() {
         var species = [];
@@ -97,9 +91,7 @@
         });
         return species;
     }
-</script>
 
-<script type="text/javascript">
     var chart;
 
     function refreshChart(data, x_title, y_title) {
@@ -149,59 +141,11 @@
             series: data.segments
         });
     }
+</script>
 
-    function refreshTable(data, x_title, y_title) {
-        var segments = data.segments;
-        var table_body = "";
-        segments = segments.sort(function (a, b) {
-            return a.name.localeCompare(b.name)
-        });
+{% block scripts %}{% endblock %}
 
-        for (var i = 0; i < segments.length; i++) {
-            if (segments[i].name === 'noise') continue;
-            table_body +=
-                "<tr>" +
-                "<td>" + segments[i].name + "</td>" +
-                "<td>" + segments[i].statistics.label_true + "</td>" +
-                "<td>" + segments[i].statistics.label_true_count + '/' + segments[i].statistics.total + "</td>" +
-                "<td>" + segments[i].statistics.mean[0] + "</td>" +
-                "<td>" + segments[i].statistics.std[0] + "</td>" +
-                "<td>" + segments[i].statistics.mean[1] + "</td>" +
-                "<td>" + segments[i].statistics.std[1] + "</td>" +
-                "</tr>"
-        }
-        $('#statistics-table-body').html(table_body);
-
-        $('#x-mean-column').html(x_title + ' mean');
-        $('#x-std-column').html(x_title + ' std');
-        $('#y-mean-column').html(y_title + ' mean');
-        $('#y-std-column').html(y_title + ' std');
-    }
-
-    function refresh() {
-        var x = $('#x-axis')[0];
-        var y = $('#y-axis')[0];
-        var clustering_algorithm = $('#clustering-algorithm')[0];
-
-        var query_dict = {
-            'x': x.value,
-            'y': y.value,
-            'clustering_algorithm': clustering_algorithm.value,
-            'species[]': getSelectedSpecies()
-        };
-        $.get('{{ url_for('parameters_2d') }}', query_dict, function (data) {
-            refreshChart(data, x[x.selectedIndex].text, y[y.selectedIndex].text);
-            refreshTable(data, x[x.selectedIndex].text, y[y.selectedIndex].text);
-
-            $('#scores').html(
-                'ARI: ' + data.scores['ARI'] + ' | ' +
-                'AMI: ' + data.scores['AMI'] + ' | ' +
-                'Homogeneity: ' + data.scores['Homogeneity'] + ' | ' +
-                'Completeness: ' + data.scores['Completeness']
-            )
-        });
-    }
-
+<script type="text/javascript">
     $('#refresh-button').click(function () {
         refresh();
     });
@@ -211,18 +155,9 @@
     })
 </script>
 
-<link href="{{ url_for('static', filename='css/select2.min.css') }}" rel="stylesheet"/>
-<script src="{{ url_for('static', filename='js/select2.full.min.js') }}"></script>
-
 <script type="text/javascript">
     $(function () {
         $('#clustering-algorithm').select2({
-            containerCssClass: "no-border"
-        });
-        $('#x-axis').select2({
-            containerCssClass: "no-border"
-        });
-        $('#y-axis').select2({
             containerCssClass: "no-border"
         });
 
@@ -276,11 +211,6 @@
         })
     });
 </script>
-
-<script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/dataTables.buttons.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/buttons.colVis.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/dataTables.select.min.js') }}"></script>
 
 {#<script type="text/javascript">#}
 {#    $(function () {#}

@@ -26,7 +26,7 @@ def index():
         ('hdbscan', 'HDBSCAN'),
         ('affinity', 'Affinity Propagation')
     ]
-    return render_template('index.html', **{
+    return render_template('2d.html', **{
         'axis': axis,
         'clustering_algorithms': clustering_algorithms
     })
