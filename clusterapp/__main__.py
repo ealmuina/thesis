@@ -39,6 +39,10 @@ def index(dimensions):
         ('fundamental_freq', 'Fundamental Frequency (Hz)'),
         ('bandwidth', 'Bandwidth (Hz)')
     ]
+    if dimensions == 'nd':
+        axis += [
+            ('mfcc', 'MFCC')
+        ]
     clustering_algorithms = [
         ('none', 'None'),
         ('kmeans', 'K-Means'),

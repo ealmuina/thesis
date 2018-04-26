@@ -34,6 +34,17 @@ class Library:
         self.categories = set(self.segments.keys())
 
     @staticmethod
+    def _extract_features(audio, features):
+        current = []
+        for feature in features:
+            x = getattr(audio, feature)
+            if feature in ('mfcc',):
+                current.extend(x.mean(0))
+            else:
+                current.append(x.mean())
+        return current
+
+    @staticmethod
     def _parse_clustering_algo(algorithm, categories):
         return {
             'kmeans': KMeans(n_clusters=len(categories)),
@@ -50,9 +61,7 @@ class Library:
         X, y, names = [], [], []
         for cat in categories:
             for audio in self.segments[cat]:
-                X.append([
-                    getattr(audio, feature).mean() for feature in features
-                ])
+                X.append(self._extract_features(audio, features))
                 names.append(audio.name)
                 y.append(audio.name.split('-')[0])
         X = np.array(X, dtype=np.float64)
@@ -61,7 +70,7 @@ class Library:
         algorithm.fit(scaled_X, y)
         labels = algorithm.labels_ if hasattr(algorithm, 'labels_') else algorithm.predict(scaled_X)
 
-        if X.shape[1] > 2:
+        if X.shape[1] != 2:
             mds = MDS(n_components=2, random_state=0)
             X = mds.fit_transform(X)
 
