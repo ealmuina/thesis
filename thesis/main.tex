@@ -19,11 +19,11 @@
     %    I want to thank\ldots
 
     %    \tableofcontents
-    %    \listoffigures
-    %    \listoftables
-    %    \listofalgorithms
+    %    \listoffigures\addcontentsline{toc}{chapter}{Índice de figuras}
+    %    \listoftables\addcontentsline{toc}{chapter}{Índice de tablas}
+    %    \listofalgorithms\addcontentsline{toc}{chapter}{Índice de algoritmos}
 
-    \chapter*{Introducción}\label{ch:introduction}
+    \chapter*{Introducción}\label{ch:introduction}\addcontentsline{toc}{chapter}{Introducción}
     \input{chapters/introduction}
 
     \mainmatter
@@ -45,15 +45,15 @@
 
     \backmatter
 
-    %    \chapter*{Conclusiones}\label{ch:conclusion}
+    %    \chapter*{Conclusiones y recomendaciones}\label{ch:conclusion}\addcontentsline{toc}{chapter}{Conclusiones y recomendaciones}
     %    \input{chapters/conclusion}
 
     \selectbiblanguage{spanish}
     \bibliographystyle{babplain-lf}
-    \bibliography{references}
+    \bibliography{references}\addcontentsline{toc}{chapter}{Bibliografía}
 
     %    \appendix
-    %    \chapter{Appendix Title}\label{ch:appendix}
+    %    \chapter{Appendix Title}\label{ch:appendix}\addcontentsline{toc}{chapter}{Índice de figuras}
     %    \input{chapters/appendix}
 
 \end{document}
