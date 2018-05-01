@@ -117,7 +117,7 @@ def statistics(clustering):
             'label_true': label_true,
             'label_true_count': count,
             'total': len(cluster),
-            'mean': x.mean(0).round(2).astype(float).tolist(),
+            'mean': x.mean(0).round(2).astype(float).tolist(),  # TODO Fix this!
             'std': x.std(0).round(2).astype(float).tolist(),
         }
 

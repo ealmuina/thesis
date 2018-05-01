@@ -6,6 +6,7 @@
     <title>Segments Clustering Tool</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.dataTables.min.css') }}">
 </head>
 <body>
 
@@ -79,9 +80,6 @@
 <script src="{{ url_for('static', filename='js/select2.full.min.js') }}"></script>
 
 <script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/dataTables.buttons.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/buttons.colVis.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/dataTables.select.min.js') }}"></script>
 
 <script type="text/javascript">
     function getSelectedSpecies() {
@@ -211,43 +209,6 @@
         })
     });
 </script>
-
-{#<script type="text/javascript">#}
-{#    $(function () {#}
-{#        $('#species-table').DataTable({#}
-{#            serverSide: true,#}
-{#            ajax: {#}
-{#                url: "{% url 'duetto:datasources' 'species' %}",#}
-{#                dataSrc: function (json) {#}
-{#                    var data = [];#}
-{#                    for (var i = 0; i < json.data.length; i++) {#}
-{#                        var species = json.data[i];#}
-{#                        data.push([#}
-{#                            species['thumbnail'],#}
-{#                            species['genus'] + ' ' + species['specific'] + ' ' + species['sub_specific'],#}
-{#                            species['kingdom'],#}
-{#                            species['phylum'],#}
-{#                            species['cls'],#}
-{#                            species['order'],#}
-{#                            species['family'],#}
-{#                            species['genus'],#}
-{#                            species['specific'],#}
-{#                            species['sub_specific']#}
-{#                        ])#}
-{#                    }#}
-{#                    return data;#}
-{#                }#}
-{#            },#}
-{#            columns: [#}
-{#                {'name': 'category'},#}
-{#                {'name': 'x mean'},#}
-{#                {'name': 'x std'},#}
-{#                {'name': 'y mean'},#}
-{#                {'name': 'y std'}#}
-{#            ]#}
-{#        })#}
-{#    })#}
-{#</script>#}
 
 </body>
 </html>

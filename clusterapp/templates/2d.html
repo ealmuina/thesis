@@ -28,7 +28,7 @@
 {% endblock %}
 
 {% block table %}
-    <table class="table table-striped" style="margin-top: 10px">
+    <table id="statistics-table" class="table table-striped" style="margin-top: 10px">
         <thead>
         <tr>
             <th>#</th>
@@ -46,12 +46,13 @@
 
 {% block scripts %}
     <script type="text/javascript">
+        var table;
+
         function refreshTable(data, x_title, y_title) {
+            if (table) table.destroy();
+
             var segments = data.segments;
             var table_body = "";
-            segments = segments.sort(function (a, b) {
-                return a.name.localeCompare(b.name)
-            });
 
             for (var i = 0; i < segments.length; i++) {
                 if (segments[i].name === 'noise') continue;
@@ -72,6 +73,11 @@
             $('#x-std-column').html(x_title + ' std');
             $('#y-mean-column').html(y_title + ' mean');
             $('#y-std-column').html(y_title + ' std');
+
+            table = $('#statistics-table').DataTable({
+                paging: false,
+                searching: false
+            });
         }
 
         function refresh() {
@@ -93,14 +99,16 @@
     </script>
 
     <script type="text/javascript">
-        $('#nd-bar').removeClass('active');
-        $('#2d-bar').addClass('active');
+        $(function () {
+            $('#nd-bar').removeClass('active');
+            $('#2d-bar').addClass('active');
 
-        $('#x-axis').select2({
-            containerCssClass: "no-border"
-        });
-        $('#y-axis').select2({
-            containerCssClass: "no-border"
-        });
+            $('#x-axis').select2({
+                containerCssClass: "no-border"
+            });
+            $('#y-axis').select2({
+                containerCssClass: "no-border"
+            });
+        })
     </script>
 {% endblock %}
