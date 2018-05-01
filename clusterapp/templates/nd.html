@@ -15,14 +15,80 @@
     </div>
 {% endblock %}
 
+{% block table %}
+    <table id="statistics-table" class="table table-striped" style="margin-top: 10px">
+        <thead>
+        <tr id="statistics-table-head"></tr>
+        </thead>
+        <tbody id="statistics-table-body"></tbody>
+    </table>
+{% endblock %}
+
 {% block scripts %}
     <script type="text/javascript">
+        var features_dimensions = {
+            'min_freq': 1,
+            'max_freq': 1,
+            'peak_freq': 1,
+            'peak_ampl': 1,
+            'fundamental_freq': 1,
+            'bandwidth': 1,
+            'mfcc': 13
+        };
+
         function getSelectedFeatures() {
             var features = [];
             $('#features-filter').find('option:selected').each(function (index, sp) {
                 features.push(sp.value);
             });
             return features;
+        }
+
+        var table;
+
+        function refreshTable(data) {
+            if (table) table.destroy();
+
+            var segments = data.segments;
+            var features = getSelectedFeatures();
+            var table_head = "<th>#</th>" +
+                "            <th>Main class</th>" +
+                "            <th>Proportion</th>";
+            var table_body = "";
+
+            for (var i = 0; i < features.length; i++) {
+                var dimension = features_dimensions[features[i]];
+                for (var j = 0; j < dimension; j++) {
+                    table_head += "<th>" + features[i];
+                    if (dimension > 1)
+                        table_head += j;
+                }
+                table_head += "</th>";
+            }
+            $('#statistics-table-head').html(table_head);
+
+            for (var i = 0; i < segments.length; i++) {
+                if (segments[i].name === 'noise') continue;
+                table_body +=
+                    "<tr>" +
+                    "<td>" + segments[i].name + "</td>" +
+                    "<td>" + segments[i].statistics.label_true + "</td>" +
+                    "<td>" + segments[i].statistics.label_true_count + '/' + segments[i].statistics.total + "</td>";
+
+                var mean = segments[i].statistics.mean;
+                var std = segments[i].statistics.std;
+                for (var j = 0; j < mean.length; j++) {
+                    table_body +=
+                        "<td>" + mean[j] + " ± " + std[j] + "</td>";
+                }
+                table_body += "</tr>";
+            }
+            $('#statistics-table-body').html(table_body);
+
+            table = $('#statistics-table').DataTable({
+                paging: false,
+                searching: false
+            });
         }
 
         function refresh() {
@@ -35,6 +101,7 @@
             };
             $.get('{{ url_for('parameters_nd') }}', query_dict, function (data) {
                 refreshChart(data, null, null);
+                refreshTable(data);
             });
         }
     </script>

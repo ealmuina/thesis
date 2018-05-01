@@ -70,9 +70,10 @@ class Library:
         algorithm.fit(scaled_X, y)
         labels = algorithm.labels_ if hasattr(algorithm, 'labels_') else algorithm.predict(scaled_X)
 
+        X_mds = X
         if X.shape[1] != 2:
             mds = MDS(n_components=2, random_state=0)
-            X = mds.fit_transform(X)
+            X_mds = mds.fit_transform(X)
 
         result = {}
         for i, label in enumerate(labels):
@@ -81,7 +82,8 @@ class Library:
             items.append({
                 'name': names[i],
                 'label_true': y[i],
-                'x': X[i, :],
+                'x': X_mds[i, :],
+                'features': X[i, :]
             })
             result[label] = items
 
@@ -111,7 +113,7 @@ def statistics(clustering):
         counts = Counter(labels_true)
         label_true, count = counts.most_common(1)[0]
 
-        x = np.array([item['x'] for item in cluster])
+        x = np.array([item['features'] for item in cluster])
 
         result[label] = {
             'label_true': label_true,
