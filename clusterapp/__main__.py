@@ -3,16 +3,26 @@ import time
 
 from flask import Flask, request, render_template, jsonify, abort
 
-from clusterapp.core import Library, statistics
+from clusterapp.core import ClassifiedLibrary, statistics, UnclassifiedLibrary
 
 app = Flask(__name__)
 
 
 def get_parameters(features):
-    clustering_algorithm = request.args.get('clustering_algorithm')
-    species = request.args.getlist('species[]')
+    if not features:
+        return jsonify({})
 
-    clustering, scores = LIBRARY.cluster(species, features, clustering_algorithm)
+    clustering_algorithm = request.args.get('clustering_algorithm')
+
+    if CLASSIFIED:
+        species = request.args.getlist('species[]')
+        clustering, scores = LIBRARY.cluster(species, features, clustering_algorithm)
+    else:
+        n_clusters = request.args.get('n_clusters')
+        if not n_clusters:
+            n_clusters = '0'
+        clustering, scores = LIBRARY.cluster(int(n_clusters), features, clustering_algorithm)
+
     stats = statistics(clustering)
 
     return jsonify(
@@ -20,8 +30,8 @@ def get_parameters(features):
             'name': label if label != '-1' else 'noise',
             'data': [{
                 'name': item['name'],
-                'x': item['x'][0],
-                'y': item['x'][1]
+                'x': item['x_2d'][0],
+                'y': item['x_2d'][1]
             } for item in clustering[label]],
             'statistics': stats[label]
         } for label in clustering.keys()],
@@ -44,21 +54,25 @@ def index(dimensions):
             ('mfcc', 'MFCC')
         ]
     clustering_algorithms = [
-        ('none', 'None'),
         ('kmeans', 'K-Means'),
         ('spectral', 'Spectral Clustering'),
         ('gmm', 'Gaussian Mixture Model'),
         ('hdbscan', 'HDBSCAN'),
         ('affinity', 'Affinity Propagation')
     ]
+    if CLASSIFIED:
+        clustering_algorithms.insert(0, ('none', 'None'))
 
     dimensions = dimensions.lower()
     if dimensions not in ('2d', 'nd'):
         abort(404)
 
-    return render_template('%s.html' % dimensions, **{
+    template_type = 'classified' if CLASSIFIED else 'unclassified'
+
+    return render_template('%s_%s.html' % (template_type, dimensions), **{
         'axis': axis,
-        'clustering_algorithms': clustering_algorithms
+        'clustering_algorithms': clustering_algorithms,
+        'classified': CLASSIFIED
     })
 
 
@@ -97,10 +111,15 @@ if __name__ == '__main__':
     parser.add_argument('path')
     parser.add_argument('--host', default='127.0.0.1')
     parser.add_argument('--port', type=int, default=5000)
+    parser.add_argument('--classified', action='store_true')
     args = parser.parse_args()
 
+    CLASSIFIED = args.classified
     start = time.time()
-    LIBRARY = Library(args.path)
+    if CLASSIFIED:
+        LIBRARY = ClassifiedLibrary(args.path)
+    else:
+        LIBRARY = UnclassifiedLibrary(args.path)
     print('Features computed in %.3f seconds.' % (time.time() - start))
 
     app.run(host=args.host, port=args.port)

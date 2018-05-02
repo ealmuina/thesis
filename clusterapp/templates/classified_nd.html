@@ -1,49 +1,13 @@
-{% extends '_layout.html' %}
+{% extends '_classified.html' %}
 
 {% block dimensions %}
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h3 class="panel-title">Features selector</h3>
-        </div>
-        <div class="panel-body">
-            <select id="features-filter" class="form-control" multiple="multiple">
-                {% for name, verbose_name in axis %}
-                    <option value="{{ name }}">{{ verbose_name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-{% endblock %}
-
-{% block table %}
-    <table id="statistics-table" class="table table-striped" style="margin-top: 10px">
-        <thead>
-        <tr id="statistics-table-head"></tr>
-        </thead>
-        <tbody id="statistics-table-body"></tbody>
-    </table>
+    {% include '_dimensions_nd.html' %}
 {% endblock %}
 
 {% block scripts %}
+    <script src="{{ url_for('static', filename='js/nd.js') }}"></script>
+
     <script type="text/javascript">
-        var features_dimensions = {
-            'min_freq': 1,
-            'max_freq': 1,
-            'peak_freq': 1,
-            'peak_ampl': 1,
-            'fundamental_freq': 1,
-            'bandwidth': 1,
-            'mfcc': 13
-        };
-
-        function getSelectedFeatures() {
-            var features = [];
-            $('#features-filter').find('option:selected').each(function (index, sp) {
-                features.push(sp.value);
-            });
-            return features;
-        }
-
         var table;
 
         function refreshTable(data) {
@@ -104,14 +68,5 @@
                 refreshTable(data);
             });
         }
-    </script>
-
-    <script type="text/javascript">
-        $('#2d-bar').removeClass('active');
-        $('#nd-bar').addClass('active');
-
-        $('#features-filter').select2({
-            containerCssClass: "no-border"
-        });
     </script>
 {% endblock %}

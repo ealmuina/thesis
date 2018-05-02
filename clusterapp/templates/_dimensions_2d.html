@@ -1,0 +1,24 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title"><b>X</b> axis selector</h3>
+    </div>
+    <div class="panel-body">
+        <select id="x-axis">
+            {% for name, verbose_name in axis %}
+                <option value="{{ name }}">{{ verbose_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title"><b>Y</b> axis selector</h3>
+    </div>
+    <div class="panel-body">
+        <select id="y-axis">
+            {% for name, verbose_name in axis %}
+                <option value="{{ name }}">{{ verbose_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>

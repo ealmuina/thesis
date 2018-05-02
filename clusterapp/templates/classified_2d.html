@@ -1,0 +1,65 @@
+{% extends '_classified.html' %}
+
+{% block dimensions %}
+    {% include '_dimensions_2d.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        var table;
+
+        function refreshTable(data, x_title, y_title) {
+            if (table) table.destroy();
+
+            var segments = data.segments;
+            var table_head = "<th>#</th>" +
+                "            <th>Main class</th>" +
+                "            <th>Proportion<" +
+                "            <th>" + x_title + " mean</th>" +
+                "            <th>" + x_title + " std</th>" +
+                "            <th>" + y_title + " mean</th>" +
+                "            <th>" + y_title + " std</th>";
+            var table_body = "";
+
+            for (var i = 0; i < segments.length; i++) {
+                if (segments[i].name === 'noise') continue;
+                table_body +=
+                    "<tr>" +
+                    "<td>" + segments[i].name + "</td>" +
+                    "<td>" + segments[i].statistics.label_true + "</td>" +
+                    "<td>" + segments[i].statistics.label_true_count + '/' + segments[i].statistics.total + "</td>" +
+                    "<td>" + segments[i].statistics.mean[0] + "</td>" +
+                    "<td>" + segments[i].statistics.std[0] + "</td>" +
+                    "<td>" + segments[i].statistics.mean[1] + "</td>" +
+                    "<td>" + segments[i].statistics.std[1] + "</td>" +
+                    "</tr>"
+            }
+            $('#statistics-table-body').html(table_body);
+            $('#statistics-table-head').html(table_head);
+
+            table = $('#statistics-table').DataTable({
+                paging: false,
+                searching: false
+            });
+        }
+
+        function refresh() {
+            var x = $('#x-axis')[0];
+            var y = $('#y-axis')[0];
+            var clustering_algorithm = $('#clustering-algorithm')[0];
+
+            var query_dict = {
+                'x': x.value,
+                'y': y.value,
+                'clustering_algorithm': clustering_algorithm.value,
+                'species[]': getSelectedSpecies()
+            };
+            $.get('{{ url_for('parameters_2d') }}', query_dict, function (data) {
+                refreshChart(data, x[x.selectedIndex].text, y[y.selectedIndex].text);
+                refreshTable(data, x[x.selectedIndex].text, y[y.selectedIndex].text);
+            });
+        }
+    </script>
+
+    <script src="{{ url_for('static', filename='js/2d.js') }}"></script>
+{% endblock %}

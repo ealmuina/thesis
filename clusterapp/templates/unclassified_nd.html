@@ -1,0 +1,69 @@
+{% extends '_unclassified.html' %}
+
+{% block dimensions %}
+    {% include '_dimensions_nd.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/nd.js') }}"></script>
+
+    <script type="text/javascript">
+        var table;
+
+        function refreshTable(data) {
+            if (table) table.destroy();
+
+            var segments = data.segments;
+            var features = getSelectedFeatures();
+            var table_head = "<th>#</th>";
+            var table_body = "";
+
+            for (var i = 0; i < features.length; i++) {
+                var dimension = features_dimensions[features[i]];
+                for (var j = 0; j < dimension; j++) {
+                    table_head += "<th>" + features[i];
+                    if (dimension > 1)
+                        table_head += j;
+                }
+                table_head += "</th>";
+            }
+            $('#statistics-table-head').html(table_head);
+
+            for (var i = 0; i < segments.length; i++) {
+                if (segments[i].name === 'noise') continue;
+                table_body +=
+                    "<tr>" +
+                    "<td>" + segments[i].name + "</td>";
+
+                var mean = segments[i].statistics.mean;
+                var std = segments[i].statistics.std;
+                for (var j = 0; j < mean.length; j++) {
+                    table_body +=
+                        "<td>" + mean[j] + " ± " + std[j] + "</td>";
+                }
+                table_body += "</tr>";
+            }
+            $('#statistics-table-body').html(table_body);
+
+            table = $('#statistics-table').DataTable({
+                paging: false,
+                searching: false
+            });
+        }
+
+        function refresh() {
+            var clustering_algorithm = $('#clustering-algorithm')[0];
+            var n_clusters = $('#clusters-number-input')[0].value;
+
+            var query_dict = {
+                'features[]': getSelectedFeatures(),
+                'clustering_algorithm': clustering_algorithm.value,
+                'n_clusters': n_clusters
+            };
+            $.get('{{ url_for('parameters_nd') }}', query_dict, function (data) {
+                refreshChart(data, null, null);
+                refreshTable(data);
+            });
+        }
+    </script>
+{% endblock %}
