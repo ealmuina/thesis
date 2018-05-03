@@ -5,7 +5,49 @@ from flask import Flask, request, render_template, jsonify, abort
 
 from clusterapp.core import ClassifiedLibrary, statistics, UnclassifiedLibrary
 
+CLUSTERING_ALGORITHMS = [
+    ('kmeans', 'K-Means'),
+    ('spectral', 'Spectral Clustering'),
+    ('gmm', 'Gaussian Mixture Model'),
+    ('hdbscan', 'HDBSCAN'),
+    ('affinity', 'Affinity Propagation')
+]
+FEATURES = [
+    ('min_freq', 'Min Frequency (Hz)'),
+    ('max_freq', 'Max Frequency (Hz)'),
+    ('peak_freq', 'Peak Frequency (Hz)'),
+    ('peak_ampl', 'Peak Amplitude'),
+    ('fundamental_freq', 'Fundamental Frequency (Hz)'),
+    ('bandwidth', 'Bandwidth (Hz)'),
+    ('mfcc', 'MFCC')
+]
 app = Flask(__name__)
+
+
+@app.route('/best_features/')
+def best_features():
+    return render_template('classified_best_features.html', **{
+        'axis': FEATURES,
+        'clustering_algorithms': CLUSTERING_ALGORITHMS
+    })
+
+
+@app.route('/best_features_2d/')
+def best_features_2d():
+    clustering_algorithm = request.args.get('clustering_algorithm')
+    species = request.args.getlist('species[]')
+
+    clustering, features, scores = LIBRARY.best_features(
+        categories=species,
+        features_set=[f for f, _ in FEATURES if f not in {'mfcc'}],
+        algorithm=clustering_algorithm
+    )
+    stats = statistics(clustering)
+
+    report = get_report(clustering, stats, scores)
+    report['x_title'] = features[0]
+    report['y_title'] = features[1]
+    return jsonify(report)
 
 
 def get_parameters(features):
@@ -24,9 +66,12 @@ def get_parameters(features):
         clustering, scores = LIBRARY.cluster(int(n_clusters), features, clustering_algorithm)
 
     stats = statistics(clustering)
+    return jsonify(get_report(clustering, stats, scores))
 
-    return jsonify(
-        segments=[{
+
+def get_report(clustering, stats, scores):
+    return {
+        'segments': [{
             'name': label if label != '-1' else 'noise',
             'data': [{
                 'name': item['name'],
@@ -35,31 +80,17 @@ def get_parameters(features):
             } for item in clustering[label]],
             'statistics': stats[label]
         } for label in clustering.keys()],
-        scores=scores
-    )
+        'scores': scores
+    }
 
 
 @app.route('/<dimensions>/')
 def index(dimensions):
-    axis = [
-        ('min_freq', 'Min Frequency (Hz)'),
-        ('max_freq', 'Max Frequency (Hz)'),
-        ('peak_freq', 'Peak Frequency (Hz)'),
-        ('peak_ampl', 'Peak Amplitude'),
-        ('fundamental_freq', 'Fundamental Frequency (Hz)'),
-        ('bandwidth', 'Bandwidth (Hz)')
-    ]
-    if dimensions == 'nd':
-        axis += [
-            ('mfcc', 'MFCC')
-        ]
-    clustering_algorithms = [
-        ('kmeans', 'K-Means'),
-        ('spectral', 'Spectral Clustering'),
-        ('gmm', 'Gaussian Mixture Model'),
-        ('hdbscan', 'HDBSCAN'),
-        ('affinity', 'Affinity Propagation')
-    ]
+    axis = list(FEATURES)
+    if dimensions != 'nd':
+        axis.remove(('mfcc', 'MFCC'))
+
+    clustering_algorithms = list(CLUSTERING_ALGORITHMS)
     if CLASSIFIED:
         clustering_algorithms.insert(0, ('none', 'None'))
 
@@ -71,8 +102,7 @@ def index(dimensions):
 
     return render_template('%s_%s.html' % (template_type, dimensions), **{
         'axis': axis,
-        'clustering_algorithms': clustering_algorithms,
-        'classified': CLASSIFIED
+        'clustering_algorithms': clustering_algorithms
     })
 
 

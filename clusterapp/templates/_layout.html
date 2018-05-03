@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-inverse">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
@@ -24,8 +24,15 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li id="2d-bar"><a href="{{ url_for('index', dimensions='2d') }}">2-dimensions</a></li>
-                <li id="nd-bar"><a href="{{ url_for('index', dimensions='nd') }}">n-dimensions</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Dataset Analysis<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li id="2d-bar"><a href="{{ url_for('index', dimensions='2d') }}">2-Dimensions</a></li>
+                        <li id="nd-bar"><a href="{{ url_for('index', dimensions='nd') }}">N-Dimensions</a></li>
+                    </ul>
+                </li>
+                <li id="best-features-bar"><a href="{{ url_for('best_features') }}">Best features</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
@@ -71,6 +78,7 @@
 </div>
 
 <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/highcharts.js') }}"></script>
 <script src="{{ url_for('static', filename='js/exporting.js') }}"></script>
 

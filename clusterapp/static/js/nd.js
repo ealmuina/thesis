@@ -19,6 +19,7 @@ function getSelectedFeatures() {
 $(function () {
     $('#2d-bar').removeClass('active');
     $('#nd-bar').addClass('active');
+    $('#best-features-bar').removeClass('active');
 
     $('#features-filter').select2({
         containerCssClass: "no-border"

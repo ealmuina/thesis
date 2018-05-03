@@ -1,3 +1,4 @@
+import itertools
 import pathlib
 from collections import Counter
 
@@ -57,7 +58,7 @@ class ClassifiedLibrary(Library):
 
         self.categories = set(self.segments.keys())
 
-    def cluster(self, categories, features, algorithm):
+    def _predict(self, categories, features, algorithm):
         algorithm = self._parse_clustering_algo(algorithm, len(categories))
 
         X, y, names = [], [], []
@@ -71,6 +72,44 @@ class ClassifiedLibrary(Library):
         scaled_X = scale(X) if len(X) else X
         algorithm.fit(scaled_X, y)
         labels = algorithm.labels_ if hasattr(algorithm, 'labels_') else algorithm.predict(scaled_X)
+
+        return X, scaled_X, y, names, labels
+
+    def best_features(self, categories, features_set, algorithm):
+        best = {
+            'AMI': 0
+        }
+        for features in itertools.combinations(features_set, 2):
+            X, scaled_X, y, names, labels = self._predict(categories, features, algorithm)
+            ami = metrics.adjusted_mutual_info_score(labels, y)
+
+            if ami > best['AMI']:
+                best.update({
+                    'AMI': ami,
+                    'X': X,
+                    'y': y,
+                    'names': names,
+                    'labels': labels,
+                    'scaled_X': scaled_X,
+                    'features': features
+                })
+
+        result = {}
+        for i, label in enumerate(best['labels']):
+            label = str(label)
+            items = result.get(label, [])
+            items.append({
+                'name': best['names'][i],
+                'label_true': best['y'][i],
+                'x': best['X'][i, :],
+                'x_2d': best['X'][i, :]
+            })
+            result[label] = items
+
+        return result, best['features'], evaluate(best['scaled_X'], best['labels'], best['y'])
+
+    def cluster(self, categories, features, algorithm):
+        X, scaled_X, y, names, labels = self._predict(categories, features, algorithm)
 
         X_2d = X
         if X.shape[1] != 2:
