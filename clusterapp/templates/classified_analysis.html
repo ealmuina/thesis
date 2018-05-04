@@ -1,0 +1,30 @@
+{% extends '_classified.html' %}
+
+{% block dimensions %}
+    {% include '_features_select.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/analysis.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+
+    <script type="text/javascript">
+        function refresh() {
+            var clustering_algorithm = $('#clustering-algorithm')[0];
+            var features = getSelectedFeatures();
+
+            var query_dict = {
+                'features[]': features,
+                'clustering_algorithm': clustering_algorithm.value,
+                'species[]': getSelectedSpecies()
+            };
+            $.get('{{ url_for('parameters_nd') }}', query_dict, function (data) {
+                if (features.length === 2)
+                    refreshChart(data, verbose_features[features[0]], verbose_features[features[1]]);
+                else
+                    refreshChart(data, null, null);
+                refreshTable(data, features);
+            });
+        }
+    </script>
+{% endblock %}

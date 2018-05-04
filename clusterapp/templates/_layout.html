@@ -24,14 +24,7 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">Dataset Analysis<span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li id="2d-bar"><a href="{{ url_for('index', dimensions='2d') }}">2-Dimensions</a></li>
-                        <li id="nd-bar"><a href="{{ url_for('index', dimensions='nd') }}">N-Dimensions</a></li>
-                    </ul>
-                </li>
+                <li id="analysis-bar"><a href="{{ url_for('index') }}">Dataset Analysis</a></li>
                 <li id="best-features-bar"><a href="{{ url_for('best_features') }}">Best features</a></li>
             </ul>
         </div><!--/.nav-collapse -->

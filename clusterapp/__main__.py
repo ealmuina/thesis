@@ -1,7 +1,7 @@
 import argparse
 import time
 
-from flask import Flask, request, render_template, jsonify, abort
+from flask import Flask, request, render_template, jsonify
 
 from clusterapp.core import ClassifiedLibrary, statistics, UnclassifiedLibrary
 
@@ -32,41 +32,21 @@ def best_features():
     })
 
 
-@app.route('/best_features_2d/')
-def best_features_2d():
+@app.route('/best_features_nd/')
+def best_features_nd():
     clustering_algorithm = request.args.get('clustering_algorithm')
     species = request.args.getlist('species[]')
 
-    clustering, features, scores = LIBRARY.best_features(
+    clustering, scores, features = LIBRARY.best_features(
         categories=species,
-        features_set=[f for f, _ in FEATURES if f not in {'mfcc'}],
+        features_set=[f for f, _ in FEATURES],
         algorithm=clustering_algorithm
     )
     stats = statistics(clustering)
 
     report = get_report(clustering, stats, scores)
-    report['x_title'] = features[0]
-    report['y_title'] = features[1]
+    report['features'] = features
     return jsonify(report)
-
-
-def get_parameters(features):
-    if not features:
-        return jsonify({})
-
-    clustering_algorithm = request.args.get('clustering_algorithm')
-
-    if CLASSIFIED:
-        species = request.args.getlist('species[]')
-        clustering, scores = LIBRARY.cluster(species, features, clustering_algorithm)
-    else:
-        n_clusters = request.args.get('n_clusters')
-        if not n_clusters:
-            n_clusters = '0'
-        clustering, scores = LIBRARY.cluster(int(n_clusters), features, clustering_algorithm)
-
-    stats = statistics(clustering)
-    return jsonify(get_report(clustering, stats, scores))
 
 
 def get_report(clustering, stats, scores):
@@ -84,39 +64,39 @@ def get_report(clustering, stats, scores):
     }
 
 
-@app.route('/<dimensions>/')
-def index(dimensions):
-    axis = list(FEATURES)
-    if dimensions != 'nd':
-        axis.remove(('mfcc', 'MFCC'))
-
+@app.route('/')
+def index():
     clustering_algorithms = list(CLUSTERING_ALGORITHMS)
     if CLASSIFIED:
         clustering_algorithms.insert(0, ('none', 'None'))
 
-    dimensions = dimensions.lower()
-    if dimensions not in ('2d', 'nd'):
-        abort(404)
-
     template_type = 'classified' if CLASSIFIED else 'unclassified'
 
-    return render_template('%s_%s.html' % (template_type, dimensions), **{
-        'axis': axis,
+    return render_template('%s_analysis.html' % template_type, **{
+        'axis': FEATURES,
         'clustering_algorithms': clustering_algorithms
     })
-
-
-@app.route('/parameters_2d/')
-def parameters_2d():
-    x = request.args.get('x')
-    y = request.args.get('y')
-    return get_parameters((x, y))
 
 
 @app.route('/parameters_nd/')
 def parameters_nd():
     features = request.args.getlist('features[]')
-    return get_parameters(features)
+    if not features:
+        return jsonify({})
+
+    clustering_algorithm = request.args.get('clustering_algorithm')
+
+    if CLASSIFIED:
+        species = request.args.getlist('species[]')
+        clustering, scores = LIBRARY.cluster(species, features, clustering_algorithm)
+    else:
+        n_clusters = request.args.get('n_clusters')
+        if not n_clusters:
+            n_clusters = '0'
+        clustering, scores = LIBRARY.cluster(int(n_clusters), features, clustering_algorithm)
+
+    stats = statistics(clustering)
+    return jsonify(get_report(clustering, stats, scores))
 
 
 @app.route('/search_for_species/')

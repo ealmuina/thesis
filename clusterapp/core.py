@@ -79,34 +79,19 @@ class ClassifiedLibrary(Library):
         best = {
             'AMI': 0
         }
-        for features in itertools.combinations(features_set, 2):
-            X, scaled_X, y, names, labels = self._predict(categories, features, algorithm)
-            ami = metrics.adjusted_mutual_info_score(labels, y)
+        for r in range(1, len(features_set) + 1):
+            for features in itertools.combinations(features_set, r):
+                X, scaled_X, y, names, labels = self._predict(categories, features, algorithm)
+                ami = metrics.adjusted_mutual_info_score(labels, y)
 
-            if ami > best['AMI']:
-                best.update({
-                    'AMI': ami,
-                    'X': X,
-                    'y': y,
-                    'names': names,
-                    'labels': labels,
-                    'scaled_X': scaled_X,
-                    'features': features
-                })
+                if ami > best['AMI']:
+                    best.update({
+                        'AMI': ami,
+                        'features': features
+                    })
 
-        result = {}
-        for i, label in enumerate(best['labels']):
-            label = str(label)
-            items = result.get(label, [])
-            items.append({
-                'name': best['names'][i],
-                'label_true': best['y'][i],
-                'x': best['X'][i, :],
-                'x_2d': best['X'][i, :]
-            })
-            result[label] = items
-
-        return result, best['features'], evaluate(best['scaled_X'], best['labels'], best['y'])
+        clustering, scores = self.cluster(categories, best['features'], algorithm)
+        return clustering, scores, best['features']
 
     def cluster(self, categories, features, algorithm):
         X, scaled_X, y, names, labels = self._predict(categories, features, algorithm)
