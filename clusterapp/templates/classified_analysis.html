@@ -19,10 +19,14 @@
                 'species[]': getSelectedSpecies()
             };
             $.get('{{ url_for('parameters_nd') }}', query_dict, function (data) {
-                if (features.length === 2)
-                    refreshChart(data, verbose_features[features[0]], verbose_features[features[1]]);
-                else
+                if (features.length === 2) {
+                    var x = getFeatureDescription(features[0], data['feature_set']);
+                    var y = getFeatureDescription(features[1], data['feature_set']);
+                    refreshChart(data, x.verbose_name, y.verbose_name);
+                }
+                else {
                     refreshChart(data, null, null);
+                }
                 refreshTable(data, features);
             });
         }

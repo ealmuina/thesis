@@ -1,5 +1,5 @@
 $(function () {
-    $('#analysis-bar-bar').addClass('active');
+    $('#analysis-bar').addClass('active');
     $('#best-features-bar').removeClass('active');
 
     $('#features-filter').select2({

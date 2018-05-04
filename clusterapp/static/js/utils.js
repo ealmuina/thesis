@@ -1,22 +1,15 @@
 var table;
-var verbose_features = {
-    'min_freq': 'Min Frequency (Hz)',
-    'max_freq': 'Max Frequency (Hz)',
-    'peak_freq': 'Peak Frequency (Hz)',
-    'peak_ampl': 'Peak Amplitude',
-    'fundamental_freq': 'Fundamental Frequency (Hz)',
-    'bandwidth': 'Bandwidth (Hz)',
-    'mfcc': 'MFCC'
-};
-var features_dimensions = {
-    'min_freq': 1,
-    'max_freq': 1,
-    'peak_freq': 1,
-    'peak_ampl': 1,
-    'fundamental_freq': 1,
-    'bandwidth': 1,
-    'mfcc': 13
-};
+
+function getFeatureDescription(feature, feature_set) {
+    for (var i = 0; i < feature_set.length; i++) {
+        var f = feature_set[i];
+        if (feature === f[0])
+            return {
+                verbose_name: f[1],
+                dimension: f[2]
+            }
+    }
+}
 
 function getSelectedFeatures() {
     var features = [];
@@ -29,18 +22,17 @@ function getSelectedFeatures() {
 function refreshTable(data, features) {
     if (table) table.destroy();
 
-    var segments = data.segments;
+    var segments = data['segments'];
     var table_head = "<th>#</th>" +
         "            <th>Main class</th>" +
         "            <th>Proportion</th>";
     var table_body = "";
 
     for (var i = 0; i < features.length; i++) {
-        var feature = features[i];
-        var dimension = features_dimensions[feature];
-        for (var j = 0; j < dimension; j++) {
-            table_head += "<th>" + verbose_features[feature];
-            if (dimension > 1)
+        var feature = getFeatureDescription(features[i], data['feature_set']);
+        for (var j = 0; j < feature.dimension; j++) {
+            table_head += "<th>" + feature.verbose_name;
+            if (feature.dimension > 1)
                 table_head += " [" + j + "]";
         }
         table_head += "</th>";

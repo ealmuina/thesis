@@ -13,13 +13,13 @@ CLUSTERING_ALGORITHMS = [
     ('affinity', 'Affinity Propagation')
 ]
 FEATURES = [
-    ('min_freq', 'Min Frequency (Hz)'),
-    ('max_freq', 'Max Frequency (Hz)'),
-    ('peak_freq', 'Peak Frequency (Hz)'),
-    ('peak_ampl', 'Peak Amplitude'),
-    ('fundamental_freq', 'Fundamental Frequency (Hz)'),
-    ('bandwidth', 'Bandwidth (Hz)'),
-    ('mfcc', 'MFCC')
+    ('min_freq', 'Min Frequency (Hz)', 1),
+    ('max_freq', 'Max Frequency (Hz)', 1),
+    ('peak_freq', 'Peak Frequency (Hz)', 1),
+    ('peak_ampl', 'Peak Amplitude', 1),
+    ('fundamental_freq', 'Fundamental Frequency (Hz)', 1),
+    ('bandwidth', 'Bandwidth (Hz)', 1),
+    ('mfcc', 'MFCC', 13)
 ]
 app = Flask(__name__)
 
@@ -39,7 +39,7 @@ def best_features_nd():
 
     clustering, scores, features = LIBRARY.best_features(
         categories=species,
-        features_set=[f for f, _ in FEATURES],
+        features_set=[f for f, _, _ in FEATURES],
         algorithm=clustering_algorithm
     )
     stats = statistics(clustering)
@@ -60,7 +60,8 @@ def get_report(clustering, stats, scores):
             } for item in clustering[label]],
             'statistics': stats[label]
         } for label in clustering.keys()],
-        'scores': scores
+        'scores': scores,
+        'feature_set': FEATURES
     }
 
 

@@ -11,16 +11,24 @@
     <script type="text/javascript">
         function refresh() {
             var clustering_algorithm = $('#clustering-algorithm')[0];
+            var features = getSelectedFeatures();
             var n_clusters = $('#clusters-number-input')[0].value;
 
             var query_dict = {
-                'features[]': getSelectedFeatures(),
+                'features[]': features,
                 'clustering_algorithm': clustering_algorithm.value,
                 'n_clusters': n_clusters
             };
             $.get('{{ url_for('parameters_nd') }}', query_dict, function (data) {
-                refreshChart(data, null, null);
-                refreshTable(data, getSelectedFeatures());
+                if (features.length === 2) {
+                    var x = getFeatureDescription(features[0], data['feature_set']);
+                    var y = getFeatureDescription(features[1], data['feature_set']);
+                    refreshChart(data, x.verbose_name, y.verbose_name);
+                }
+                else {
+                    refreshChart(data, null, null);
+                }
+                refreshTable(data, features);
             });
         }
     </script>
