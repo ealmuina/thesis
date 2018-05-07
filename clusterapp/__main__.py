@@ -13,13 +13,59 @@ CLUSTERING_ALGORITHMS = [
     ('affinity', 'Affinity Propagation')
 ]
 FEATURES = [
-    ('min_freq', 'Min Frequency (Hz)', 1),
-    ('max_freq', 'Max Frequency (Hz)', 1),
-    ('peak_freq', 'Peak Frequency (Hz)', 1),
-    ('peak_ampl', 'Peak Amplitude', 1),
-    ('fundamental_freq', 'Fundamental Frequency (Hz)', 1),
-    ('bandwidth', 'Bandwidth (Hz)', 1),
-    ('mfcc', 'MFCC', 13)
+    ('Autocorrelation', 'Auto Correlation', 1),
+    ('StdAmplitudeTime', 'Std Amplitude (Time)', 1),
+    ('VarianceAmplitudeTime', 'Variance Amplitude (Time)', 1),
+    ('MeanAmplitudeTime', 'Mean Amplitude (Time)', 1),
+    ('TimeCentroid', 'Temporal Centroid (s)', 1),
+    ('Time Energy', 'Time Energy', 1),
+    ('ZeroCrossingRate', 'Zero Crossing Rate', 1),
+    ('DurationTime', 'Duration (s)', 1),
+    ('RmsTime', 'RMS', 1),
+    ('PeakToPeakTime', 'Peak to Peak Time (s)', 1),
+    ('StartTime', 'Start Time (s)', 1),
+    ('EndTime', 'End Time (s)', 1),
+    ('DistanceToMaxTime', 'Distance to Max (s)', 1),
+
+    ('MaxFreq-start', 'Max Frequency [start] (Hz)', 1),
+    ('MinFreq-start', 'Min Frequency [start] (Hz)', 1),
+    ('BandwidthFreq-start', 'Bandwidth [start] (Hz)', 1),
+    ('PeaksAboveFreq-start', 'Peaks Above Frequency [start]', 1),
+    ('EntropyFreq-start', 'Spectral Entropy [start]', 1),
+    ('PeakFreq-start', 'Peak Frequency [start] (Hz)', 1),
+    ('PeakAmpFreq-start', 'Peak Amplitude [start]', 1),
+
+    ('MaxFreq-end', 'Max Frequency [end] (Hz)', 1),
+    ('MinFreq-end', 'Min Frequency [end] (Hz)', 1),
+    ('BandwidthFreq-end', 'Bandwidth [end] (Hz)', 1),
+    ('PeaksAboveFreq-end', 'Peaks Above Frequency [end]', 1),
+    ('EntropyFreq-end', 'Spectral Entropy [end]', 1),
+    ('PeakFreq-end', 'Peak Frequency [end] (Hz)', 1),
+    ('PeakAmpFreq-end', 'Peak Amplitude [end]', 1),
+
+    ('MaxFreq-center', 'Max Frequency [center] (Hz)', 1),
+    ('MinFreq-center', 'Min Frequency [center] (Hz)', 1),
+    ('BandwidthFreq-center', 'Bandwidth [center] (Hz)', 1),
+    ('PeaksAboveFreq-center', 'Peaks Above Frequency [center]', 1),
+    ('EntropyFreq-center', 'Spectral Entropy [center]', 1),
+    ('PeakFreq-center', 'Peak Frequency [center] (Hz)', 1),
+    ('PeakAmpFreq-center', 'Peak Amplitude [center]', 1),
+
+    ('MaxFreq-max', 'Max Frequency [max] (Hz)', 1),
+    ('MinFreq-max', 'Min Frequency [max] (Hz)', 1),
+    ('BandwidthFreq-max', 'Bandwidth [max] (Hz)', 1),
+    ('PeaksAboveFreq-max', 'Peaks Above Frequency [max]', 1),
+    ('EntropyFreq-max', 'Spectral Entropy [max]', 1),
+    ('PeakFreq-max', 'Peak Frequency [max] (Hz)', 1),
+    ('PeakAmpFreq-max', 'Peak Amplitude [max]', 1),
+
+    ('MaxFreq-max_amp', 'Max Frequency [max_amp] (Hz)', 1),
+    ('MinFreq-max_amp', 'Min Frequency [max_amp] (Hz)', 1),
+    ('BandwidthFreq-max_amp', 'Bandwidth [max_amp] (Hz)', 1),
+    ('PeaksAboveFreq-max_amp', 'Peaks Above Frequency [max_amp]', 1),
+    ('EntropyFreq-max_amp', 'Spectral Entropy [max_amp]', 1),
+    ('PeakFreq-max_amp', 'Peak Frequency [max_amp] (Hz)', 1),
+    ('PeakAmpFreq-max_amp', 'Peak Amplitude [max_amp]', 1),
 ]
 app = Flask(__name__)
 

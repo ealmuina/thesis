@@ -5,7 +5,7 @@
     <div class="panel-body">
         <select id="features-filter" class="form-control" multiple="multiple">
             {% for name, verbose_name, dimension in axis %}
-                <option value="{{ name }}">{{ verbose_name }} [{{ dimension }}]</option>
+                <option value="{{ name }}">{{ verbose_name }}</option>
             {% endfor %}
         </select>
     </div>

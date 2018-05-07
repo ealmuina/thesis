@@ -10,7 +10,7 @@ from sklearn.manifold import MDS
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import scale, LabelEncoder
 
-from clusterapp.features import Audio
+from .features.audio import Audio
 
 
 class IdentityClustering:
@@ -27,10 +27,7 @@ class Library:
         current = []
         for feature in features:
             x = getattr(audio, feature)
-            if feature in ('mfcc',):
-                current.extend(x.mean(0))
-            else:
-                current.append(x.mean())
+            current.append(x)
         return current
 
     @staticmethod
@@ -79,7 +76,7 @@ class ClassifiedLibrary(Library):
         best = {
             'AMI': 0
         }
-        for r in range(1, len(features_set) + 1):
+        for r in range(1, 3):
             for features in itertools.combinations(features_set, r):
                 X, scaled_X, y, names, labels = self._predict(categories, features, algorithm)
                 ami = metrics.adjusted_mutual_info_score(labels, y)
