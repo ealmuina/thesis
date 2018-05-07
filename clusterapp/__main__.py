@@ -83,6 +83,9 @@ def best_features_nd():
     clustering_algorithm = request.args.get('clustering_algorithm')
     species = request.args.getlist('species[]')
 
+    if not species:
+        return jsonify({})
+
     clustering, scores, features = LIBRARY.best_features(
         categories=species,
         features_set=[f for f, _, _ in FEATURES],

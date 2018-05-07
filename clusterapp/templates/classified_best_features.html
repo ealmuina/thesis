@@ -12,7 +12,14 @@
                 'species[]': getSelectedSpecies()
             };
             $.get('{{ url_for('best_features_nd') }}', query_dict, function (data) {
-                refreshChart(data);
+                if (data.features.length === 2) {
+                    var x = getFeatureDescription(data.features[0], data['feature_set']);
+                    var y = getFeatureDescription(data.features[1], data['feature_set']);
+                    refreshChart(data, x.verbose_name, y.verbose_name);
+                }
+                else {
+                    refreshChart(data, null, null);
+                }
                 refreshTable(data, data.features);
             });
         }

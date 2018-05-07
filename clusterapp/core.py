@@ -2,6 +2,7 @@ import itertools
 import pathlib
 import warnings
 from collections import Counter
+from math import factorial
 
 import numpy as np
 from hdbscan import HDBSCAN
@@ -10,7 +11,7 @@ from sklearn.cluster import KMeans, SpectralClustering, AffinityPropagation
 from sklearn.manifold import MDS
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import scale, LabelEncoder
-from tqdm import tqdm
+from tqdm import tqdm, trange
 
 from .features.audio import Audio
 from .utils import std_out_err_redirect_tqdm
@@ -59,7 +60,7 @@ class ClassifiedLibrary(Library):
         super().__init__(path)
         self.segments = {}
 
-        for file, audio in self.segments:
+        for file, audio in self.files:
             category = file.name.split('-')[0]
             items = self.segments.get(category, [])
             items.append(audio)
@@ -88,16 +89,28 @@ class ClassifiedLibrary(Library):
         best = {
             'AMI': 0
         }
-        for r in range(1, 3):
-            for features in itertools.combinations(features_set, r):
-                X, scaled_X, y, names, labels = self._predict(categories, features, algorithm)
-                ami = metrics.adjusted_mutual_info_score(labels, y)
+        n = len(features_set)
+        max_r = 2  # maximum size of features subset to be checked (max_r <= n)
+        with std_out_err_redirect_tqdm() as orig_stdout:
+            for r in trange(1, max_r + 1, desc='Checking subsets of features', file=orig_stdout, dynamic_ncols=True):
+                k = factorial(n) / (factorial(r) * factorial(n - r))
+                combinations = tqdm(
+                    itertools.combinations(features_set, r),
+                    total=int(k),
+                    desc='Checking subsets of size %d' % r,
+                    file=orig_stdout,
+                    dynamic_ncols=True,
+                    leave=False
+                )
+                for features in combinations:
+                    X, scaled_X, y, names, labels = self._predict(categories, features, algorithm)
+                    ami = metrics.adjusted_mutual_info_score(labels, y)
 
-                if ami > best['AMI']:
-                    best.update({
-                        'AMI': ami,
-                        'features': features
-                    })
+                    if ami > best['AMI']:
+                        best.update({
+                            'AMI': ami,
+                            'features': features
+                        })
 
         clustering, scores = self.cluster(categories, best['features'], algorithm)
         return clustering, scores, best['features']
