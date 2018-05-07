@@ -1,5 +1,6 @@
 import itertools
 import pathlib
+import warnings
 from collections import Counter
 
 import numpy as np
@@ -9,8 +10,12 @@ from sklearn.cluster import KMeans, SpectralClustering, AffinityPropagation
 from sklearn.manifold import MDS
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import scale, LabelEncoder
+from tqdm import tqdm
 
 from .features.audio import Audio
+from .utils import std_out_err_redirect_tqdm
+
+warnings.filterwarnings("ignore")
 
 
 class IdentityClustering:
@@ -22,6 +27,13 @@ class IdentityClustering:
 
 
 class Library:
+    def __init__(self, path):
+        files = list(pathlib.Path(path).iterdir())
+        self.files = []
+        with std_out_err_redirect_tqdm() as orig_stdout:
+            for file in tqdm(files, desc='Loading audio files', file=orig_stdout, dynamic_ncols=True):
+                self.files.append((file, Audio(file)))
+
     @staticmethod
     def _extract_features(audio, features):
         current = []
@@ -44,10 +56,10 @@ class Library:
 
 class ClassifiedLibrary(Library):
     def __init__(self, path):
+        super().__init__(path)
         self.segments = {}
 
-        for file in pathlib.Path(path).iterdir():
-            audio = Audio(file)
+        for file, audio in self.segments:
             category = file.name.split('-')[0]
             items = self.segments.get(category, [])
             items.append(audio)
@@ -115,8 +127,9 @@ class ClassifiedLibrary(Library):
 
 class UnclassifiedLibrary(Library):
     def __init__(self, path):
+        super().__init__(path)
         self.segments = [
-            Audio(file) for file in pathlib.Path(path).iterdir()
+            audio for _, audio in self.files
         ]
 
     def cluster(self, n_clusters, features, algorithm):
