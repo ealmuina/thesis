@@ -7,7 +7,7 @@ from math import factorial
 import numpy as np
 from hdbscan import HDBSCAN
 from sklearn import metrics
-from sklearn.cluster import KMeans, SpectralClustering, AffinityPropagation
+from sklearn.cluster import MiniBatchKMeans, SpectralClustering, AffinityPropagation
 from sklearn.manifold import MDS
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import scale, LabelEncoder
@@ -17,6 +17,8 @@ from .features.audio import Audio
 from .utils import std_out_err_redirect_tqdm
 
 warnings.filterwarnings("ignore")
+
+RANDOM_STATE = 0
 
 
 class IdentityClustering:
@@ -46,10 +48,10 @@ class Library:
     @staticmethod
     def _parse_clustering_algo(algorithm, n_clusters):
         return {
-            'kmeans': KMeans(n_clusters=n_clusters),
-            'spectral': SpectralClustering(n_clusters=n_clusters),
+            'kmeans': MiniBatchKMeans(n_clusters=n_clusters, random_state=RANDOM_STATE),
+            'spectral': SpectralClustering(n_clusters=n_clusters, n_jobs=-1, random_state=RANDOM_STATE),
             'affinity': AffinityPropagation(),
-            'gmm': GaussianMixture(n_components=n_clusters),
+            'gmm': GaussianMixture(n_components=n_clusters, random_state=RANDOM_STATE),
             'hdbscan': HDBSCAN(min_cluster_size=3),
             'none': IdentityClustering()
         }[algorithm]
@@ -87,7 +89,8 @@ class ClassifiedLibrary(Library):
 
     def best_features(self, categories, features_set, algorithm):
         best = {
-            'AMI': 0
+            'AMI': 0,
+            'CH': -2 ** 31
         }
         n = len(features_set)
         max_r = 2  # maximum size of features subset to be checked (max_r <= n)
@@ -105,11 +108,13 @@ class ClassifiedLibrary(Library):
                 for features in combinations:
                     X, scaled_X, y, names, labels = self._predict(categories, features, algorithm)
                     ami = metrics.adjusted_mutual_info_score(labels, y)
+                    ch = metrics.calinski_harabaz_score(scaled_X, y)
 
-                    if ami > best['AMI']:
+                    if ami > best['AMI'] or (ami == best['AMI'] and ch > best['CH']):
                         best.update({
                             'AMI': ami,
-                            'features': features
+                            'CH': ch,
+                            'features': list(features)
                         })
 
         clustering, scores = self.cluster(categories, best['features'], algorithm)
@@ -120,7 +125,7 @@ class ClassifiedLibrary(Library):
 
         X_2d = X
         if X.shape[1] != 2:
-            mds = MDS(n_components=2, random_state=0)
+            mds = MDS(n_components=2, random_state=RANDOM_STATE)
             X_2d = mds.fit_transform(X)
 
         result = {}
