@@ -69,8 +69,9 @@ app = Flask(__name__)
 
 @app.route('/best_features/')
 def best_features():
-    return render_template('classified_best_features.html', **{
-        'axis': FEATURES,
+    template_type = 'classified' if CLASSIFIED else 'unclassified'
+
+    return render_template('%s_best_features.html' % template_type, **{
         'clustering_algorithms': CLUSTERING_ALGORITHMS
     })
 
@@ -78,13 +79,17 @@ def best_features():
 @app.route('/best_features_nd/')
 def best_features_nd():
     clustering_algorithm = request.args.get('clustering_algorithm')
-    species = request.args.getlist('species[]')
 
-    if not species:
+    if CLASSIFIED:
+        categories = request.args.getlist('species[]')
+    else:
+        categories = int(request.args.get('n_clusters'))
+
+    if not categories:
         return jsonify({})
 
     clustering, scores, features = LIBRARY.best_features(
-        categories=species,
+        categories=categories,
         features_set=[f for f, _, _ in FEATURES],
         algorithm=clustering_algorithm
     )

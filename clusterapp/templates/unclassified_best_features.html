@@ -1,0 +1,39 @@
+{% extends '_unclassified.html' %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+
+    <script type="text/javascript">
+        function refresh() {
+            var clustering_algorithm = $('#clustering-algorithm')[0];
+            var n_clusters = $('#clusters-number-input')[0].value;
+
+            var query_dict = {
+                'clustering_algorithm': clustering_algorithm.value,
+                'n_clusters': n_clusters
+            };
+            $.get('{{ url_for('best_features_nd') }}', query_dict, function (data) {
+                if (data.features.length === 2) {
+                    var x = getFeatureDescription(data.features[0], data['feature_set']);
+                    var y = getFeatureDescription(data.features[1], data['feature_set']);
+                    refreshChart(data, x.verbose_name, y.verbose_name);
+                }
+                else {
+                    refreshChart(data, null, null);
+                }
+                refreshTable(data, data.features);
+            });
+        }
+    </script>
+
+    <script type="application/javascript">
+        $(function () {
+            $('#analysis-bar').removeClass('active');
+            $('#best-features-bar').addClass('active');
+
+            $('#features-filter').select2({
+                containerCssClass: "no-border"
+            });
+        });
+    </script>
+{% endblock %}

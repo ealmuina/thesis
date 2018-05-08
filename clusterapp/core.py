@@ -181,7 +181,10 @@ class UnclassifiedLibrary(Library):
         return X, names, None
 
     def _update_best_features(self, best, features, scaled_X, labels_true, labels_pred):
-        ch = metrics.calinski_harabaz_score(scaled_X, labels_pred)
+        try:
+            ch = metrics.calinski_harabaz_score(scaled_X, labels_pred)
+        except ValueError:
+            ch = -2 ** 31  # Likely because labels_pred had only one category. Just give it a bad score
 
         if ch > best['CH']:
             best.update({
