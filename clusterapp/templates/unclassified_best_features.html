@@ -21,7 +21,10 @@
                 else {
                     refreshChart(data, null, null);
                 }
+
                 refreshTable(data, data.features);
+                table.column(1).visible(false);
+                table.column(2).visible(false);
             });
         }
     </script>
