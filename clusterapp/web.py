@@ -72,13 +72,16 @@ def best_features():
     template_type = 'classified' if CLASSIFIED else 'unclassified'
 
     return render_template('%s_best_features.html' % template_type, **{
-        'clustering_algorithms': CLUSTERING_ALGORITHMS
+        'clustering_algorithms': CLUSTERING_ALGORITHMS,
+        'features_number': len(FEATURES)
     })
 
 
 @app.route('/best_features_nd/')
 def best_features_nd():
     clustering_algorithm = request.args.get('clustering_algorithm')
+    min_features = int(request.args.get('min_features'))
+    max_features = int(request.args.get('max_features'))
 
     if CLASSIFIED:
         categories = request.args.getlist('species[]')
@@ -91,7 +94,9 @@ def best_features_nd():
     clustering, scores, features = LIBRARY.best_features(
         categories=categories,
         features_set=[f for f, _, _ in FEATURES],
-        algorithm=clustering_algorithm
+        algorithm=clustering_algorithm,
+        min_features=min_features,
+        max_features=max_features
     )
     stats = statistics(clustering)
 

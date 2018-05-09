@@ -1,5 +1,9 @@
 {% extends '_unclassified.html' %}
 
+{% block dimensions %}
+    {% include '_number_features_input.html' %}
+{% endblock %}
+
 {% block scripts %}
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
 
@@ -7,10 +11,14 @@
         function refresh() {
             var clustering_algorithm = $('#clustering-algorithm')[0];
             var n_clusters = $('#clusters-number-input')[0].value;
+            var min_features = $('#min-features-number-input')[0].value;
+            var max_features = $('#max-features-number-input')[0].value;
 
             var query_dict = {
                 'clustering_algorithm': clustering_algorithm.value,
-                'n_clusters': n_clusters
+                'n_clusters': n_clusters,
+                'min_features': min_features,
+                'max_features': max_features
             };
             $.get('{{ url_for('best_features_nd') }}', query_dict, function (data) {
                 if (data.features.length === 2) {

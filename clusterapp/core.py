@@ -58,11 +58,17 @@ class Library:
             'none': IdentityClustering()
         }[algorithm]
 
-    def _best_features(self, best, categories, features_set, algorithm):
+    def _best_features(self, best, categories, features_set, algorithm, min_features, max_features):
         n = len(features_set)
-        max_r = 2  # maximum size of features subset to be checked (max_r <= n)
         with std_out_err_redirect_tqdm() as orig_stdout:
-            for r in trange(1, max_r + 1, desc='Checking subsets of features', file=orig_stdout, dynamic_ncols=True):
+            sizes = trange(
+                min_features,
+                max_features + 1,
+                desc='Checking subsets of features',
+                file=orig_stdout,
+                dynamic_ncols=True
+            )
+            for r in sizes:
                 k = factorial(n) / (factorial(r) * factorial(n - r))
                 combinations = tqdm(
                     itertools.combinations(features_set, r),
@@ -157,12 +163,12 @@ class ClassifiedLibrary(Library):
                 'features': list(features)
             })
 
-    def best_features(self, categories, features_set, algorithm):
+    def best_features(self, categories, features_set, algorithm, min_features, max_features):
         best = {
             'AMI': 0,
             'CH': -2 ** 31
         }
-        return self._best_features(best, categories, features_set, algorithm)
+        return self._best_features(best, categories, features_set, algorithm, min_features, max_features)
 
 
 class UnclassifiedLibrary(Library):
@@ -192,11 +198,11 @@ class UnclassifiedLibrary(Library):
                 'features': list(features)
             })
 
-    def best_features(self, categories, features_set, algorithm):
+    def best_features(self, categories, features_set, algorithm, min_features, max_features):
         best = {
             'CH': -2 ** 31
         }
-        return self._best_features(best, categories, features_set, algorithm)
+        return self._best_features(best, categories, features_set, algorithm, min_features, max_features)
 
 
 def evaluate(X, labels_pred, labels_true=None):
