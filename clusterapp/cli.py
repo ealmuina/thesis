@@ -40,19 +40,22 @@ def run(args):
 
     with open(args.config) as config:
         config = json.load(config)
+
     features = config.get('features')
+    n_clusters = config.get('n_clusters', 2)
+    categories = config.get('categories', getattr(LIBRARY, 'categories', None))
 
     test(
         features_set=features,
         min_features=config.get('min_features', 1),
         max_features=config.get('max_features', len(features)),
         algorithms=config.get('algorithms'),
-        n_clusters=config.get('n_clusters', 2),
+        categories=(categories or n_clusters),
         export_path=config.get('export_path')
     )
 
 
-def test(features_set, min_features, max_features, algorithms, n_clusters, export_path):
+def test(features_set, min_features, max_features, algorithms, categories, export_path):
     for r in range(min_features, max_features + 1):
         for features in itertools.combinations(features_set, r):
             print()
@@ -67,7 +70,7 @@ def test(features_set, min_features, max_features, algorithms, n_clusters, expor
                 ]
             for algorithm in algorithms:
                 X, scaled_X, names, labels_pred, labels_true = LIBRARY.predict(
-                    categories=getattr(LIBRARY, 'categories', n_clusters),
+                    categories=categories,
                     features=features,
                     algorithm=algorithm
                 )
@@ -75,5 +78,5 @@ def test(features_set, min_features, max_features, algorithms, n_clusters, expor
                 if EXPORT:
                     os.makedirs(export_path, exist_ok=True)
                     export(names, labels_pred,
-                           os.path.join(export_path, '[%s]%s.json' % (algorithm, '+'.join(features))))
+                           os.path.join(export_path, '[%s] %s.json' % (algorithm, '+'.join(features))))
             print_table(report)
