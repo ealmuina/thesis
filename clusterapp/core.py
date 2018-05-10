@@ -9,6 +9,7 @@ from hdbscan import HDBSCAN
 from sklearn import metrics
 from sklearn.cluster import MiniBatchKMeans, SpectralClustering, AffinityPropagation
 from sklearn.manifold import MDS
+from sklearn.metrics import pairwise_distances_argmin
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import scale, LabelEncoder
 from tqdm import tqdm, trange
@@ -19,6 +20,31 @@ from .utils import std_out_err_redirect_tqdm
 warnings.filterwarnings("ignore")
 
 RANDOM_STATE = 0
+
+
+class Classifier:
+    def __init__(self, clustering):
+        self.centroids = []
+        self.labels = []
+
+        for label in clustering.keys():
+            cluster = clustering[label]
+            X = np.array([item['x'] for item in cluster])
+
+            self.centroids.append(X.mean(0))
+            self.labels.append(label)
+
+        self.centroids = np.array(self.centroids)
+        self.labels = np.array(self.labels)
+
+    def predict(self, files, features):
+        X = []
+        for file in files:
+            audio = Audio(file)
+            x = _extract_features(audio, features)
+            X.append(x)
+        i = pairwise_distances_argmin(np.array(X), self.centroids)
+        return self.labels[i]
 
 
 class IdentityClustering:
@@ -36,14 +62,6 @@ class Library:
         with std_out_err_redirect_tqdm() as orig_stdout:
             for file in tqdm(files, desc='Loading audio files', file=orig_stdout, dynamic_ncols=True):
                 self.files.append((file, Audio(file)))
-
-    @staticmethod
-    def _extract_features(audio, features):
-        current = []
-        for feature in features:
-            x = getattr(audio, feature)
-            current.append(x)
-        return current
 
     @staticmethod
     def _parse_clustering_algo(algorithm, categories):
@@ -82,7 +100,7 @@ class Library:
                     _, scaled_X, _, labels_pred, labels_true = self._predict(categories, features, algorithm)
                     self._update_best_features(best, features, scaled_X, labels_true, labels_pred)
 
-        clustering, scores = self.cluster(categories, best['features'], algorithm)
+        clustering, scores, _ = self.cluster(categories, best['features'], algorithm)
         return clustering, scores, best['features']
 
     def _parse_data(self, categories, features, algorithm):
@@ -123,7 +141,7 @@ class Library:
             items.append(entry)
             result[label] = items
 
-        return result, evaluate(scaled_X, labels_pred, labels_true)
+        return result, evaluate(scaled_X, labels_pred, labels_true), Classifier(result)
 
 
 class ClassifiedLibrary(Library):
@@ -143,7 +161,7 @@ class ClassifiedLibrary(Library):
         X, labels_true, names = [], [], []
         for cat in categories:
             for audio in self.segments[cat]:
-                X.append(self._extract_features(audio, features))
+                X.append(_extract_features(audio, features))
                 names.append(audio.name)
                 labels_true.append(cat)
         X = np.array(X, dtype=np.float64)
@@ -181,7 +199,7 @@ class UnclassifiedLibrary(Library):
     def _parse_data(self, categories, features, algorithm):
         X, names = [], []
         for audio in self.segments:
-            X.append(self._extract_features(audio, features))
+            X.append(_extract_features(audio, features))
             names.append(audio.name)
         X = np.array(X, dtype=np.float64)
         return X, names, None
@@ -203,6 +221,14 @@ class UnclassifiedLibrary(Library):
             'CH': -2 ** 31
         }
         return self._best_features(best, categories, features_set, algorithm, min_features, max_features)
+
+
+def _extract_features(audio, features):
+    current = []
+    for feature in features:
+        x = getattr(audio, feature)
+        current.append(x)
+    return current
 
 
 def evaluate(X, labels_pred, labels_true=None):

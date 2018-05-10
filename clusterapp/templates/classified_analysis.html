@@ -4,6 +4,20 @@
     {% include '_features_select.html' %}
 {% endblock %}
 
+{% block after_training %}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Classify segment</h3>
+        </div>
+        <div class="panel-body">
+            <form id="classify-form" method="post" action="." enctype="multipart/form-data">
+                <input type=file name=file>
+                <input type="submit" value="Classify"> <b><span id="classify-result"></span></b>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
 {% block scripts %}
     <script src="{{ url_for('static', filename='js/analysis.js') }}"></script>
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
@@ -30,5 +44,30 @@
                 refreshTable(data, features);
             });
         }
+    </script>
+
+    <script>
+        $(function () {
+            $('#classify-form').submit(function (e) {
+                e.preventDefault();
+
+                var data = new FormData(this);
+                var features = getSelectedFeatures();
+
+                for (var i = 0; i < features.length; i++)
+                    data.append('features[]', features[i]);
+
+                $.ajax({
+                    url: '{{ url_for('classify') }}',
+                    type: 'POST',
+                    data: data,
+                    success: function (result) {
+                        $('#classify-result').html(result)
+                    },
+                    contentType: false,
+                    processData: false
+                });
+            })
+        })
     </script>
 {% endblock %}

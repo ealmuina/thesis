@@ -105,6 +105,13 @@ def best_features_nd():
     return jsonify(report)
 
 
+@app.route('/classify/', methods=['POST'])
+def classify():
+    features = request.form.getlist('features[]')
+    file = request.files['file']
+    return CLASSIFIER.predict([file.stream], features)[0]
+
+
 def get_report(clustering, stats, scores):
     return {
         'segments': [{
@@ -137,6 +144,8 @@ def index():
 
 @app.route('/parameters_nd/')
 def parameters_nd():
+    global CLASSIFIER
+
     features = request.args.getlist('features[]')
     if not features:
         return jsonify({})
@@ -145,12 +154,12 @@ def parameters_nd():
 
     if CLASSIFIED:
         species = request.args.getlist('species[]')
-        clustering, scores = LIBRARY.cluster(species, features, clustering_algorithm)
+        clustering, scores, CLASSIFIER = LIBRARY.cluster(species, features, clustering_algorithm)
     else:
         n_clusters = request.args.get('n_clusters')
         if not n_clusters:
             n_clusters = '0'
-        clustering, scores = LIBRARY.cluster(int(n_clusters), features, clustering_algorithm)
+        clustering, scores, CLASSIFIER = LIBRARY.cluster(int(n_clusters), features, clustering_algorithm)
 
     stats = statistics(clustering)
     return jsonify(get_report(clustering, stats, scores))

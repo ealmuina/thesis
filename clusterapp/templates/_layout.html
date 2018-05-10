@@ -52,8 +52,12 @@
 
                 {% block filter %}{% endblock %}
 
-                <div style="text-align: center; margin-top: 20px">
+                <div style="text-align: center; margin-top: 20px; margin-bottom: 20px">
                     <button id="refresh-button" class="btn btn-default">Refresh</button>
+                </div>
+
+                <div id="after-training" class="hidden">
+                    {% block after_training %}{% endblock %}
                 </div>
             </div>
 
@@ -137,6 +141,7 @@
 <script type="text/javascript">
     $('#refresh-button').click(function () {
         refresh();
+        $('#after-training').removeClass('hidden');
     });
 
     $(function () {
