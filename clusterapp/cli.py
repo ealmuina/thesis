@@ -47,7 +47,7 @@ def mark_best_features(reports):
                 line[0] = '*'
 
 
-def report_algorithm(algorithm, X, labels_pred, labels_true):
+def report_algorithm(algorithm, X, labels_pred, labels_true, run_id):
     start = time.time()
     score = evaluate(X, labels_pred, labels_true)
     if CLASSIFIED:
@@ -58,7 +58,8 @@ def report_algorithm(algorithm, X, labels_pred, labels_true):
         '',
         algorithm,
         *[score[measure] for measure in measures],
-        round(time.time() - start, 2)
+        round(time.time() - start, 2),
+        run_id
     ]))
 
 
@@ -93,6 +94,7 @@ def test(features_set, min_features, max_features, algorithms, categories, expor
     n = len(features_set)
     reports = []
     features_combinations = []
+    i = 0
 
     with std_out_err_redirect_tqdm() as orig_stdout:
         sizes = trange(
@@ -115,11 +117,11 @@ def test(features_set, min_features, max_features, algorithms, categories, expor
             for features in combinations:
                 if CLASSIFIED:
                     report = [
-                        (' ', 'ALGORITHM', 'AMI', 'ARI', 'HOMOGENEITY', 'COMPLETENESS', 'TIME')
+                        (' ', 'ALGORITHM', 'AMI', 'ARI', 'HOMOGENEITY', 'COMPLETENESS', 'TIME', 'ID')
                     ]
                 else:
                     report = [
-                        (' ', 'ALGORITHM', 'SILHOUETTE', 'CALINSKI-HARABAZ', 'TIME')
+                        (' ', 'ALGORITHM', 'SILHOUETTE', 'CALINSKI-HARABAZ', 'TIME', 'ID')
                     ]
                 for algorithm in algorithms:
                     X, scaled_X, names, labels_pred, labels_true = LIBRARY.predict(
@@ -127,10 +129,14 @@ def test(features_set, min_features, max_features, algorithms, categories, expor
                         features=features,
                         algorithm=algorithm
                     )
-                    report.append(report_algorithm(algorithm, scaled_X, labels_pred, labels_true))
+                    report.append(report_algorithm(algorithm, scaled_X, labels_pred, labels_true, i))
                     if EXPORT:
-                        export(names, labels_pred,
-                               os.path.join(export_path, '[%s] %s.json' % (algorithm, '+'.join(features))))
+                        export(
+                            names,
+                            labels_pred,
+                            os.path.join(export_path, '%d [%s] %s.json' % (i, algorithm, '+'.join(features)))
+                        )
+                    i += 1
                 reports.append(report)
                 features_combinations.append(features)
 
