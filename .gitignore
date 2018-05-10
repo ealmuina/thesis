@@ -3,6 +3,6 @@
 /auxil
 /out
 /codes/sandbox.py
-/codes/out
 /build
 /dist
+*.json

@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, jsonify
 
 from clusterapp.core import statistics
+from clusterapp.utils import build_library
 
 CLUSTERING_ALGORITHMS = [
     ('hdbscan', 'HDBSCAN'),
@@ -166,11 +167,11 @@ def parameters_nd():
     return jsonify(get_report(clustering, stats, scores))
 
 
-def run(host, port, library, classified):
+def run(args):
     global LIBRARY, CLASSIFIED
-    LIBRARY = library
-    CLASSIFIED = classified
-    app.run(host=host, port=port)
+    LIBRARY = build_library(args.path, args.classified)
+    CLASSIFIED = args.classified
+    app.run(host=args.host, port=args.port)
 
 
 @app.route('/search_for_species/')

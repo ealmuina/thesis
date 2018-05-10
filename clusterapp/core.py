@@ -110,7 +110,7 @@ class Library:
                     leave=False
                 )
                 for features in combinations:
-                    _, scaled_X, _, labels_pred, labels_true = self._predict(categories, features, algorithm)
+                    _, scaled_X, _, labels_pred, labels_true = self.predict(categories, features, algorithm)
                     self._update_best_features(best, features, scaled_X, labels_true, labels_pred)
 
         clustering, scores, _ = self.cluster(categories, best['features'], algorithm)
@@ -122,18 +122,8 @@ class Library:
     def _update_best_features(self, best, features, scaled_X, labels_true, labels_pred):
         raise NotImplementedError()
 
-    def _predict(self, categories, features, algorithm):
-        algorithm = self._parse_clustering_algo(algorithm, categories)
-        X, names, labels_true = self._parse_data(categories, features, algorithm)
-
-        scaled_X = scale(X) if len(X) else X
-        algorithm.fit(scaled_X, labels_true)
-        labels_pred = algorithm.labels_ if hasattr(algorithm, 'labels_') else algorithm.predict(scaled_X)
-
-        return X, scaled_X, names, labels_pred, labels_true
-
     def cluster(self, categories, features, algorithm):
-        X, scaled_X, names, labels_pred, labels_true = self._predict(categories, features, algorithm)
+        X, scaled_X, names, labels_pred, labels_true = self.predict(categories, features, algorithm)
 
         X_2d = X
         if X.shape[1] != 2:
@@ -155,6 +145,16 @@ class Library:
             result[label] = items
 
         return result, evaluate(scaled_X, labels_pred, labels_true), Classifier(result)
+
+    def predict(self, categories, features, algorithm):
+        algorithm = self._parse_clustering_algo(algorithm, categories)
+        X, names, labels_true = self._parse_data(categories, features, algorithm)
+
+        scaled_X = scale(X) if len(X) else X
+        algorithm.fit(scaled_X, labels_true)
+        labels_pred = algorithm.labels_ if hasattr(algorithm, 'labels_') else algorithm.predict(scaled_X)
+
+        return X, scaled_X, names, labels_pred, labels_true
 
 
 class ClassifiedLibrary(Library):
