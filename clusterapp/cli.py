@@ -2,9 +2,12 @@ import itertools
 import json
 import os
 import time
+from math import factorial
+
+from tqdm import trange, tqdm
 
 from clusterapp.core import evaluate
-from clusterapp.utils import build_library, print_table
+from clusterapp.utils import build_library, print_table, std_out_err_redirect_tqdm
 
 
 def export(names, labels_pred, filename):
@@ -17,14 +20,37 @@ def export(names, labels_pred, filename):
         json.dump(result, file)
 
 
+def mark_best_features(reports):
+    best = {}
+    for report in reports:
+        for line in report:
+            if line[1] == 'ALGORITHM':
+                continue
+
+            algorithm = line[1]
+            score = float(line[2])
+            b = best.get(algorithm, {
+                'score': -2 ** 31,
+                'line': line
+            })
+            best[algorithm] = b
+
+            if score > b['score']:
+                b['score'] = score
+                b['line'][0] = ' '
+                b['line'] = line
+                line[0] = '*'
+
+
 def report_algorithm(algorithm, X, labels_pred, labels_true):
     start = time.time()
     score = evaluate(X, labels_pred, labels_true)
     if CLASSIFIED:
-        measures = ['ARI', 'AMI', 'Homogeneity', 'Completeness']
+        measures = ['AMI', 'ARI', 'Homogeneity', 'Completeness']
     else:
         measures = ['Silhouette', 'Calinski-Harabaz']
     return list(map(str, [
+        '',
         algorithm,
         *[score[measure] for measure in measures],
         round(time.time() - start, 2)
@@ -56,27 +82,53 @@ def run(args):
 
 
 def test(features_set, min_features, max_features, algorithms, categories, export_path):
-    for r in range(min_features, max_features + 1):
-        for features in itertools.combinations(features_set, r):
-            print()
-            print(features)
-            if CLASSIFIED:
-                report = [
-                    ('ALGORITHM', 'ARI', 'AMI', 'HOMOGENEITY', 'COMPLETENESS', 'TIME')
-                ]
-            else:
-                report = [
-                    ('ALGORITHM', 'SILHOUETTE', 'CALINSKI-HARABAZ', 'TIME')
-                ]
-            for algorithm in algorithms:
-                X, scaled_X, names, labels_pred, labels_true = LIBRARY.predict(
-                    categories=categories,
-                    features=features,
-                    algorithm=algorithm
-                )
-                report.append(report_algorithm(algorithm, scaled_X, labels_pred, labels_true))
-                if EXPORT:
-                    os.makedirs(export_path, exist_ok=True)
-                    export(names, labels_pred,
-                           os.path.join(export_path, '[%s] %s.json' % (algorithm, '+'.join(features))))
-            print_table(report)
+    n = len(features_set)
+    reports = []
+    features_combinations = []
+
+    with std_out_err_redirect_tqdm() as orig_stdout:
+        sizes = trange(
+            min_features,
+            max_features + 1,
+            desc='Checking subsets of features',
+            file=orig_stdout,
+            dynamic_ncols=True
+        )
+        for r in sizes:
+            k = factorial(n) / (factorial(r) * factorial(n - r))
+            combinations = tqdm(
+                itertools.combinations(features_set, r),
+                total=int(k),
+                desc='Checking subsets of size %d' % r,
+                file=orig_stdout,
+                dynamic_ncols=True,
+                leave=False
+            )
+            for features in combinations:
+                if CLASSIFIED:
+                    report = [
+                        (' ', 'ALGORITHM', 'AMI', 'ARI', 'HOMOGENEITY', 'COMPLETENESS', 'TIME')
+                    ]
+                else:
+                    report = [
+                        (' ', 'ALGORITHM', 'SILHOUETTE', 'CALINSKI-HARABAZ', 'TIME')
+                    ]
+                for algorithm in algorithms:
+                    X, scaled_X, names, labels_pred, labels_true = LIBRARY.predict(
+                        categories=categories,
+                        features=features,
+                        algorithm=algorithm
+                    )
+                    report.append(report_algorithm(algorithm, scaled_X, labels_pred, labels_true))
+                    if EXPORT:
+                        os.makedirs(export_path, exist_ok=True)
+                        export(names, labels_pred,
+                               os.path.join(export_path, '[%s] %s.json' % (algorithm, '+'.join(features))))
+                reports.append(report)
+                features_combinations.append(features)
+
+    mark_best_features(reports)
+    for features, report in zip(features_combinations, reports):
+        print()
+        print(features)
+        print_table(report)
