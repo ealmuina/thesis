@@ -29,15 +29,16 @@ def build_library(path, classified):
     return library
 
 
-def print_table(table):
+def format_table(table):
     """
-    Print a list of tuples as a pretty tabulated table.
+    Convert a list of tuples into a pretty tabulated table.
     :param table: List of tuples, each one will be a row of the printed table
     """
-
     col_width = [max(len(x) for x in col) for col in zip(*table)]
+    result = ""
     for line in table:
-        print((" " * 3).join("{:{}}".format(x, col_width[i]) for i, x in enumerate(line)))
+        result += "%s\n" % ((" " * 3).join("{:{}}".format(x, col_width[i]) for i, x in enumerate(line)))
+    return result
 
 
 @contextlib.contextmanager

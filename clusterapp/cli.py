@@ -7,7 +7,7 @@ from math import factorial
 from tqdm import trange, tqdm
 
 from clusterapp.core import evaluate
-from clusterapp.utils import build_library, print_table, std_out_err_redirect_tqdm
+from clusterapp.utils import build_library, format_table, std_out_err_redirect_tqdm
 
 
 def export(names, labels_pred, filename):
@@ -18,6 +18,11 @@ def export(names, labels_pred, filename):
         result[label] = category
     with open(filename, 'w') as file:
         json.dump(result, file)
+
+
+def log(line, log_file):
+    print(line)
+    log_file.write('%s\n' % line)
 
 
 def mark_best_features(reports):
@@ -70,6 +75,9 @@ def run(args):
     features = config.get('features')
     n_clusters = config.get('n_clusters', 2)
     categories = config.get('categories', getattr(LIBRARY, 'categories', None))
+    export_path = config.get('export_path', '')
+
+    os.makedirs(export_path, exist_ok=True)
 
     test(
         features_set=features,
@@ -77,7 +85,7 @@ def run(args):
         max_features=config.get('max_features', len(features)),
         algorithms=config.get('algorithms'),
         categories=(categories or n_clusters),
-        export_path=config.get('export_path')
+        export_path=export_path
     )
 
 
@@ -121,14 +129,14 @@ def test(features_set, min_features, max_features, algorithms, categories, expor
                     )
                     report.append(report_algorithm(algorithm, scaled_X, labels_pred, labels_true))
                     if EXPORT:
-                        os.makedirs(export_path, exist_ok=True)
                         export(names, labels_pred,
                                os.path.join(export_path, '[%s] %s.json' % (algorithm, '+'.join(features))))
                 reports.append(report)
                 features_combinations.append(features)
 
+    print()
     mark_best_features(reports)
-    for features, report in zip(features_combinations, reports):
-        print()
-        print(features)
-        print_table(report)
+    with open(os.path.join(export_path, 'log.txt'), 'w') as log_file:
+        for features, report in zip(features_combinations, reports):
+            log('%s' % str(features), log_file)
+            log(format_table(report), log_file)
