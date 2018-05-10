@@ -40,11 +40,24 @@ class Classifier:
     def predict(self, files, features):
         X = []
         for file in files:
-            audio = Audio(file)
+            audio = Audio(file.stream)
             x = _extract_features(audio, features)
             X.append(x)
-        i = pairwise_distances_argmin(np.array(X), self.centroids)
-        return self.labels[i]
+
+        X = np.array(X)
+        X_2d = X
+        if X.shape[1] != 2:
+            mds = MDS(n_components=2, random_state=RANDOM_STATE)
+            X_2d = mds.fit_transform(X)
+        centroid = pairwise_distances_argmin(X, self.centroids)
+
+        return [{
+            'name': files[i].filename,
+            'x': float(X_2d[i, 0].round(2)),
+            'y': float(X_2d[i, 1].round(2)),
+            'label': self.labels[centroid[i]],
+            'centroid': i,
+        } for i in range(len(centroid))]
 
 
 class IdentityClustering:

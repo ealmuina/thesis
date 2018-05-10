@@ -109,7 +109,8 @@ def best_features_nd():
 def classify():
     features = request.form.getlist('features[]')
     file = request.files['file']
-    return CLASSIFIER.predict([file.stream], features)[0]
+    result = CLASSIFIER.predict([file], features)[0]
+    return jsonify(result)
 
 
 def get_report(clustering, stats, scores):

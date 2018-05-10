@@ -62,7 +62,8 @@
                     type: 'POST',
                     data: data,
                     success: function (result) {
-                        $('#classify-result').html(result)
+                        $('#classify-result').html(result['label']);
+                        chart.series[result['centroid']].addPoint(result);
                     },
                     contentType: false,
                     processData: false
