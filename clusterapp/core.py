@@ -110,7 +110,11 @@ class Library:
                     leave=False
                 )
                 for features in combinations:
-                    _, scaled_X, _, labels_pred, labels_true = self.predict(categories, features, algorithm)
+                    try:  # TODO remove this try-except
+                        _, scaled_X, _, labels_pred, labels_true = self.predict(categories, features, algorithm)
+                    except:
+                        print(features)
+                        continue
                     self._update_best_features(best, features, scaled_X, labels_true, labels_pred)
 
         clustering, scores, _ = self.cluster(categories, best['features'], algorithm)
