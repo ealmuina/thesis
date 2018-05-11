@@ -1,6 +1,7 @@
 import itertools
 import json
 import os
+import shutil
 import time
 from math import factorial
 
@@ -78,6 +79,7 @@ def run(args):
     categories = config.get('categories', getattr(LIBRARY, 'categories', None))
     export_path = config.get('export_path', '')
 
+    shutil.rmtree(export_path, ignore_errors=True)
     os.makedirs(export_path, exist_ok=True)
 
     test(

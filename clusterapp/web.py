@@ -64,6 +64,8 @@ FEATURES = [
     ('EntropyFreq-max_amp', 'Spectral Entropy [max_amp]', 1),
     ('PeakFreq-max_amp', 'Peak Frequency [max_amp] (Hz)', 1),
     ('PeakAmpFreq-max_amp', 'Peak Amplitude [max_amp]', 1),
+
+    ('MFCC', 'MFCC', 12)
 ]
 app = Flask(__name__)
 

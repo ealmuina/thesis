@@ -244,7 +244,10 @@ def _extract_features(audio, features):
     current = []
     for feature in features:
         x = getattr(audio, feature)
-        current.append(x)
+        if isinstance(x, np.ndarray):
+            current.extend(x.mean(1))
+        else:
+            current.append(x)
     return current
 
 

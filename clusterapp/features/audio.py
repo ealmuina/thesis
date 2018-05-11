@@ -1,3 +1,5 @@
+from librosa.feature import mfcc
+
 from .FreqParameters.BandwidthFreqParameter import BandwidthFreqParameter
 from .FreqParameters.EntropyFreqParameter import EntropyFreqParameter
 from .FreqParameters.MaxFreqParameter import MaxFreqParameter
@@ -51,8 +53,8 @@ entropy_f = EntropyFreqParameter()
 
 class Audio:
     def __init__(self, path, string_path=False):
-        file, fs = load_file(str(path) if string_path else path)
-        signal = Signal(file, fs)
+        file, self.fs = load_file(str(path) if string_path else path)
+        signal = Signal(file, self.fs)
         signal.set_window('hann')
 
         self.segment = Segment(signal, 0, len(signal.data) - 1)
@@ -60,11 +62,16 @@ class Audio:
 
         self._build_temporal_features()
         self._build_spectral_features()
+        self._build_mfcc()
 
     def __getattr__(self, item):
         if item in self.segment.measures_dict:
             return self.segment.measures_dict[item]
         raise AttributeError(item)
+
+    def _build_mfcc(self):
+        coeffs = mfcc(self.segment.data, self.fs, n_mfcc=13)[1:]
+        self.segment.measures_dict['MFCC'] = coeffs
 
     def _build_spectral_features(self):
         locations = ['start', 'end', 'center', 'max', 'max_amp']
