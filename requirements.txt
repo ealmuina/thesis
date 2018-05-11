@@ -20,7 +20,6 @@ numba==0.38.0
 numpy==1.14.0
 pandas==0.22.0
 pefile==2017.11.5
-pkg-resources==0.0.0
 pluggy==0.6.0
 py==1.5.3
 pyamg==3.3.2
