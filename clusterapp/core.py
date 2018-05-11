@@ -74,7 +74,7 @@ class Library:
         self.files = []
         with std_out_err_redirect_tqdm() as orig_stdout:
             for file in tqdm(files, desc='Loading audio files', file=orig_stdout, dynamic_ncols=True):
-                self.files.append((file, Audio(file)))
+                self.files.append((file, Audio(file, string_path=True)))
 
     @staticmethod
     def _parse_clustering_algo(algorithm, categories):

@@ -50,8 +50,8 @@ entropy_f = EntropyFreqParameter()
 
 
 class Audio:
-    def __init__(self, path):
-        file, fs = load_file(path)
+    def __init__(self, path, string_path=False):
+        file, fs = load_file(str(path) if string_path else path)
         signal = Signal(file, fs)
         signal.set_window('hann')
 
