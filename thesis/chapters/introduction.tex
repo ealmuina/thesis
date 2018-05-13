@@ -11,12 +11,12 @@ Durante años la Bioacústica vio su labor dificultada por problemas de índole 
 Esto ha cambiado recientemente con la introducción de dispositivos de grabación y almacenamiento de mayor calidad y capacidad y, especialmente, con la aplicación de técnicas de Inteligencia Artificial.
 
 Un factor que afectó el avance científico en esta área era que las señales debían ser procesadas por expertos en la materia, quienes tenían la engorrosa tarea de segmentar\footnote{Segmentar es el procedimiento de separar una grabación sonora en porciones (segmentos) en las que ocurren una o varias señales acústicas de interés.} y clasificar cada grabación con el propósito de determinar la ocurrencia de sonidos emitidos por ciertas especies de animales en estas.
-Los especialistas debían dedicar horas a este tedioso procedimiento, haciendo poco factible el desarrollo de estudios que requirieran la detección de especies mediante tal proceder.
+Los especialistas debían dedicar horas a este engorroso procedimiento, haciendo poco factible el desarrollo de estudios que requirieran la detección de especies mediante tal proceder.
 Dichos estudios son muy necesarios para el desarrollo de proyectos ecológicos, medioambientales y de investigación de nuevas especies, sobre todo en lugares donde las condiciones geográficas y del entorno dificultan la observación directa.
 
 La Inteligencia Artificial ha sido vista como una posible solución a la problemática antes planteada.
 Son numerosos los estudios llevados a cabo con diferentes algoritmos de esta para su aplicación en la detección y clasificación de señales bioacústicas~\cite{Gerhard03}.
-En general estos pueden ser clasificados en supervisados o no supervisados, de acuerdo a si requieren un conjunto de datos previamente procesados a partir de los cuales <<deducir>> el resultado para nuevos datos o no, respectivamente.
+En general dichos algoritmos pueden ser clasificados en supervisados o no supervisados, de acuerdo a si requieren un conjunto de datos previamente procesados a partir de los cuales <<deducir>> el resultado para nuevos datos o no, respectivamente.
 Algoritmos supervisados han sido ampliamente aplicados para la solución del problema en cuestión, quedando la pertinencia y calidad del uso de los no supervisados como un objeto de estudio menos abordado.
 
 Entre las técnicas más estudiadas para la clasificación de señales bioacústicas se encuentran:
@@ -37,13 +37,13 @@ Todas constituyen dificultades a tratar cuando se desarrolla un mecanismo para r
 
 Una tendencia en numerosos trabajos es enfocarse en la clasificación de una categoría taxonómica específica como aves~\cite{Oliveira15,Lasseck14,Stowell14} o primates~\cite{Heinicke15}.
 Lo anterior persigue lograr un mejor ajuste en los parámetros de los algoritmos y alcanzar así resultados de mayor calidad.
-Se encuentra menos estudiada la aplicación en grabaciones sobre una comunidad de organismos diversa, donde los resultados han sido menos alentadores~\cite{Ilyas14}; y resulta un campo particularmente propicio para la aplicación de algoritmos no supervisados, dada su naturaleza de no requerir conocimiento previo de las categorías esperadas, y que funcionan mejor para mayores separaciones entre las categorías.
+Se encuentra menos estudiada la aplicación en grabaciones sobre una comunidad de organismos diversa, donde los resultados han sido menos alentadores~\cite{Ilyas14}; y resulta este un campo particularmente propicio para la aplicación de algoritmos no supervisados, dada su naturaleza de no requerir conocimiento previo de las categorías esperadas, y que funcionan mejor para mayores separaciones entre las categorías.
 
 Planteado el contexto sobre el que se desarrolla este trabajo, se formula la siguiente pregunta científica: ¿En qué escenarios resulta propicia la aplicación de algoritmos de aprendizaje no supervisado para la clasificación automática de señales sonoras?
 
-Para dar respuesta a esta interrogante, nos proponemos cumplir los siguientes objetivos:
+Para dar respuesta a esta interrogante, se plantean los siguientes objetivos:
 \begin{itemize}
-    \item Presentar un estudio de los algoritmos de aprendizaje no supervisado y clustering semi-supervisado\footnote{Técnica que aplica algoritmos de aprendizaje no supervisado a conjuntos de datos en los que se conoce la categoría de algunos elementos.} y su aplicación en el procesamiento de señales.
+    \item Presentar un estudio de los algoritmos de aprendizaje no supervisado, la validación de sus resultados, y su aplicación en el procesamiento de señales.
     \item Implementar variantes de los algoritmos estudiados.
     \item Establecer una comparación entre los resultados obtenidos, en correspondencia con el problema general (clasificación de señales de diversas especies) y restricciones de este (clasificación de señales en categorías de especies específicas).
 \end{itemize}
