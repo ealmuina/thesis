@@ -8,10 +8,10 @@ This repository contains both the report and implementation of a Bachelor Thesis
 clusterapp/ // Source code of the project implementation 
 codes/      // Source code using to generate plots and results shown in the thesis report
 sounds/     // Datasets of sounds used in the research
-thesis/     // LaTex source code of the thesis report (Please be aware the report is written in Spanish)
+thesis/     // LaTeX source code of the thesis report (Please be aware the report is written in Spanish)
 ```
 
-In order to generate a pdf file from the _LaTex_ source code the following commands have to be executed:
+In order to generate a pdf file from the _LaTeX_ source code it is recommended to use the _MiKTeX_ distribution. The following commands have to be executed:
 
 ```bash
 pdflatex thesis/title.tex

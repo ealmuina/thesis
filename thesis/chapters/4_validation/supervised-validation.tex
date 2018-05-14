@@ -2,10 +2,10 @@ Las medidas de validación supervisadas o \textbf{externas}, parten de la premis
 Haciendo uso de este conocimiento, pueden construirse clusters ideales, estableciendo una correspondencia biyectiva entre clusters y categorías.
 La tarea de los criterios de validación supervisados es comparar el resultado de la aplicación de un algoritmo de clustering con dicho conjunto de clusters ideales.
 
-De acuerdo al enfoque que adopta cada criterio para establecer la comparación, estos pueden agruparse en dos conjuntos:
+De acuerdo al enfoque que adopta cada criterio para realizar la comparación, estos pueden agruparse en dos conjuntos:
 
 \begin{itemize}
-    \item \textbf{Orientados a la clasificación}: Son aquellas medidas que evalúan la composición de los clusters respecto a qué tan cerca se encuentran de contener elementos pertenecientes a una única clase.
+    \item \textbf{Orientados a la clasificación}: Conjunto de aquellas medidas que evalúan la composición de los clusters respecto a qué tan cerca se encuentran de contener elementos pertenecientes a una única clase.
     \item \textbf{Orientados a la similaridad}: Estos criterios valoran cuánto se cumple que dos objetos de una misma categoría se encuentren en el mismo cluster y viceversa.
 \end{itemize}
 
@@ -172,9 +172,18 @@ Esta aproximación para la validación del clustering puede ser vista como la co
     que tiene, de forma semejante, 1 en la posición $(i, j)$ si los objetos $i$ y $j$ forman parte de la misma clase, y 0 de lo contrario.
 \end{itemize}
 
-La correlación ($\Gamma$) entre estas dos matrices se puede tomar como una medida de la calidad del resultado del algoritmo de clustering.
+La correlación ($\Gamma$), también conocida como \textit{estadística gamma}, entre estas dos matrices se puede tomar como una medida de la calidad del resultado del algoritmo de clustering:
 
-A partir de las $n(n-1)/2$ parejas de objetos que pueden formarse en el conjunto de datos, se computan los siguientes valores:
+\begin{equation}
+    \label{eq:gamma-statistic}
+    \Gamma = \frac{N_s - N_d}{N_s + N_d}
+\end{equation}
+
+\noindent
+donde $N_s$ es la cantidad de posiciones en que coinciden los valores ambas matrices, y $N_d$ la cantidad en que son diferentes.
+La correlación oscila entre -1 y 1, correspondiéndose estos extremos con la peor y mejor evaluación respectivamente.
+
+De igual modo, a partir de las $n(n-1)/2$ parejas de objetos que pueden formarse en el conjunto de datos, es posible computar los siguientes valores:
 
 \begin{itemize}
     \item $f_{00}$: número de parejas de objetos que pertenecen a clases y clusters diferentes.
@@ -183,7 +192,7 @@ A partir de las $n(n-1)/2$ parejas de objetos que pueden formarse en el conjunto
     \item $f_{11}$: número de parejas de objetos que pertenecen a clases y clusters iguales.
 \end{itemize}
 
-Empleando estos cuatro valores se definen tres de las medidas más usadas para la evaluación de algoritmos de clustering: el \textbf{índice de Rand}, el \textbf{coeficiente de Jaccard} y el \textbf{índice de Fowlkes-Mallows}, dados por las ecuaciones (\ref{eq:rand-index}), (\ref{eq:jaccard-coefficient}) y (\ref{eq:fowlkes-mallows-index}) respectivamente~\cite{Wagner07,Tan05,Aggarawal13}.
+Empleando estos cuatro valores se definen tres de las medidas más usadas para la evaluación de algoritmos de clustering: el \textbf{índice de Rand}, el \textbf{coeficiente de Jaccard} y el \textbf{índice de Fowlkes-Mallows}, dadas por las ecuaciones (\ref{eq:rand-index}), (\ref{eq:jaccard-coefficient}) y (\ref{eq:fowlkes-mallows-index}) respectivamente~\cite{Wagner07,Tan05,Aggarawal13}.
 
 \begin{align}
     \label{eq:rand-index}
