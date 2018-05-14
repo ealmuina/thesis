@@ -44,16 +44,16 @@ Este concepto constituye la diferencia entre los distintos algoritmos de cluster
     Dendrogramas obtenidos a partir de este conjunto usando los métodos de clustering aglomerativo (b) single link y (c) complete link. (Tomado de~\cite{Aggarawal13})}
 \end{figure}
 
-\textbf{Group averaged}\footnote{También conocido como \textit{Average linkage}} es una tercera variante de clustering aglomerativo.
+\textbf{Group averaged}\footnote{También conocido como \textit{Average linkage}.} es una tercera variante de clustering aglomerativo.
 En este caso, la similitud entre dos clusters no es determinada por la distancia entre dos puntos específicos de estos, sino por el promedio de todas las distancias punto a punto entre los dos clusters.
 Se caracteriza por requerir una complejidad de cálculos mayor que las dos variantes anteriormente mencionadas, lo que hace que sea menos usada.
-Una variación que busca compensar esta dificultad es la técnica nombrada \textbf{Centroid-based agglomerative clustering}\footnote{\textit{Clustering aglomerativo basado en centroides} en español}, que determina la distancia entre dos clusters a partir de sus respectivos centroides.
+Una variación que busca compensar esta dificultad es la técnica nombrada \textbf{Centroid-based agglomerative clustering}\footnote{\textit{Clustering aglomerativo basado en centroides} en español.}, que determina la distancia entre dos clusters a partir de sus respectivos centroides.
 
 \subsubsection{Método de Ward}
 
 El método de Ward es una propuesta para el cálculo de la distancia entre dos clusters usado en el clustering aglomerativo.
 Utiliza la ecuación~(\ref{eq:SSE}) de la SSE para medir la distancia entre dos clusters como el incremento que produce en este valor unir dichos clusters.
-Al igual que K-Means, este método intenta minimizar la suma de las distancias al cuadrado de cada punto al centroide de su cluster.
+Al igual que K-Means, este método intenta minimizar la suma de los cuadrados de las distancias de cada punto al centroide de su cluster.
 
 \subsubsection{Complejidad espacial y temporal}
 

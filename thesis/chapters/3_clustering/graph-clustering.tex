@@ -2,26 +2,26 @@ Los algoritmos de \textit{clustering basado en grafos}, a diferencia de otros co
 Esto les permite aplicarse en escenarios de mayor complejidad y, en algunos casos, pueden producir clusters de estructura no necesariamente convexa.
 
 La idea detrás de estos algoritmos consiste en construir un grafo no dirigido ponderado $W$, a partir de la matriz de similaridad (o distancias) correspondiente al conjunto de datos.
-Para encontrar una partición en $K$ clusters, $A_1,\dots,A_K$, se minimiza la expresión de \textbf{corte} de $W$~\cite{Murphy12}:
+Para encontrar una partición en $K$ clusters, $C_1,\dots,C_K$, se minimiza la expresión de \textbf{corte} de $W$~\cite{Murphy12}:
 
 \begin{equation}
     \label{eq:graph-cut}
-    cut(A_1,\dots,A_K) = \frac{1}{2}\sum_{k=1}^{K}{W(A_k,\bar{A_k})}
+    cut(C_1,\dots,C_K) = \frac{1}{2}\sum_{k=1}^{K}{W(C_k,\bar{C_k})}
 \end{equation}
 
 \noindent
-donde $V$ son los vértices del grafo (puntos del conjunto de datos), $\bar{A_k}=V\backslash A_k$ es el complemento de $A_k$, y $W(A,B) = \sum_{i\in A, j \in B}{w_{ij}}$.
+donde $\bar{C_k}=V\backslash C_k$ es el complemento de $C_k$, $V$ son los vértices del grafo (puntos del conjunto de datos), y $W(C_a,C_b) = \sum_{i\in C_a, j \in C_b}{w_{ij}}$.
 
 Frecuentemente ocurre que la solución óptima de~(\ref{eq:graph-cut}) particiona el conjunto separando un único punto del resto.
 Para garantizar particiones más razonables, se puede definir el \textbf{corte normalizado}~\cite{Murphy12}:
 
 \begin{equation}
     \label{eq:normalized-cut}
-    Ncut(A_1,\dots,A_K) = \frac{1}{2}\sum_{k=1}^{K}{\frac{cut(A_k,\bar{A_k})}{vol(A_k)}}
+    Ncut(C_1,\dots,C_K) = \frac{1}{2}\sum_{k=1}^{K}{\frac{cut(C_k,\bar{C_k})}{vol(C_k)}}
 \end{equation}
 
 \noindent
-donde $vol(A_k)=\sum_{i\in A}\sum_{j=1}^{N}{w_{ij}}$.
+donde $vol(C_k)=\sum_{i\in C_k}\sum_{j=1}^{N}{w_{ij}}$.
 El problema puede formularse en términos de hallar los vectores de coeficientes binarios $c_i\in{0,1}^N$, donde $c_{ik} = 1$ si el punto $i$ pertenece al cluster $k$, tales que se minimiza $Ncut$~\cite{Murphy12}.
 El modo de hallar los vectores $c_i$ distingue los dos algoritmos que más adelante se mencionan: \textbf{Clustering espectral} y \textbf{Affinity propagation}.
 
@@ -78,7 +78,7 @@ Esta matriz cumple varias propiedades importantes~\cite{Luxburg07}:
     \item $L$ tiene $n$ valores propios reales no negativos $0=\lambda_1 \leq \lambda_2 \leq \dots \leq \lambda_n$.
 \end{enumerate}
 
-El conjunto de vectores propios, dado por los \textit{vectores indicadores} $\mathbbm{1}_{A_1}, \dots, \mathbbm{1}_{A_K}$, con valores propios 0, se corresponde con las $K$ componentes conexas del grafo.
+El conjunto de vectores propios, dado por los \textit{vectores indicadores} $\mathbbm{1}_{C_1}, \dots, \mathbbm{1}_{C_K}$, con valores propios 0, se corresponde con las $K$ componentes conexas del grafo.
 Si $K=1$, y $f$ es un vector propio con valor propio 0, entonces $0=\sum_{i,j}{w_{ij}(f_i - f_j)^2}$.
 Si dos nodos pertenecen a la misma componente conexa entonces $w_{ij}>0$ y por tanto $f_i = f_j$, por lo que se verifica que $f$ es constante para todos los vértices conectados por un camino en el grafo.
 En el caso de $K>1$, $L$ estará conformada por una matriz diagonal de bloques $L_k$, en cada uno de los cuales ocurre que existirá un mismo $f$ asociado a sus elementos~\cite{Luxburg07,Murphy12}.
@@ -113,7 +113,7 @@ Existen otras dos variantes comunes para la matriz laplaciana que la normalizan~
 
 Si se emplea la matriz de~(\ref{eq:rw-laplacian}), el procedimiento es el mismo al mostrado en el algoritmo~\ref{algorithm:UnnormalizedSpectralClustering}, con el paso adicional del cálculo de $L_{rw}$ y empleando esta última en sustitución de $L$.
 
-El uso de $L_{sym}$ es más complicado pues los vectores propios serán de la forma $D^{\frac{1}{2}}\mathbbm{1}_{A_k}$; por ello, antes de aplicar K-Means sobre las filas de la matriz $U$, es necesario normalizarlas creando así la matriz $T$ con $t_{ij} = u_{ij}/\sqrt{\sum_{k}{u_{ik}^2}}$~\cite{Murphy12}.
+El uso de $L_{sym}$ es más complicado pues los vectores propios serán de la forma $D^{\frac{1}{2}}\mathbbm{1}_{C_k}$; por ello, antes de aplicar K-Means sobre las filas de la matriz $U$, es necesario normalizarlas creando así la matriz $T$ con $t_{ij} = u_{ij}/\sqrt{\sum_{k}{u_{ik}^2}}$~\cite{Murphy12}.
 
 \subsubsection{Complejidad espacial y temporal}
 
@@ -151,8 +151,8 @@ En otras palabras:
 
 Los puntos se envían, con cada uno de los restantes puntos, mensajes que pertenecen a una de dos categorías:
 \begin{itemize}
-    \item \textit{Responsabilidad} $r(i, k)$: Mide cuánta importancia le asocia el punto $i$ a que $k$ sea su centroide, comparado con otros posibles centroides para $i$.
-    \item \textit{Disponibilidad} $a(i, k)$: Indica cuánta importancia le asocia el punto $k$ a ser el centroide de $i$, comparado con otros posibles puntos de los que puede ser centroide.
+    \item \textbf{Responsabilidad} $r(i, k)$: Mide cuánta importancia le asocia el punto $i$ a que $k$ sea su centroide, comparado con otros posibles centroides para $i$.
+    \item \textbf{Disponibilidad} $a(i, k)$: Indica cuánta importancia le asocia el punto $k$ a ser el centroide de $i$, comparado con otros posibles puntos de los que puede ser centroide.
 \end{itemize}
 
 Las responsabilidades y disponibilidades se inicializan en cero para todos los pares de puntos y son actualizadas iterativamente siguiendo las siguientes fórmulas:

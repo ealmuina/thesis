@@ -1,5 +1,5 @@
-Algoritmos como K-Means presentan dificultades para identificar clusters cuando las distancias entre elementos de un mismo conjunto es mayor que la de elementos de conjuntos distintos.
-En estos casos, puesto que K-Means busca minimizar la distancia entre los elementos dentro de un mismo cluster, producirá clusters que difieran significativamente de los grupos <<correctos>>.
+Algoritmos como K-Means presentan dificultades para identificar clusters cuando las distancias entre elementos de un mismo conjunto son mayores que las existentes entre elementos de conjuntos distintos.
+En estos casos, puesto que K-Means busca minimizar la distancia entre los elementos dentro de un mismo cluster, el algoritmo producirá clusters que difieran significativamente de los grupos <<correctos>>.
 Puede observarse un ejemplo en el escenario de la figura~\ref{img:kmeans-dbscan}.
 
 \begin{figure}[!h]
@@ -10,9 +10,9 @@ Puede observarse un ejemplo en el escenario de la figura~\ref{img:kmeans-dbscan}
 \end{figure}
 
 En la imagen se puede apreciar asimismo el comportamiento de otro algoritmo sobre el mismo conjunto de datos.
-En esta sección se aborda el algoritmo en cuestión, denominado \textit{DBSCAN}\footnote{Siglas en inglés de \textit{Density-based spatial clustering of applications with noise}.}, que forma parte del conjunto de algoritmos de clustering basados en la densidad de los datos.
+En esta sección se aborda el algoritmo en cuestión, denominado \textit{DBSCAN}\footnote{Siglas en inglés de \textit{Density-Based Spatial Clustering of Applications with Noise}.}, que forma parte del conjunto de algoritmos de clustering basados en la densidad de los datos.
 
-Un cluster basado en el criterio de densidad de los puntos consiste en un área densa de puntos conectados, separado de otros clusters por áreas de menor densidad.
+Un cluster definido siguiendo el criterio de densidad de los puntos, consiste en un área densa de puntos conectados, separado de otros clusters por áreas de menor densidad.
 
 \subsection{Densidad}\label{subsec:densidad}
 
@@ -22,14 +22,14 @@ En la figura~\ref{img:dbscan} se puede observar gráficamente esta definición.
 En este caso número de puntos alrededor de $A$ es 7.
 
 El valor del radio es determinante en la densidad de un punto.
-Si este valor es suficientemente grande, entonces todos los puntos tendrán una densidad de $n$, el número de puntos en el conjunto de datos.
+Si este valor es suficientemente grande, entonces todos los puntos tendrán una densidad de $N$, el número de puntos en el conjunto de datos.
 En cambio, si el radio es demasiado pequeño, la densidad de todos los puntos será igual a 1.
 Más adelante se discutirán algunas estrategias para la selección de valores apropiados para el radio.
 
 \begin{figure}[!h]
     \centering
     \includegraphics[width=0.8\textwidth]{dbscan.png}
-    \caption{Densidad en el entorno de un punto y clasificaciones de los puntos según su densidad. (Tomado de~\cite{Tan05})}
+    \caption{Densidad en el entorno de un punto y clasificaciones de los puntos según su densidad si $4 \leq MinPts \leq 7$. (Tomado de~\cite{Tan05})}
     \label{img:dbscan}
 \end{figure}
 
@@ -47,7 +47,7 @@ De acuerdo con la densidad de un punto, estos pueden ser clasificados de la sigu
 
 \subsection{Algoritmo DBSCAN}\label{subsec:DBSCAN}
 
-A partir de las definiciones dadas de puntos núcleos, fronteras y de ruido, se puede describir el algoritmo DBSCAN del siguiente modo: Todo par de puntos núcleos cuya distancia sea no mayor que $Eps$ son asignados al mismo cluster.
+A partir de las definiciones dadas de puntos núcleos, fronteras y de ruido, se puede describir el algoritmo DBSCAN del siguiente modo: Todo par de puntos núcleos que disten a lo sumo $Eps$ son asignados al mismo cluster.
 De igual forma, los puntos fronteras son asignados al cluster de los puntos núcleos cuya distancia a estos sea menor o igual que $Eps$.
 (En caso de estar en la vecindad de núcleos pertenecientes a clusters diferentes, un criterio específico debe ser determinado al programar el algoritmo).
 Los puntos de ruido son descartados y no asignados a ningún cluster.
@@ -66,8 +66,9 @@ Los puntos de ruido son descartados y no asignados a ningún cluster.
 
 El algoritmo DBSCAN demora en ejecución un tiempo $O(n \cdot$ tiempo para encontrar puntos en una $Eps$-vecindad), donde $n$ es el número de puntos en el conjunto de datos.
 En el peor caso, esta complejidad sería $O(n^2)$.
-Sin embargo, el uso de determinadas estructuras de datos en espacios de pocas dimensiones, permite la recuperación eficiente de todos los puntos en un intervalo dado alrededor de un punto específico~\cite{Tan05};
-en estos escenarios la complejidad puede llegar a ser $O(n\log n)$.
+Sin embargo, el uso de determinadas estructuras de datos en espacios de pocas dimensiones, permite la recuperación eficiente de todos los puntos en un intervalo dado alrededor de un punto específico~\cite{Tan05}.
+En tales escenarios la complejidad puede reducirse a $O(n\log n)$.
+
 Los requerimientos de memoria de DBSCAN, aun en espacios de grandes dimensiones, son $O(n)$, puesto que solo es necesario mantener poca información relativa a cada punto, como puede ser el cluster al que pertenece, la clasificación, etc.
 No obstante, este uso de memoria depende igualmente del comportamiento de la estructura de datos empleada para computar las vecindades.
 
@@ -75,7 +76,8 @@ No obstante, este uso de memoria depende igualmente del comportamiento de la est
 
 Un criterio para determinar los parámetros es mediante la observación del comportamiento de la distancia de los puntos a su $k$-ésimo vecino más cercano, llamada $k$-distancia\footnote{En la bibliografía en inglés también suele nombrársele \textit{core distance}.}.
 Si un punto pertenece a un cluster, entonces su $k$-distancia debe ser un valor relativamente pequeño, siempre que $k$ no sea mayor que el tamaño del cluster.
-Siempre que las densidades de los clusters no difieran radicalmente, en promedio, los valores de la $k$-distancias para puntos que pertenezcan a algún cluster no mostrarán un rango de valores muy amplio.
+
+Si las densidades de los clusters no difieren radicalmente, en promedio, los valores de la $k$-distancias para puntos que pertenezcan a algún cluster no mostrarán un rango de valores muy amplio.
 En cambio, para puntos que no pertenezcan a ningún cluster, es decir, de ruido, este valor sí estará situado muy por encima del rango antes mencionado.
 De esta forma, si se toman todos los puntos de un conjunto de datos, se les ordena por su $k$-distancia y estas se representan en una gráfica (ver figura~\ref{img:dbscan-k-dist}), se debería obtener una imagen donde existirá un punto de inflexión que se corresponda con el valor de la $k$-distancia a partir del cual los puntos se encuentran fuera de algún cluster.
 Puede entonces tomarse dicho valor como el $Eps$ adecuado para el problema en cuestión.
@@ -89,8 +91,8 @@ En cuanto al valor de $MinPts$, este sería precisamente el $k$ seleccionado par
 \end{figure}
 
 Es importante notar que el valor de $Eps$ resultante de este proceso dependerá del $k$ seleccionado al inicio.
-Si $k$ es demasiado pequeño, algunos puntos de ruido situados muy próximos entre sí pudieran ser etiquetados incorrectamente como clusters.
-Por otra parte, si $k$ es demasiado grandes, aquellos clusters cuya cantidad de elementos sea menor que $k$ no serán identificados correctamente.
+Si $k$ es muy pequeño, algunos puntos de ruido situados muy próximos entre sí pudieran ser etiquetados incorrectamente como clusters.
+Por otra parte, si $k$ es demasiado grande, aquellos clusters cuya cantidad de elementos sea menor que $k$ no serán identificados correctamente.
 
 Un defecto del algoritmo DBSCAN es que requiere que las densidades de los clusters (y del espacio de datos en general) muestren comportamientos semejantes.
 Un ejemplo de esta afirmación puede ser observado en la figura~\ref{img:density-issues}.
@@ -108,7 +110,7 @@ En cambio si el $Eps$ es tan alto como para distinguir a $A$ y $B$ como clusters
 
 \subsection{Algoritmo HDBSCAN}\label{subsec:HDBSCAN}
 
-HDBSCAN\footnote{\textit{Hierarchical DBSCAN} en inglés, o \textit{DBSCAN jerárquico} en español.} es un algoritmo creado en 2013~\cite{Campello13}, basado en la combinación del concepto de densidad con el clustering jerárquico.
+HDBSCAN\footnote{\textit{Hierarchical DBSCAN} en inglés, o \textit{DBSCAN jerárquico} en español.} es un algoritmo creado en el año 2013~\cite{Campello13}, basado en la combinación del concepto de densidad con la técnica de clustering jerárquico.
 Fue propuesto como solución a algunas desventajas presentes en DBSCAN y otros algoritmos de clustering, como las mencionadas en el epígrafe anterior.
 
 La idea detrás del algoritmo consiste en usar DBSCAN convertido en algoritmo de clustering jerárquico, y luego emplear una técnica basada en el concepto de \textit{estabilidad} de un cluster para extraer los clusters a partir de la jerarquía encontrada~\cite{McInnes17}.
@@ -127,7 +129,7 @@ El primer paso del algoritmo HDBSCAN busca transformar las distancias con la fin
 La nueva matriz de distancias conservará las distancias entre puntos situados en áreas densas del espacio;
 mientras que asociará valores más altos a las distancias correspondientes a puntos ubicados fuera de estas.
 
-Primero se calculan las $k$-distancias (ver página~\ref{subsubsec:paramsDBSCAN}) de cada punto $x$ del conjunto de datos: $dist_k(x)$.
+Primero se calculan las $k$-distancias (ver en la sección~\hyperref[subsubsec:paramsDBSCAN]{Selección de parámetros para DBSCAN}) de cada punto $x$ del conjunto de datos: $dist_k(x)$.
 A continuación, se construye la nueva matriz de distancias, empleando la función conocida como \textit{distancia de alcanzabilidad mutua}\footnote{\textit{mutual reachability distance} en inglés.} definida por la ecuación~(\ref{eq:d_mreach}):
 
 \begin{equation}
@@ -137,8 +139,8 @@ A continuación, se construye la nueva matriz de distancias, empleando la funci�
 
 \noindent
 donde $dist(a,b)$ es la distancia original entre los puntos $a$ y $b$.
-Como se mencionó con anterioridad, bajo esta nueva métrica, los puntos de regiones densas permanecen a la misma distancia, pues sus $k$-distancias tienen valores relativamente pequeños y siendo entonces su distancia entre sí quien domina en la ecuación~(\ref{eq:d_mreach}).
-Lo contrario ocurre en puntos localizados en regiones esparcidas, en dichos casos se impone su $k$-distancia y por tanto son alejados del resto de los puntos a al menos dicho valor.
+Como se mencionó con anterioridad, bajo esta nueva métrica, los puntos de regiones densas permanecen a la misma distancia, pues sus $k$-distancias tienen valores relativamente pequeños, siendo entonces su distancia entre sí la que domina en la ecuación~(\ref{eq:d_mreach}).
+Lo contrario ocurre para puntos localizados en regiones esparcidas, en dichos casos se impone su $k$-distancia y por tanto son alejados del resto de los puntos a al menos dicho valor.
 
 El uso de la distancia de alcanzabilidad mutua como alternativa a la medida de distancia tradicional mejora significativamente los resultados obtenidos al aproximar mediante una jerarquía la distribución de las densidades de los puntos del conjunto de datos~\cite{Eldridge15}.
 
@@ -161,12 +163,12 @@ Para ello se eliminan todas las aristas del grafo y se las añade en orden ascen
 
 El próximo paso consiste en obtener un conjunto disjunto de clusters a partir de la jerarquía, que represente al conjunto de datos de un modo equivalente al que produce el algoritmo DBSCAN\@.
 En este paso, ocurre una diferencia sustancial entre el enfoque del algoritmo DBSCAN y el de HDBSCAN\@.
-Mientras el primero opta por producir una respuesta donde los parámetros $Eps$ y $MinPts$ (ver página~\ref{subsubsec:paramsDBSCAN}) determinan el nivel al que se corta el árbol de la jerarquía y los clusters que son desechados como ruido;
+Mientras el primero opta por producir una respuesta donde los parámetros $Eps$ y $MinPts$ determinan el nivel al que se corta el árbol de la jerarquía y los clusters que son desechados como ruido;
 HDBSCAN no corta el árbol a un nivel dado, sino que selecciona los clusters a diferentes niveles, permitiendo así detectar agrupaciones de densidad variable.
 
 El paso 4 del algoritmo <<condensa>> el árbol de la jerarquía del paso anterior, lo que permite asociar a cada nodo una mayor cantidad de información.
 A menudo, mientras se desciende en la jerarquía se observa que, al dividirse un cluster, solo se separan unos pocos puntos mientras el grueso de sus elementos permanecen en el otro cluster hijo.
-Si no se consideran estas divisiones donde se pierden \textit{pocos} puntos y en su lugar simplemente se eliminan tales puntos del cluster en cuestión, se obtendrá una versión simplificada del árbol de la jerarquía;
+Si no se consideran estas divisiones donde se pierden <<pocos>> puntos y en su lugar simplemente se eliminan tales puntos del cluster en cuestión, se obtendrá una versión simplificada del árbol de la jerarquía;
 donde las ramas realmente implican una división del cluster más que la eliminación de puntos de ruido.
 Esta es precisamente la versión condensada de la jerarquía.
 Y para lograr diferenciar entre las ramificaciones, HDBSCAN recibe un parámetro conocido como \textbf{tamaño mínimo de cluster}, que sirve como cota inferior para los clusters que son incluidos en el árbol condensado.
@@ -191,13 +193,13 @@ Luego, se computa la \textbf{estabilidad} de un cluster como:
     \sum_{p\in cluster}{\lambda_p - \lambda_{birth}}
 \end{equation*}
 
-Finalmente, se inicializa un conjunto de clusters seleccionados con las hojas del árbol condensado y se recorre el árbol en orden topológico aplicando el siguiente criterio:
-Si la suma de la estabilidad de los hijos es mayor que la estabilidad del cluster actual, se sutituye este valor por dicha suma.
-Si, por el contrario, la estabilidad del cluster es mayor que la suma de las de sus hijos entonces es añadido al conjunto de clusters seleccionados y se eliminan de este a sus descendientes.
+Finalmente, se inicializa el conjunto de clusters seleccionados con las hojas del árbol condensado y se recorre el árbol en orden topológico aplicando el siguiente criterio:
+Si la suma de las estabilidades de los hijos es mayor que la estabilidad del cluster actual, se sustituye este valor por dicha suma.
+Si, por el contrario, la estabilidad del cluster es mayor que la suma de las de sus hijos entonces es añadido al conjunto de clusters seleccionados y sus descendientes se eliminan del conjunto.
 Una vez alcanzado el nodo raíz, el algoritmo ha concluido y su resultado son los clusters que hayan quedado en el conjunto.
 
 Cualquier punto que no forme parte de los clusters seleccionados será considerado ruido.
-Además HDBSCAN permite, debido al funcionamiento del algoritmo, establecer un valor de pertenencia de los puntos a sus respectivos clusters, normalizando los $\lambda_p$.
+Además HDBSCAN permite de forma intuitiva, debido al funcionamiento del algoritmo, establecer un valor de pertenencia de los puntos a sus respectivos clusters, normalizando los $\lambda_p$.
 
 \subsubsection{Complejidad espacial y temporal}
 
@@ -210,7 +212,7 @@ Luego la ejecución completa del algoritmo HDBSCAN tiene una complejidad en tiem
 
 La complejidad temporal de HDBSCAN puede ser reducida a $O(n\log n)$ para el caso promedio, mediante el uso de estructuras de datos y variaciones de los algoritmos mejor adaptados al problema~\cite{McInnes17-2}.
 
-En cuanto al espacio de memoria, se necesita $O(m n)$ para almacenar el conjunto de datos y $O(n)$ para las k-distancias del paso 1.
+En cuanto al espacio de memoria, se necesita $O(m n)$ para almacenar el conjunto de datos y $O(n)$ para las $k$-distancias del paso 1.
 El paso 2, teniendo en cuenta que el grafo no requiere ser computado y almacenado en memoria por completo, sino arista por arista;
 requiere una cantidad de memoria $O(n)$.
 Los siguientes pasos, solo necesitan tener en memoria en un mismo momento un nivel dado de la jerarquía, lo que ocupa un espacio $O(n)$.

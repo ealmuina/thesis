@@ -1,4 +1,4 @@
-A continuación es discutido el algoritmo de clustering conocido como K-Means, el cual es uno de los más simples y eficientes existentes en la literatura.
+A continuación es discutido el algoritmo de clustering conocido como K-Means, uno de los más simples y eficientes existentes en la literatura.
 Luego de describir en detalle el algoritmo, se analizan algunos de los principales factores que influyen sobre sus resultados.
 Finalmente, se presenta una variación de K-Means que busca disminuir la complejidad computacional del algoritmo.
 
@@ -10,7 +10,7 @@ Cada punto del conjunto de datos es luego asignado al centroide más cercano bas
 Una vez se han formado los clusters, los centroides para cada cluster son actualizados a un nuevo punto.
 De manera iterativa, el algoritmo repite estos dos pasos hasta que los centroides no cambien o algún criterio de convergencia alternativo sea cumplido.
 K-Means es un algoritmo \textit{greedy} con convergencia garantizada a un mínimo local~\cite{Selim84} pero, visto como un problema de optimización, ha sido demostrado que hallar el mínimo de su función objetivo es NP-Hard~\cite{Manning08}.
-En la práctica, suele usarse como criterio de convergencia una versión relajada, continuándose las iteraciones hasta que el 1\% de los puntos cambien de cluster.
+En la práctica, suele usarse como criterio de convergencia una versión relajada, continuándose las iteraciones hasta que menos del 1\% de los puntos cambien de cluster.
 
 \begin{algorithm}
     \caption{K-Means}
@@ -22,12 +22,11 @@ En la práctica, suele usarse como criterio de convergencia una versión relajad
     }
 \end{algorithm}
 
-La elección de la medida de proximidad para computar el centroide más próximo a cada punto puede afectar significativamente las asignaciones y la calidad de la solución final.
+La elección de la medida de proximidad para calcular el centroide más próximo a cada punto puede afectar significativamente las asignaciones y la calidad de la solución final.
 Medidas como la distancia Manhattan (norma $L_1$), la distancia euclidiana (norma $L_2$) y la similitud coseno son frecuentemente empleadas, especialmente la segunda.
 Tanto la medida de proximidad como el valor de $K$ son determinantes en la configuración de clusters producida por K-Means.
 
-Si se analiza este algoritmo como un problema de optimización, entonces estaría minimizándose la función objetivo de K-Means conocida como Suma de Errores Cuadráticos (SSE por sus siglas en inglés).
-A continuación presentamos su formulación matemática.
+Si se analiza este algoritmo como un problema de optimización, entonces estaría minimizándose la función objetivo de K-Means conocida como Suma de Errores Cuadráticos (SSE por sus siglas en inglés), cuya formulación matemática se presenta a continuación.
 
 Dado un conjunto de datos $D={x_1,x_2,\dots,x_N}$ de $N$ puntos, y denotado el conjunto de clusters obtenido tras aplicar K-Means como $C={C_1,C_2,\dots,C_k,\dots,C_K}$;
 la SSE para $C$ es definida en la ecuación~(\ref{eq:SSE}) donde $c_k$ es el centroide del cluster $C_k$.
@@ -37,8 +36,8 @@ la SSE para $C$ es definida en la ecuación~(\ref{eq:SSE}) donde $c_k$ es el cen
     SSE(C)=\sum_{k=1}^{K}{\sum_{x_{i}\in C_k}{dist(x_i, c_k)^2}}
 \end{equation}
 
-En otras palabras, se calcula el error de cada punto de los datos, es decir, su distancia al centroide más próximo, y luego es computada la suma total de los errores al cuadrado.
-Dados dos conjuntos de clusters obtenidos aplicando dos diferentes corridas de K-Means, sería preferible conservar el de menor SSE puesto que esto significaría que los centroides obtenidos en esa corrida constituyen una mejor representación de los puntos en sus clusters.
+En otras palabras, se calcula el error de cada punto de los datos, es decir, su distancia al centroide más próximo, y luego es computada la suma de los cuadrados de dichos errores.
+Dados dos conjuntos de clusters obtenidos aplicando dos diferentes corridas de K-Means, sería preferible conservar el de menor SSE puesto que esto significaría que los centroides hallados en esa corrida constituyen una mejor representación de los puntos en sus clusters.
 De ahí que el resultado de minimizar la función SSE represente el conjunto de clusters óptimo.
 
 Los centroides que minimizan la SSE son la media de los puntos de cada cluster~\cite{Tan05}.
@@ -116,7 +115,7 @@ A continuación se mencionan algunos de los más generalizados.
 
 Los requerimientos de espacio de memoria para K-Means son relativamente pequeños puesto que solamente los puntos de datos y los centroides son almacenados por el algoritmo.
 Específicamente, la cantidad de memoria empleada es $O((n+K)m)$, donde $n$ es el número de puntos y $m$ la cantidad de atributos (dimensionalidad) de estos.
-Los requisitos de tiempo de este algoritmo son igualmente bajos -es básicamente lineal respecto al tamaño del conjunto de datos.
+Los requisitos de tiempo de este algoritmo son igualmente bajos, es básicamente lineal respecto al tamaño del conjunto de datos.
 En particular, el tiempo requerido es $O(I \cdot K \cdot m \cdot n)$, donde $I$ es el número de iteraciones necesarias para converger.
 A menudo $I$ es suficientemente pequeño, y usualmente puede ser considerado como un valor constante y despreciable.
 De esta forma, K-Means es lineal respecto al tamaño del conjunto de datos $n$, y es muy eficiente siempre que el número de clusters $K$ sea significativamente menor que $n$~\cite{Tan05}.

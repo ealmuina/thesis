@@ -1,8 +1,9 @@
-Los algoritmos de clustering probabilísticos modelan el conjunto de datos a partir de la asunción de que estos son generados a partir de la combinación de determinadas distribuciones de probabilidad.
+Los algoritmos de clustering probabilísticos modelan el conjunto de datos a partir de la asunción de que este es generado mediante la combinación de determinadas distribuciones de probabilidad.
 Estos algoritmos transforman el problema de clustering en el de estimar los parámetros para $K$ distribuciones de probabilidad.
 Luego los puntos del conjunto de datos que se correspondan con una misma distribución se asociarán al mismo cluster.
 
-En esta sección se analiza un modelo de clustering probabilístico ampliamente estudiado, conocido como \textit{Gaussian Mixture Model} (GMM) y la técnica \textit{Expectation-maximization}, empleada para estimarlo computacionalmente.
+En esta sección se analiza un modelo de clustering probabilístico ampliamente estudiado, conocido como \textit{Gaussian Mixture Model} (GMM);
+así como la técnica \textit{Expectation-maximization}, empleada para estimarlo computacionalmente.
 
 \subsection{Combinación de modelos}\label{subsec:mixtureModels}
 
@@ -25,7 +26,7 @@ en la práctica, para simplificar el estudio de estos modelos, suele asociarse u
 \subsection{Gaussian Mixture Model}\label{subsec:GMM}
 
 El modelo de clustering probabilístico más extendido es el de combinación de distribuciones normales, conocido en la literatura como \textit{Gaussian Mixture Model} (GMM)~\cite{Murphy12}.
-Es asimismo, uno de los modelos de mayor uso en aplicaciones relacionadas con el análisis acústico~\cite{Kakar13,Virtanen18,Somervuo06,Lee08,Kwan06}.
+Es asimismo, uno de los modelos de mayor uso en aplicaciones relacionadas con el análisis acústico~\cite{Kakar13,Kwan06,Lee08,Somervuo06,Virtanen18}.
 
 La distribución normal, en el caso de una variable unidimensional $x$, tiene una función de densidad de la forma:
 
@@ -96,14 +97,14 @@ Luego de aplicar algunas operaciones adicionales~\cite{Aggarawal13} debido a las
 \end{equation}
 
 Sin embargo, la optimización de la función~(\ref{eq:log-likelihood}) presenta serios inconvenientes debido a la dependencia existente entre las responsabilidades $\gamma(x_{ik})$ y el resto de los parámetros, por lo que no resulta simple derivar una expresión que permita calcular directamente dichos valores.
-Generalmente solo pueden ser obtenidos mínimos locales aplicando algoritmos de descenso por gradiente sobre la expresión~(\ref{eq:log-likelihood}), lo que igualmente resulta difícil debido a las restricciones del modelo (matriz de covarianzas definida positiva, suma de los pesos $\pi_k$ igual a uno, etc)~\cite{Aggarawal13,Murphy12}.
+Generalmente solo pueden ser obtenidos mínimos locales aplicando algoritmos de descenso por gradiente sobre~(\ref{eq:log-likelihood}), lo que igualmente resulta difícil debido a las restricciones del modelo (matriz de covarianzas definida positiva, suma de los pesos $\pi_k$ igual a uno, etc)~\cite{Aggarawal13,Murphy12}.
 
 \subsection{Algoritmo Expectation-maximization}\label{subsec:EM}
 
 El algoritmo \textit{Expectation-maximization} (EM) permite estimar parámetros de máxima verosimilitud para un modelo.
 Sigue un proceso iterativo que alterna dos etapas: se infieren valores para los parámetros (\textit{expectation}), y luego se optimizan dichos valores para el conjunto de datos dado (\textit{maximization}).
 
-En el caso particular de GMM, se puede aplicar empleando para ello las ecuaciones que obtenidas en la sección~\ref{subsec:GMM} como se explica en el algoritmo~\ref{algorithm:EM}.
+En el caso particular de GMM, se puede aplicar empleando para ello las ecuaciones obtenidas en la sección~\ref{subsec:GMM} como se explica en el algoritmo~\ref{algorithm:EM}.
 
 \begin{algorithm}
     \caption{Expectation-maximization para GMM}
@@ -126,17 +127,19 @@ De forma similar a lo que ocurre con el algoritmo K-Means, EM puede caer en máx
 \subsubsection{Estimación de hiper-parámetros}
 
 El número de componentes es decisivo en la calidad del resultado producido por el algoritmo EM\@.
-Asimismo, debe decidirse cuál emplear entre los diferentes patrones existentes para representar la covarianza del modelo\footnote{En inglés se les conoce como \textit{full}, \textit{tied}, \textit{diagonal} y \textit{spherical} respectivamente.}:
+Asimismo, debe decidirse cuál emplear entre los diferentes patrones existentes para representar la matriz de covarianza del modelo, mencionados a continuación:
+
 \begin{itemize}
-    \item \textbf{Completa}: De dimensión $K\times m\times m$.
+    \item \textbf{Full}: De dimensión $K\times m\times m$.
     Cada componente posee su propia matriz de covarianza.
-    \item \textbf{Atada}: De dimensión $m\times m$.
+    \item \textbf{Tied}: De dimensión $m\times m$.
     Todas las componentes comparten la misma matriz de covarianza.
     \item \textbf{Diagonal}: De dimensión $K\times m$.
     Cada componente posee su propia matriz de covarianza diagonal.
-    \item \textbf{Esférica}: De dimensión $K\times 1$.
+    \item \textbf{Spherical}: De dimensión $K\times 1$.
     Cada componente tiene un único valor de varianza que le es propio.
 \end{itemize}
+
 A continuación se mencionan dos criterios ampliamente usados para la evaluación de la calidad de un GMM con parámetros calculados aplicando este algoritmo.
 Estos facilitan la decisión de los hiper-parámetros en correspondencia con el problema que se intenta modelar.
 
@@ -157,8 +160,8 @@ Estos facilitan la decisión de los hiper-parámetros en correspondencia con el 
 Como se puede apreciar, ambos criterios se basan en la penalización de la función de verosimilitud (log-verosimilitud) a partir de la complejidad del modelo.
 De esta forma a modelos más complejos corresponde mayor penalización, y se logra así un equilibrio entre la calidad del resultado y la complejidad del modelo correspondiente.
 
-Los parámetros libres son los parámetros del modelo estimados aplicando el método de máxima verosimilitud.
-Para GMM son $\mu_k$, $\Sigma_k$ y $\pi_k$, aunque se cuantifican (valor asociado a $d$) por la cantidad total de valores que estos vectores contienen.
+Se consideran \textit{parámetros libres} aquellos parámetros del modelo estimados aplicando el método de máxima verosimilitud.
+Para GMM son $\mu_k$, $\Sigma_k$ y $\pi_k$, que se cuantifican (valor asociado a $d$) por la cantidad total de valores que estos vectores contienen.
 
 \subsubsection{Complejidad espacial y temporal}
 
