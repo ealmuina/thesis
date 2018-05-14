@@ -2,12 +2,12 @@ Las características incluidas en este grupo describen el grado de armonicidad d
 
 La extracción de estos descriptores requiere la estimación de la \textbf{frecuencia fundamental} de la señal, así como de los llamados \textbf{picos armónicos} de esta.
 
-La frecuencia fundamental ($F_0$) es la frecuencia más baja del espectro de frecuencias tal que las frecuencias dominantes en la señal pueden expresarse como múltiplos de esta.
+La frecuencia fundamental ($F_0$) es la frecuencia más baja del espectro de frecuencias tal que las frecuencias dominantes en la señal pueden expresarse como múltiplos de ella.
 Puede, por tanto, considerarse la $F_0$ como la frecuencia de la señal armónica que mejor representa a la señal en cuestión.
 
 Existen numerosas variantes para la estimación de la $F_0$ de una señal~\cite{Kim05}, siendo la propuesta en~\cite{Cheveigne02} una de las más populares.
 Esta técnica, también conocida como \textit{algoritmo YIN};
-se basa, a grandes rasgos, en encontrar el valor del período $\tau$ que minimiza la siguiente función para cada trama $t$~\cite{Gerhard03-2}:
+se basa, a grandes rasgos, en encontrar el valor del período $\tau$ que minimiza la función $d_t'(\tau)$ para cada trama $t$~\cite{Gerhard03-2}:
 
 \begin{gather}
     \label{eq:YIN}

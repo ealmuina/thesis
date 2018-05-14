@@ -2,12 +2,12 @@ Una señal de sonido no es más que la variación en la presión que ejerce el m
 La percepción del sonido en los seres humanos ocurre en dos regiones fundamentales: la \textit{periférica} y la \textit{nerviosa}.
 Comienza en los oídos y continúa a través de la cóclea, en el oído interno, donde las variaciones en la presión del aire son transformadas en impulsos nerviosos conducidos hacia la corteza cerebral.
 
-El hertz (Hz) es la unidad que expresa la cantidad de vibraciones que emite una fuente sonora en cada segundo de tiempo (frecuencia).
-Se considera que el oído humano puede percibir ondas sonoras de frecuencias entre los 20 y los 20~000 Hz.
+El hertz (Hz) es la unidad de medida de la \textit{frecuencia}, definida en este caso como la cantidad de vibraciones que emite una fuente sonora en cada segundo de tiempo.
+Se considera que el oído humano puede percibir sonidos de frecuencias entre los 20 y los 20~000 Hz.
 Los tonos agudos son percibidos en las frecuencias más altas (por encima de 5 kHz), y los graves en las bajas (menos de 250 Hz).
 
 Un sonido puede ser representado de forma simple mediante un \textbf{oscilograma} (figura~\ref{img:oscillogram}), donde el eje X representa el tiempo, y el eje Y representa la \textit{amplitud} de la presión del sonido (generalmente usando unidades de media arbitrarias).
-Mediante su análisis se pueden detectar con facilidad los instantes de tiempo de sonido más intensos y aquellos de silencio.
+Mediante su análisis se pueden detectar con facilidad los instantes de tiempo con sonidos más intensos y aquellos de silencio.
 
 \begin{figure}[!h]
     \centering
@@ -17,8 +17,8 @@ Mediante su análisis se pueden detectar con facilidad los instantes de tiempo d
 \end{figure}
 
 Una importante clase de sonidos son aquellos que consisten en oscilaciones que se repiten periódicamente cada un cierto tiempo.
-La duración de una de estas oscilaciones es conocida como su \textit{período} (en segundos) y a la medida inversa se le denomina \textit{frecuencia} (en Hz).
-Otro grupo de señales sonoras, llamadas \textit{armónicas} es igualmente interesante, pues se trata de señales compuestas por varias oscilaciones periódicas cuyas frecuencias son todas múltiplos de la más baja presente en la señal.
+La duración de una de estas oscilaciones es conocida como su \textit{período} (en segundos) y a su medida inversa es la \textit{frecuencia}, mencionada con anterioridad.
+Otro grupo de señales sonoras, llamadas \textit{armónicas} es igualmente interesante, pues se trata de señales compuestas por la combinación de varias oscilaciones periódicas cuyas frecuencias son todas múltiplos de la más baja presente en la señal.
 Existen, asimismo, otros sonidos de características aleatorias y que no se repiten periódicamente, llamados \textit{ruidos}.
 
 Una oscilación puede ser descompuesta en una suma de sinusoides elementales de diferentes frecuencias, mediante la aplicación de la \textbf{transformada de Fourier}.
@@ -38,15 +38,16 @@ Los pasos más importantes en esta conversión de la señal de analógica a digi
 \begin{enumerate}
     \item \textbf{Filtrado}: La señal analógica se filtra con el propósito de limitar las frecuencias presentes al intervalo $[0,B]$, donde $B$ es la frecuencia \textit{máxima} o \textit{de corte}.
     \item \textbf{Muestreo}: Se digitaliza la señal resultante del paso anterior;
-    se emplea \textit{frecuencia de muestreo} $F_s = 2B$ para evita el fenómeno de \textit{aliasing}\footnote{Efecto que causa que señales continuas distintas se tornen indistinguibles cuando se muestrean digitalmente si la tasa de muestreo es menor que el doble de la frecuencia más alta.
+    se emplea una \textit{frecuencia de muestreo} $F_s = 2B$, es decir, que se toman $2B$ observaciones de la señal en cada segundo; esto evita la ocurrencia del fenómeno conocido como \textit{aliasing}\footnote{Efecto que causa que señales continuas distintas se tornen indistinguibles cuando se muestrean digitalmente si la tasa de muestreo es menor que el doble de la frecuencia más alta.
     Cuando esto sucede, la señal original no puede ser reconstruida de forma unívoca a partir de la señal digital.}.
-    \item \textbf{Cuantificación}: La señal digital es cuantificada, se limita el espacio de almacenamiento ocupado por cada muestra.
+    \item \textbf{Cuantificación}: La señal digital es cuantificada, o sea los valores de la fase de muestreo son restringidos a un intervalo dado, lo que limita el espacio de almacenamiento ocupado por cada muestra.
 \end{enumerate}
 
 Para una calidad de audio de CD se emplean valores de muestreo $F_s = 44.1$ kHz y una cuantificación de 16 bits por muestra.
 
 Los algoritmos de inteligencia artificial tradicionalmente operan con vectores numéricos, llamados \textit{vectores de características}.
-En las siguientes secciones analizamos los procedimientos mediante los cuales una señal de audio digital se transforma en una secuencia de tales vectores.
+Si bien luego de digitalizada una señal puede considerarse como un vector numérico, no resulta propicio trabajar con esta directamente por lo grande y variable que resulta su tamaño.
+En las siguientes secciones analizamos los procedimientos mediante los cuales una señal de audio digital se transforma en una secuencia de tales vectores, más propicios para su procesamiento mediante técnicas de inteligencia artificial.
 
 Al procesar una grabación sonora, determinados intervalos de tiempo y/o frecuencias pueden resultar más <<importantes>> que otros.
 Estas secciones, conocidas como \textit{segmentos}, permiten establecer una correspondencia entre un evento de sonido y un individuo de una especie dada.
