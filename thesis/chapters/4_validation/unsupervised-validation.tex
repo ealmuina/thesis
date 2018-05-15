@@ -11,22 +11,25 @@ En general, para evaluar un conjunto de $K$ clusters suele emplearse la suma pon
     overall\ validity = \sum_{i=1}^{K}{w_i\ validity(C_i)}
 \end{equation}
 
-La función ($validity(C_i)$) usada para evaluar el cluster $C_i$, puede ser su \textbf{cohesión}, \textbf{separación}, o una combinación de estas medidas.
-Los pesos más comúnmente empleados aparecen reflejados en la tabla~\ref{table:validity-weights}, en correspondencia con la función utilizada.
+La evaluación del cluster $C_i$ está dada por la función $validity(C_i)$, cuyo peso es indicado por el coeficiente $w_i$.
+Existen numerosas variantes para seleccionar dicha función de evaluación y los pesos, algunas de las cuales aparecen reflejadas en la tabla~\ref{table:validity-weights}.
 
-La cohesión y separación pueden ser vistas siguiendo dos criterios:
+Dos funciones a partir de las que puede construirse $validity(C_i)$ son \textbf{cohesión} y \textbf{separación}, que respectivamente miden lo próximos que están entre sí los puntos de $C_i$ y lo lejos que se encuentran de puntos fuera del cluster.
+Pueden ser planteadas siguiendo dos criterios:
 
 \begin{itemize}
     \item Entre pares de puntos:
     \begin{align}
-        cohesion(C_i) & = \sum_{\substack{x\in C_i \\ y\in C_i}}{proximity(x,y)} \\
-        separation(C_i, C_j) & = \sum_{\substack{x\in C_i \\ y\in C_j}}{proximity(x,y)}
+        cohesion_1(C_i) & = \sum_{\substack{x\in C_i \\ y\in C_i}}{proximity(x,y)} \\
+        separation_1(C_i, C_j) & = \sum_{\substack{x\in C_i \\ y\in C_j}}{proximity(x,y)}
     \end{align}
 
-    \item Entre cada punto y un punto <<distinguido>> $c_i$ que puede ser, por ejemplo, el centroide o la media de los puntos del cluster $C_i$:
+    \item Entre cada punto y un punto <<distinguido>> $c_i$ como, por ejemplo, el centroide o la media de los puntos del cluster $C_i$:
     \begin{align}
-        cohesion(C_i) & = \sum_{x\in C_i}{proximity(x,c_i)} \\
-        separation(C_i, C_j) & = proximity(c_i,c_j)
+        \label{eq:selected-point-cohesion}
+        cohesion_2(C_i) & = \sum_{x\in C_i}{proximity(x,c_i)} \\
+        \label{eq:selected-point-separation}
+        separation_2(C_i, C_j) & = proximity(c_i,c_j)
     \end{align}
 \end{itemize}
 
@@ -36,14 +39,14 @@ La función $proximity$ puede indicar la distancia, similaridad, o cualquier otr
     \centering
     \begin{tabular}{rl}
         \hline
-        Función de validación & Peso                                                                                    \\  \hline
-        $\sum_{\substack{x\in C_i \\ y\in C_i}} proximity(x,y)$                                      & $1/m_i$                                                                       \\
-        $\sum_{x\in C_i} proximity(x,c_i)$                                                           & 1                                                                                        \\
-        $proximity(c_i , c)$                                                                         & $m_i$                                                                                     \\
-        $\sum_{\substack{j=1 \\ j\neq i}}^{K}\sum_{\substack{x\in C_i \\ y\in C_j}} proximity(x, y)$ & $\frac{1}{\sum_{\substack{x\in C_i \\ y\in C_i}} proximity(x, y)}$
+        Función de validación ($validity(C_i)$)                        & Peso ($w_i$)                            \\                 \hline
+        $cohesion_1(C_i)$                                              & $1/n_i$                                 \\
+        $cohesion_2(C_i)$                                              & 1                                       \\
+        $proximity(c_i , c)$                                           & $n_i$                                   \\
+        $\sum_{\substack{j=1 \\ j\neq i}}^{K}{separation_1(C_i, C_j)}$ & $\frac{1}{cohesion_1(C_i)}$
     \end{tabular}
-    \caption{Pesos $w_i$ frecuentemente empleados en la evaluación no supervisada de los resultados de algoritmos de clustering.
-    Tomada de~\cite{Tan05}.}
+    \caption{Algunas de funciones de validación y pesos que pueden emplearse en la evaluación no supervisada de los resultados de algoritmos de clustering. $c$ centroide (o punto distinguido) del conjunto de datos completo.
+    Adaptada de~\cite{Tan05}.}
     \label{table:validity-weights}
 \end{table}
 
@@ -54,7 +57,7 @@ Su cálculo se realiza independientemente para cada punto $x$ siguiendo los sigu
 
 \begin{enumerate}
     \item Calcular $a_x$, distancia promedio del punto a todos los demás puntos de su cluster.
-    \item Calcular, para cada cluster al que no pertenece el punto, la distancia promedio de este a sus integrantes, y conservar el menor de dichos promedios, $b_x$.
+    \item Calcular, para cada cluster al que no pertenece el punto, la distancia promedio de este último a sus elementos, y conservar el menor de dichos promedios, $b_x$.
     \item El coeficiente de silueta de $x$ estará dado entonces por la expresión:
     \begin{equation}
         \label{eq:silhouette-coefficient}
@@ -66,5 +69,5 @@ El valor de este medidor varía entre -1 y 1.
 Los valores negativos corresponden al caso en que $a_x$ es mayor que $b_x$, o sea que la distancia a los puntos de su cluster es mayor que la que lo separa del cluster más cercano.
 En cambio, cuando este valor es positivo, se tiene que el punto está mucho más próximo a puntos de su mismo cluster que a los de clusters diferentes.
 
-Una vez conocidos los coeficientes de silueta de cada punto, el promedio de estos puede ser utilizado para medir la calidad general del conjunto de clusters.
+Una vez conocidos los coeficientes de silueta de cada punto, su promedio puede ser utilizado para medir la calidad general del conjunto de clusters.
 
