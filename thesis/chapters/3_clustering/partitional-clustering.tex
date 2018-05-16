@@ -120,15 +120,6 @@ En particular, el tiempo requerido es $O(I \cdot K \cdot m \cdot n)$, donde $I$ 
 A menudo $I$ es suficientemente pequeño, y usualmente puede ser considerado como un valor constante y despreciable.
 De esta forma, K-Means es lineal respecto al tamaño del conjunto de datos $n$, y es muy eficiente siempre que el número de clusters $K$ sea significativamente menor que $n$~\cite{Tan05}.
 
-% TODO Analyse if this section needs to be included
-%\subsection{Variantes de K-Means}\label{subsec:variantesDeK-means}
-%
-%La simplicidad del algoritmo K-Means lo hace especialmente flexible para la incorporación de modificaciones con la finalidad de construir nuevas variantes a partir de este.
-%En esta sección discutiremos algunas de las variaciones más difundidas.
-%
-%\subsubsection{K-Medoids}
-%
-
 \subsection{Mini-batch K-Means}\label{subsec:miniBatchKMeans}
 
 Mini-batch K-Means es una variante del algoritmo K-Means que emplea \textit{mini-batches} con el fin de reducir el tiempo de computación, sin afectar la función objetivo a optimizar.
