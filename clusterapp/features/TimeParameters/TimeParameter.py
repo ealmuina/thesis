@@ -1,4 +1,4 @@
-class TimeParameter():
+class TimeParameter:
     name = 'TimeParameter'
 
     """docstring for TimeParameter"""

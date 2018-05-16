@@ -1,7 +1,7 @@
 import numpy as np
 
+from clusterapp.features.utils import energy
 from .TimeParameter import TimeParameter
-from .__init__ import *
 
 
 class RmsTimeParameter(TimeParameter):
@@ -13,6 +13,6 @@ class RmsTimeParameter(TimeParameter):
         super(TimeParameter, self).__init__()
 
     def measure(self, segment):
-        value = np.sqrt(np.sum(segment.data ** 2) / len(segment.data))
-        segment.measures_dict[self.name] = np.round(value, DECIMAL_PLACES)
+        value = np.sqrt(energy(segment.data) / len(segment.data))
+        segment.measures_dict[self.name] = value
         return True

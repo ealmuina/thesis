@@ -1,7 +1,4 @@
-import numpy as np
-
 from .TimeParameter import TimeParameter
-from .__init__ import *
 
 
 class DurationTimeParameter(TimeParameter):
@@ -15,5 +12,5 @@ class DurationTimeParameter(TimeParameter):
     def measure(self, segment):
         value = (segment.IndexTo - segment.IndexFrom) / segment.samplingRate
 
-        segment.measures_dict[self.name] = np.round(value, DECIMAL_PLACES)
+        segment.measures_dict[self.name] = value
         return True

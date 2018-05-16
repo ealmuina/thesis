@@ -9,8 +9,8 @@ def load_file(filename):
     return x, fs
 
 
-def get_location(segment, location='center'):
-    if location == 'center':
+def get_location(segment, location='centre'):
+    if location == 'centre':
         return int(segment.spec.shape[1] / 2)
     elif location == 'start':
         return 0
@@ -26,7 +26,7 @@ def get_location(segment, location='center'):
     return None
 
 
-def toDB(x, reference=1.0):
+def to_db(x, reference=1.0):
     return 20 * np.log10(x / reference)
 
 
@@ -34,30 +34,46 @@ def apply_threshold(value, threshold=-20):
     return value * np.power(10, threshold / 10.0)
 
 
+def geometric_mean(data):
+    g_mean = 0.0
+    for i in range(len(data)):
+        if data[i] == 0.0:
+            continue
+        else:
+            g_mean += np.log(data[i])
+
+    g_mean /= len(data)
+    g_mean = np.exp(g_mean)
+
+    return g_mean
+
+
+def energy(data):
+    return np.sum(np.square(data))
+
 """Envelopes"""
 
 
-def threeStepEnvelope(data, chunk_len=20, filterOrder=4, cutoffFrequency=0.1):
+def three_step_envelope(data, chunk_len=20, filter_order=4, cutoff_frequency=0.1):
     y = abs(data)
 
-    N = len(y)
-    k = int(N / chunk_len)
-    aux = {}
+    n = len(y)
+    k = int(n / chunk_len)
     z = []
 
     for i in range(k):
         z += [np.max(y[i * chunk_len: (i + 1) * chunk_len - 1]) for j in range(chunk_len)]
-    if N % chunk_len != 0:
-        z += [np.max(y[(k - 1) * chunk_len: -1]) for j in range(N % chunk_len)]
+    if n % chunk_len != 0:
+        z += [np.max(y[(k - 1) * chunk_len: -1]) for j in range(n % chunk_len)]
     z = np.array(z)
 
-    b, a = signal.butter(filterOrder, cutoffFrequency, 'low')
+    b, a = signal.butter(filter_order, cutoff_frequency, 'low')
     w = signal.filtfilt(b, a, z)
 
     return w
 
 
-def hilbertEnvelope(data):
+def hilbert_envelope(data):
     h_data = hilbert(data)
     return np.sqrt(np.square(data) + np.square(h_data))
 
@@ -104,4 +120,4 @@ def get_median(data, i, j):
 
 
 def is_valid_position(data, i, j):
-    return i >= 0 and i < data.shape[0] and j >= 0 and j < data.shape[1]
+    return 0 <= i < data.shape[0] and 0 <= j < data.shape[1]

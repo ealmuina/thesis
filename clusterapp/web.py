@@ -19,54 +19,39 @@ FEATURES = [
     ('Time Energy', 'Time Energy', 1),
     ('ZeroCrossingRate', 'Zero Crossing Rate', 1),
     ('DurationTime', 'Duration (s)', 1),
-    ('RmsTime', 'RMS', 1),
+    ('RmsTime', 'Root Mean Square - Time (RMS-Time)', 1),
     ('PeakToPeakTime', 'Peak to Peak Time (s)', 1),
     ('StartTime', 'Start Time (s)', 1),
     ('EndTime', 'End Time (s)', 1),
     ('DistanceToMaxTime', 'Distance to Max (s)', 1),
 
-    ('MaxFreq-start', 'Max Frequency [start] (Hz)', 1),
-    ('MinFreq-start', 'Min Frequency [start] (Hz)', 1),
-    ('BandwidthFreq-start', 'Bandwidth [start] (Hz)', 1),
-    ('PeaksAboveFreq-start', 'Peaks Above Frequency [start]', 1),
-    ('EntropyFreq-start', 'Spectral Entropy [start]', 1),
-    ('PeakFreq-start', 'Peak Frequency [start] (Hz)', 1),
-    ('PeakAmpFreq-start', 'Peak Amplitude [start]', 1),
-
-    ('MaxFreq-end', 'Max Frequency [end] (Hz)', 1),
-    ('MinFreq-end', 'Min Frequency [end] (Hz)', 1),
-    ('BandwidthFreq-end', 'Bandwidth [end] (Hz)', 1),
-    ('PeaksAboveFreq-end', 'Peaks Above Frequency [end]', 1),
-    ('EntropyFreq-end', 'Spectral Entropy [end]', 1),
-    ('PeakFreq-end', 'Peak Frequency [end] (Hz)', 1),
-    ('PeakAmpFreq-end', 'Peak Amplitude [end]', 1),
-
-    ('MaxFreq-center', 'Max Frequency [center] (Hz)', 1),
-    ('MinFreq-center', 'Min Frequency [center] (Hz)', 1),
-    ('BandwidthFreq-center', 'Bandwidth [center] (Hz)', 1),
-    ('PeaksAboveFreq-center', 'Peaks Above Frequency [center]', 1),
-    ('EntropyFreq-center', 'Spectral Entropy [center]', 1),
-    ('PeakFreq-center', 'Peak Frequency [center] (Hz)', 1),
-    ('PeakAmpFreq-center', 'Peak Amplitude [center]', 1),
-
-    ('MaxFreq-max', 'Max Frequency [max] (Hz)', 1),
-    ('MinFreq-max', 'Min Frequency [max] (Hz)', 1),
-    ('BandwidthFreq-max', 'Bandwidth [max] (Hz)', 1),
-    ('PeaksAboveFreq-max', 'Peaks Above Frequency [max]', 1),
-    ('EntropyFreq-max', 'Spectral Entropy [max]', 1),
-    ('PeakFreq-max', 'Peak Frequency [max] (Hz)', 1),
-    ('PeakAmpFreq-max', 'Peak Amplitude [max]', 1),
-
-    ('MaxFreq-max_amp', 'Max Frequency [max_amp] (Hz)', 1),
-    ('MinFreq-max_amp', 'Min Frequency [max_amp] (Hz)', 1),
-    ('BandwidthFreq-max_amp', 'Bandwidth [max_amp] (Hz)', 1),
-    ('PeaksAboveFreq-max_amp', 'Peaks Above Frequency [max_amp]', 1),
-    ('EntropyFreq-max_amp', 'Spectral Entropy [max_amp]', 1),
-    ('PeakFreq-max_amp', 'Peak Frequency [max_amp] (Hz)', 1),
-    ('PeakAmpFreq-max_amp', 'Peak Amplitude [max_amp]', 1),
-
     ('MFCC', 'MFCC', 12)
 ]
+_SPECTRAL_FEATURES = [
+    ('MaxFreq', 'Max Frequency (Hz)', 1),
+    ('MinFreq', 'Min Frequency (Hz)', 1),
+    ('BandwidthFreq', 'Bandwidth (Hz)', 1),
+    ('PeaksAboveFreq', 'Peaks Above Frequency', 1),
+    ('EntropyFreq', 'Spectral Entropy', 1),
+    ('PeakFreq', 'Peak Frequency (Hz)', 1),
+    ('PeakAmpFreq', 'Peak Amplitude', 1),
+    ('Spectral Energy', 'Spectral Energy', 1),
+    ('Flux', 'Flux', 1),
+    ('Rms Freq', 'Root Mean Square - Spectrum (RMS-Spectrum)', 1),
+    ('Roll Off Freq', 'Roll-Off', 1),
+    ('Shannon Entropy', 'Shannon Entropy', 1),
+    ('Spectral Centroid', 'Spectral Centroid', 1),
+]
+_LOCATIONS = ['start', 'end', 'centre', 'max', 'max_amp']
+
+for l in _LOCATIONS:
+    for name, verbose_name, dimension in _SPECTRAL_FEATURES:
+        FEATURES.append((
+            '%s(%s)' % (name, l),
+            '%s [%s]' % (verbose_name, l),
+            dimension
+        ))
+
 app = Flask(__name__)
 
 

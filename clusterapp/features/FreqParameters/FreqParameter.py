@@ -1,4 +1,4 @@
-class FreqParameter():
+class FreqParameter:
     name = 'FreqParameter'
 
     """docstring for FreqParameter"""

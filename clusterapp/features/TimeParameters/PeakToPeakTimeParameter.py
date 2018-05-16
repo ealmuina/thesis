@@ -1,7 +1,6 @@
 import numpy as np
 
 from .TimeParameter import TimeParameter
-from .__init__ import *
 
 
 class PeakToPeakTimeParameter(TimeParameter):
@@ -17,5 +16,5 @@ class PeakToPeakTimeParameter(TimeParameter):
         data /= np.max(np.abs(segment.signal.data))
         value = np.ptp(data) / 2.
 
-        segment.measures_dict[self.name] = np.round(value, DECIMAL_PLACES)
+        segment.measures_dict[self.name] = value
         return True

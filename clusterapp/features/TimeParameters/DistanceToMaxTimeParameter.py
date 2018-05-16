@@ -1,7 +1,6 @@
 import numpy as np
 
 from .TimeParameter import TimeParameter
-from .__init__ import *
 
 
 class DistanceToMaxTimeParameter(TimeParameter):
@@ -18,5 +17,5 @@ class DistanceToMaxTimeParameter(TimeParameter):
     def measure(self, segment):
         max_index = np.argmax(segment.data)
         value = max_index / segment.samplingRate
-        segment.measures_dict[self.name] = np.round(value, DECIMAL_PLACES)
+        segment.measures_dict[self.name] = value
         return True

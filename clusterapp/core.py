@@ -113,7 +113,7 @@ class Library:
                     try:  # TODO remove this try-except
                         _, scaled_X, _, labels_pred, labels_true = self.predict(categories, features, algorithm)
                     except:
-                        print(features)
+                        print('Error extracting features: %s' % str(features))
                         continue
                     self._update_best_features(best, features, scaled_X, labels_true, labels_pred)
 

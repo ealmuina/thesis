@@ -1,8 +1,8 @@
 import numpy as np
 
+from clusterapp.features.utils import apply_threshold, get_location
 from .FreqParameter import FreqParameter
 from .__init__ import *
-from ..utils import apply_threshold, get_location
 
 
 class MaxFreqParameter(FreqParameter):
@@ -18,6 +18,9 @@ class MaxFreqParameter(FreqParameter):
         if segment.peaks_values is None:
             segment.compute_peaks()
 
+        if location is None:
+            return self.__measure_spectrum(segment, threshold)
+
         j = get_location(segment, location)
         i = segment.peaks_indexes[j]
 
@@ -30,5 +33,22 @@ class MaxFreqParameter(FreqParameter):
             below[:i] = False
             max_freq = np.argwhere(below).min()
 
-        segment.measures_dict[self.name + '-' + location] = np.round(segment.freqs[max_freq], DECIMAL_PLACES)
+        segment.measures_dict[self.name + '(' + location + ')'] = np.round(segment.freqs[max_freq], DECIMAL_PLACES)
+        return True
+
+    def __measure_spectrum(self, segment, threshold=-20):
+        if segment.peaks_values is None:
+            segment.compute_peaks()
+
+        i = np.argmax(segment.spectrum)
+        value = apply_threshold(segment.spectrum[i], threshold)
+
+        if self.total:
+            max_freq = np.argwhere(segment.spectrum >= value).max()
+        else:
+            below = segment.spectrum < value
+            below[:i] = False
+            max_freq = np.argwhere(below).min()
+
+        segment.measures_dict[self.name + '(total)'] = np.round(segment.spectrum_freqs[max_freq], DECIMAL_PLACES)
         return True

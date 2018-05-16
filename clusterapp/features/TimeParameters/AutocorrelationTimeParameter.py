@@ -1,7 +1,6 @@
 import numpy as np
 
 from .TimeParameter import TimeParameter
-from .__init__ import *
 
 
 class AutocorrelationTimeParameter(TimeParameter):
@@ -18,5 +17,5 @@ class AutocorrelationTimeParameter(TimeParameter):
         b = segment.data[offset:]
         value = np.sum(a * b)
 
-        segment.measures_dict[self.name] = np.round(value, DECIMAL_PLACES)
+        segment.measures_dict[self.name] = value
         return True

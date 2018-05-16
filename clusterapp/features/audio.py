@@ -1,12 +1,18 @@
 from librosa.feature import mfcc
 
 from .FreqParameters.BandwidthFreqParameter import BandwidthFreqParameter
+from .FreqParameters.EnergyFreqParameter import EnergyFreqParameter
 from .FreqParameters.EntropyFreqParameter import EntropyFreqParameter
+from .FreqParameters.FluxFreqParameter import FluxFreqParameter
 from .FreqParameters.MaxFreqParameter import MaxFreqParameter
 from .FreqParameters.MinFreqParameter import MinFreqParameter
 from .FreqParameters.PeakAmpFreqParameter import PeakAmpFreqParameter
 from .FreqParameters.PeakFreqParameter import PeakFreqParameter
 from .FreqParameters.PeaksAboveFreqParameter import PeaksAboveFreqParameter
+from .FreqParameters.RmsFreqParameter import RmsFreqParameter
+from .FreqParameters.RollOffFreqParameter import RollOffFreqParameter
+from .FreqParameters.ShannonEntropyFreqParameter import ShannonEntropyFreqParameter
+from .FreqParameters.SpectralCentroidParameter import SpectralCentroidParameter
 from .TimeParameters.AutocorrelationTimeParameter import AutocorrelationTimeParameter
 from .TimeParameters.DistanceToMaxTimeParameter import DistanceToMaxTimeParameter
 from .TimeParameters.DurationTimeParameter import DurationTimeParameter
@@ -20,7 +26,8 @@ from .TimeParameters.StdAmplitudeTimeParameter import StdAmplitudeTimeParameter
 from .TimeParameters.TimeCentroidParameter import TimeCentroidParameter
 from .TimeParameters.VarianceAmplitudeTimeParameter import VarianceAmplitudeTimeParameter
 from .TimeParameters.ZcrTimeParameter import ZcrTimeParameter
-from .segment import Segment, Signal
+from .segment import Segment
+from .signal import Signal
 from .utils import *
 
 """Time Parameters Instances"""
@@ -46,16 +53,22 @@ min_f = MinFreqParameter(total=True)
 bandwidth_f = BandwidthFreqParameter(total=True)
 peaks_above_f = PeaksAboveFreqParameter()
 
+energy_f = EnergyFreqParameter()
+rms_f = RmsFreqParameter()
+s_centroid = SpectralCentroidParameter()
 peak_f = PeakFreqParameter()
 peak_amp_f = PeakAmpFreqParameter()
+s_entropy = ShannonEntropyFreqParameter()
 entropy_f = EntropyFreqParameter()
+roll_off_f = RollOffFreqParameter()
+flux_f = FluxFreqParameter()
 
 
 class Audio:
     def __init__(self, path, string_path=False):
         file, self.fs = load_file(str(path) if string_path else path)
         signal = Signal(file, self.fs)
-        signal.set_window('hann')
+        signal.set_window('boxcar')
 
         self.segment = Segment(signal, 0, len(signal.data) - 1)
         self.name = path.name
@@ -74,7 +87,7 @@ class Audio:
         self.segment.measures_dict['MFCC'] = coeffs
 
     def _build_spectral_features(self):
-        locations = ['start', 'end', 'center', 'max', 'max_amp']
+        locations = ['start', 'end', 'centre', 'max', 'max_amp']
 
         for l in locations:
             max_f.measure(self.segment, threshold=-20, location=l)
@@ -82,9 +95,15 @@ class Audio:
             bandwidth_f.measure(self.segment, threshold=-20, location=l)
             peaks_above_f.measure(self.segment, threshold=-20, location=l)
 
+            energy_f.measure(self.segment, location=l)
+            rms_f.measure(self.segment, location=l)
+            s_centroid.measure(self.segment, location=l)
+            s_entropy.measure(self.segment, location=l)
             entropy_f.measure(self.segment, location=l)
             peak_f.measure(self.segment, location=l)
             peak_amp_f.measure(self.segment, location=l)
+            roll_off_f.measure(self.segment, location=l, cutoff=.95)
+            flux_f.measure(self.segment, location=l)
 
     def _build_temporal_features(self):
         corr_t.measure(self.segment, offset=0)
