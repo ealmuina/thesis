@@ -243,7 +243,13 @@ class UnclassifiedLibrary(Library):
 def _extract_features(audio, features):
     current = []
     for feature in features:
-        x = getattr(audio, feature)
+        if isinstance(feature, list):
+            # TODO Expand to allow sub_features of more than one dimension
+            x = np.array([
+                getattr(audio, sub_feature) for sub_feature in feature
+            ]).mean()
+        else:
+            x = getattr(audio, feature)
         if isinstance(x, np.ndarray):
             current.extend(x.mean(1))
         else:
