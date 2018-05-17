@@ -68,7 +68,7 @@ class Audio:
     def __init__(self, path, string_path=False):
         file, self.fs = load_file(str(path) if string_path else path)
         signal = Signal(file, self.fs)
-        signal.set_window('boxcar')
+        signal.set_window('hann')
 
         self.segment = Segment(signal, 0, len(signal.data) - 1)
         self.name = path.name
