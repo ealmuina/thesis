@@ -6,7 +6,7 @@
 
     \frontmatter
 
-    %    \includepdf{../out/title.pdf}
+    \includepdf{../out/title.pdf}
 
     %    \input{abstract}
 
@@ -18,10 +18,10 @@
     %    \chapter*{Acknowledgements}\label{ch:acknowledgements}
     %    I want to thank\ldots
 
-    %    \tableofcontents
-    %    \listoffigures\addcontentsline{toc}{chapter}{Índice de figuras}
-    %    \listoftables\addcontentsline{toc}{chapter}{Índice de tablas}
-    %    \listofalgorithms\addcontentsline{toc}{chapter}{Índice de algoritmos}
+    \tableofcontents
+    \listoffigures\addcontentsline{toc}{chapter}{Índice de figuras}
+    \listoftables\addcontentsline{toc}{chapter}{Índice de tablas}
+    \listofalgorithms\addcontentsline{toc}{chapter}{Índice de algoritmos}
 
     \chapter*{Introducción}\label{ch:introduction}\addcontentsline{toc}{chapter}{Introducción}
     \input{chapters/introduction}
@@ -40,16 +40,13 @@
     \chapter{Validación del Clustering}\label{ch:validation}
     \input{chapters/4_validation/validation}
 
-    \chapter{Implementación}\label{ch:implementation}
-    \input{chapters/5_implementation/implementation}
-
-    %    \chapter{Experimentación}\label{ch:results}
-    %    \input{chapters/6_results/results}
+    \chapter{Experimentación}\label{ch:results}
+    \input{chapters/5_results/results}
 
     \backmatter
 
-    %    \chapter*{Conclusiones y recomendaciones}\label{ch:conclusion}\addcontentsline{toc}{chapter}{Conclusiones y recomendaciones}
-    %    \input{chapters/conclusion}
+    \chapter*{Conclusiones}\label{ch:conclusion}\addcontentsline{toc}{chapter}{Conclusiones}
+    \input{chapters/conclusion}
 
     \selectbiblanguage{spanish}
     \bibliographystyle{babplain-lf}

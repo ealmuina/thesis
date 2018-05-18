@@ -53,17 +53,18 @@ La función $proximity$ puede indicar la distancia, similaridad, o cualquier otr
 \section{Coeficiente de silueta}\label{sec:coeficienteDeSilueta}
 
 El coeficiente de silueta~\cite{Rousseeuw87, Tan05} combina la cohesión y la separación en una medida común.
-Su cálculo se realiza independientemente para cada punto $x$ siguiendo los siguientes pasos:
+Su cálculo se realiza independientemente para cada punto $x$ aplicando el siguiente algoritmo:
 
-\begin{enumerate}
-    \item Calcular $a_x$, distancia promedio del punto a todos los demás puntos de su cluster.
-    \item Calcular, para cada cluster al que no pertenece el punto, la distancia promedio de este último a sus elementos, y conservar el menor de dichos promedios, $b_x$.
-    \item El coeficiente de silueta de $x$ estará dado entonces por la expresión:
-    \begin{equation}
-        \label{eq:silhouette-coefficient}
+\begin{algorithm}
+    \caption{Coeficiente de silueta}
+    \label{algorithm:silohuette-coefficient}
+    Calcular $a_x$, distancia promedio del punto a todos los demás puntos de su cluster\;
+    Calcular, para cada cluster al que no pertenece el punto, la distancia promedio de este último a sus elementos, y conservar el menor de dichos promedios, $b_x$\;
+    El coeficiente de silueta de $x$ estará dado entonces por la expresión:
+    \begin{equation*}
         s_x = \frac{b_x - a_x}{\max{(a_x, b_x)}}
-    \end{equation}
-\end{enumerate}
+    \end{equation*}
+\end{algorithm}
 
 El valor de este medidor varía entre -1 y 1.
 Los valores negativos corresponden al caso en que $a_x$ es mayor que $b_x$, o sea que la distancia a los puntos de su cluster es mayor que la que lo separa del cluster más cercano.
