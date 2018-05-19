@@ -15,7 +15,7 @@ Para la implementación de esta interfaz se utilizó el framework \textit{Flask}
 En este modo se ofrecen dos vistas diferentes:
 
 \begin{itemize}
-    \item \textbf{Análisis de datos}: Vista enfocada al análisis de los patrones existentes en el conjunto de datos y los resultados producidos por diferentes algoritmos de clustering al aplicarse con determinadas configuraciones y características de audio. Puede observarse un ejemplo de esta vista en la figura~\ref{img:dataset-analysis}
+    \item \textbf{Análisis de datos}: Vista enfocada al análisis de los patrones existentes en el conjunto de datos y los resultados producidos por diferentes algoritmos de clustering al aplicarse con determinadas configuraciones y características de audio. Puede observarse un ejemplo de esta vista en la figura~\ref{img:dataset-analysis}.
     \item \textbf{Selección de las mejores características}: Esta vista permite determinar el conjunto de características de audio para el que se produce el resultado de mejor evaluación para determinado algoritmo de clustering. Un ejemplo de esta vista aparece en la figura~\ref{img:best-features}.
 \end{itemize}
 
@@ -42,10 +42,16 @@ que es usado en la selección de las características que mejor diferencian los 
 Mediante esta interfaz, usuarios de mayor experiencia empleando terminales de línea de comandos, pueden interactuar con la herramienta.
 Si bien el número de configuraciones que ofrece esta variante es equivalente al de la interfaz web;
 a diferencia de esta última, las configuraciones no son introducidas de forma manual por el usuario, sino que se reciben en un fichero en formato \textit{JSON}.
-Ello permite mayor rapidez en la ejecución de pruebas con variaciones en la configuración de la herramienta, y que dichas configuraciones puedan ser conservadas en disco para futuras réplicas de los resultados.
+Ello ofrece mayor rapidez en la ejecución de pruebas con variaciones en la configuración de la herramienta, y que dichas configuraciones puedan ser conservadas en disco para futuras réplicas de los resultados.
 
 Adicionalmente la interfaz de línea de comandos ofrece una ventaja al presentar los resultados en forma más extensiva que su homóloga web.
 Los valores obtenidos empleando las distintas medidas de evaluación son directamente mostrados en tablas.
 Además, el usuario puede seleccionar si desea que los resultados del clustering con cada variación en la configuración sean directamente exportados a ficheros en formato \textit{JSON}, que pueden ser empleados por otras aplicaciones.
 
 \subsection{Librería de Python}\label{subsec:libreríaDePython}
+
+La librería de Python constituye la base sobre la que fueron implementadas las otras dos interfaces.
+Se trata de una capa de abstracción entre el código que se encarga de la capa de presentación y el que realiza el cómputo científico.
+
+Esta interfaz ofrece las mismas configuraciones que las ya mencionadas.
+Su propósito radica en que puede ser empleada como base sobre la que implementar nuevas interfaces de interacción con el usuario, o para añadir las funcionalidades que provee la herramienta \textit{Clusterapp} directamente dentro de las interfaces de otras aplicaciones.
