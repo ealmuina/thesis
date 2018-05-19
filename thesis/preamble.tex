@@ -16,7 +16,12 @@
 \usepackage[fixlanguage]{babelbib}
 \usepackage{float}
 \usepackage{bbm}
-\usepackage[refpage, intoc, spanish]{nomencl}
+
+\usepackage[intoc, spanish]{nomencl}
+\makenomenclature
+\setlength{\nomlabelwidth}{2.0cm}
+\renewcommand{\nomname}{Acrónimos}
+\renewcommand{\nomlabel}[1]{{\textbf{#1}}}
 
 \DeclareMathOperator*{\argmax}{argmax}
 
