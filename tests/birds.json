@@ -1,0 +1,48 @@
+{
+  "features": [
+    "TimeCentroid",
+    "DistanceToMaxTime",
+    "ZeroCrossingRate",
+    [
+      "BandwidthFreq(start)",
+      "BandwidthFreq(end)",
+      "BandwidthFreq(centre)"
+    ],
+    "MFCC"
+  ],
+  "min_features": 1,
+  "max_features": 5,
+  "algorithms": [
+    "hdbscan",
+    "kmeans",
+    "gmm",
+    "affinity"
+  ],
+  "n_clusters": 23,
+  "export_path": "/home/eddy/Desktop/out/birds",
+  "categories": [
+    "acanthis cannabina A",
+    "anthus trivialis A",
+    "catherpes mexicanus A",
+    "crex crex A",
+    "dendrocopos major A",
+    "dendrocopos major B",
+    "fringilla coelebs A",
+    "jynx torquilla A",
+    "jynx torquilla B",
+    "locustella fluviatilis A",
+    "locustella naevia A",
+    "luscinia megarhynchos A",
+    "parus caeruleus A",
+    "phylloscopus sibilatrix A",
+    "phylloscopus sibilatrix B",
+    "phylloscopus sibilatrix C",
+    "phylloscopus sibilatrix D",
+    "picoides minor A",
+    "sitta europaea A",
+    "sitta europaea B",
+    "sylvia melanocephala A",
+    "tachybaptus ruficollis A",
+    "tachybaptus ruficollis B"
+  ]
+}

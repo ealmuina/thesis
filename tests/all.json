@@ -1,0 +1,22 @@
+{
+  "features": [
+    "TimeCentroid",
+    "DistanceToMaxTime",
+    "ZeroCrossingRate",
+    [
+      "BandwidthFreq(start)",
+      "BandwidthFreq(end)",
+      "BandwidthFreq(centre)"
+    ],
+    "MFCC"
+  ],
+  "min_features": 1,
+  "max_features": 5,
+  "algorithms": [
+    "hdbscan",
+    "kmeans",
+    "gmm",
+    "affinity"
+  ],
+  "export_path": "/home/eddy/Desktop/out/all"
+}

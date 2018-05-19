@@ -1,0 +1,42 @@
+{
+  "features": [
+    "TimeCentroid",
+    "DistanceToMaxTime",
+    "ZeroCrossingRate",
+    "BandwidthFreq(start)",
+    "BandwidthFreq(end)",
+    "BandwidthFreq(centre)",
+    "MFCC"
+  ],
+  "min_features": 1,
+  "max_features": 7,
+  "algorithms": [
+    "hdbscan",
+    "kmeans",
+    "gmm",
+    "affinity"
+  ],
+  "n_clusters": 19,
+  "export_path": "/home/eddy/Desktop/out/bats",
+  "categories": [
+    "a. jamaicensis",
+    "b. nana",
+    "e. fuscus",
+    "e. glaucinus",
+    "e. poeyi",
+    "e. sezekorni",
+    "m. blainvillei",
+    "m. minutus",
+    "m. molosus",
+    "m. redmani",
+    "m. waterhousei",
+    "n. cubanus",
+    "n. lepidus",
+    "n. leporinus",
+    "n. macrotis",
+    "n. primus",
+    "p. parnelli",
+    "p. quadridens",
+    "t. brasiliensis"
+  ]
+}

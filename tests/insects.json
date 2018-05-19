@@ -1,0 +1,33 @@
+{
+  "features": [
+    "TimeCentroid",
+    "DistanceToMaxTime",
+    "ZeroCrossingRate",
+    "BandwidthFreq(start)",
+    "BandwidthFreq(end)",
+    "BandwidthFreq(centre)",
+    "MFCC"
+  ],
+  "min_features": 1,
+  "max_features": 7,
+  "algorithms": [
+    "hdbscan",
+    "kmeans",
+    "gmm",
+    "affinity"
+  ],
+  "n_clusters": 10,
+  "export_path": "/home/eddy/Desktop/out/insects",
+  "categories": [
+    "acheta domesticus",
+    "eumodicogryllus burdigalensis",
+    "gryllotalpa gryllotalpa",
+    "gryllus bimaculatus",
+    "gryllus campestris",
+    "metrioptera bicolor",
+    "metrioptera roeselii",
+    "myrmeleotettix maculatus",
+    "tettigonia caudata",
+    "tettigonia viridissima"
+  ]
+}
