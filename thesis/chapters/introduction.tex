@@ -17,7 +17,7 @@ Dichos estudios son muy necesarios para el desarrollo de proyectos ecológicos, 
 La Inteligencia Artificial ha sido vista como una posible solución a la problemática antes planteada.
 Son numerosos los estudios llevados a cabo con diferentes algoritmos de esta para su aplicación en la detección y clasificación de señales bioacústicas~\cite{Gerhard03}.
 En general dichos algoritmos pueden ser clasificados en supervisados o no supervisados, de acuerdo a si requieren un conjunto de datos previamente procesados a partir de los cuales <<deducir>> el resultado para nuevos datos o no, respectivamente.
-Algoritmos supervisados han sido ampliamente aplicados para la solución del problema en cuestión, quedando la pertinencia y calidad del uso de los no supervisados como un objeto de estudio menos abordado.
+Algoritmos supervisados han sido ampliamente aplicados para la solución del problema en cuestión, quedando la pertinencia y calidad del uso de los no supervisados como un objeto de estudio abordado en pocos trabajos como~\cite{Jancovic13}.
 
 Entre las técnicas más estudiadas para la clasificación de señales bioacústicas se encuentran:
 \begin{itemize}
@@ -29,6 +29,10 @@ Entre las técnicas más estudiadas para la clasificación de señales bioacúst
 \end{itemize}
 
 Todas las técnicas antes mencionadas pertenecen al campo del aprendizaje supervisado por lo que, para su aplicación, están sujetas a la existencia de un conjunto de entrenamiento previamente etiquetado por expertos.
+
+Otros trabajos como~\cite{Roch07} emplean el algoritmo de aprendizaje no supervisado \textit{Gaussian Mixture Model}, analizado posteriormente en este trabajo;
+aunque se centran en su uso para la clasificación de nuevas señales luego de una fase de entrenamiento del algoritmo.
+Por tanto, emplean esta técnica como un algoritmo de aprendizaje supervisado.
 
 Son múltiples los problemas que debe enfrentar un sistema automatizado para la clasificación de una señal bioacústica: el ruido de fondo producido por especies emitiendo sonidos de forma simultánea;
 el que producen eventos meteorológicos como la lluvia o el viento;
@@ -47,3 +51,12 @@ Para dar respuesta a esta interrogante, se plantean los siguientes objetivos:
     \item Implementar variantes de los algoritmos estudiados.
     \item Establecer una comparación entre los resultados obtenidos, en correspondencia con el problema general (clasificación de señales de diversas especies) y restricciones de este (clasificación de señales en categorías de especies específicas).
 \end{itemize}
+
+\subsection*{Estructura del Trabajo}\label{subsec:estructuraDelTrabajo}
+
+Este trabajo se organiza en cinco capítulos.
+En el capítulo 1 se describe el procedimiento para la extracción de vectores de características a partir de una señal de sonido.
+En el capítulo 2 se explican métodos para la reducción de dimensiones de dichos vectores, con los propósitos de disminuir el costo computacional de procesarlos y facilitar el análisis de estos por parte de especialistas.
+A continuación en el capítulo 3 se expone un estudio de las técnicas de clustering, algoritmos de aprendizaje no supervisados para el agrupamiento de los elementos de un conjunto de datos a partir de sus características.
+En el capítulo 4 se analizan diferentes propuestas para la validación de los resultados obtenidos al aplicar estos algoritmos.
+Finalmente, en el capítulo 5, se presenta una aplicación para el procesamiento de señales bioacústicas mediante técnicas de clustering, y se detallan los resultados obtenidos en la experimentación con ella.
