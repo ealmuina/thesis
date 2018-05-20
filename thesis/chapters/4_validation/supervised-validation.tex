@@ -50,7 +50,7 @@ Los valores de este medidor se encuentran en el rango $[0, \log|C|]$, siendo 0 e
 
 \subsubsection{Pureza, Precisión y Recobrado}
 
-La \textbf{pureza}~\cite{Tan05,Aggarawal13} de un cluster mide lo cerca que este se encuentra de contener objetos de una única categoría.
+La \textbf{pureza}~\cite{Aggarawal13,Tan05} de un cluster mide lo cerca que este se encuentra de contener objetos de una única categoría.
 Se define por las fórmulas:
 
 \begin{gather}
@@ -64,17 +64,17 @@ Se define por las fórmulas:
 donde $K$ es la cantidad de clusters, y $p_{ij} = n_{ij}/n_i$ es la probabilidad de que un elemento del cluster $i$ pertenezca a la categoría $j$.
 La expresión (\ref{eq:cluster-purity}) determina la pureza de un cluster, y~(\ref{eq:purity}) la de un conjunto de clusters.
 
-La \textbf{precisión}~\cite{Tan05,Aggarawal13} es la fracción de los elementos de un cluster que pertenecen a la misma clase.
+La \textbf{precisión}~\cite{Aggarawal13,Tan05} es la fracción de los elementos de un cluster que pertenecen a la misma clase.
 La precisión del cluster $i$ respecto a la clase $j$ está dada por la expresión $precision(i,j) = p_{ij}$.
 
-El \textbf{recobrado}~\cite{Tan05,Aggarawal13} mide el grado en que un cluster contiene todos los elementos que pertenecen a una clase dada.
+El \textbf{recobrado}~\cite{Aggarawal13,Tan05} mide el grado en que un cluster contiene todos los elementos que pertenecen a una clase dada.
 Para el cluster $i$ y la categoría $j$, su expresión es $recall(i,j) = n_{ij}/n_j$, donde $n_j$ es el número de elementos del conjunto de datos incluidos en la clase $j$.
 
 Los tres criterios mencionados toman valores entre 0 y 1, donde un valor más alto indica un mejor resultado.
 
 \subsubsection{Medida F}
 
-Haciendo uso de los conceptos de precisión y recobrado, se define la medida F~\cite{Tan05,Aggarawal13,Wagner07} como una combinación de estos, que busca medir el grado en que un cluster está constituido solamente por elementos de una única clase y a su vez contiene a todos los elementos de dicha clase.
+Haciendo uso de los conceptos de precisión y recobrado, se define la medida F~\cite{Aggarawal13,Tan05,Wagner07} como una combinación de estos, que busca medir el grado en que un cluster está constituido solamente por elementos de una única clase y a su vez contiene a todos los elementos de dicha clase.
 La medida F del cluster $i$ respecto a la clase $j$ está dada por:
 
 \begin{equation}
@@ -195,7 +195,7 @@ De igual modo, a partir de las $n(n-1)/2$ parejas de objetos que pueden formarse
     \item $f_{11}$: número de parejas de objetos que pertenecen a clases y clusters iguales (posiciones en las el valor 1 coincide en las dos matrices).
 \end{itemize}
 
-Empleando estos cuatro valores se definen tres de las medidas más usadas para la evaluación de algoritmos de clustering: el \textbf{índice de Rand}, el \textbf{coeficiente de Jaccard} y el \textbf{índice de Fowlkes-Mallows}, dadas por las ecuaciones (\ref{eq:rand-index}), (\ref{eq:jaccard-coefficient}) y (\ref{eq:fowlkes-mallows-index}) respectivamente~\cite{Wagner07,Tan05,Aggarawal13}.
+Empleando estos cuatro valores se definen tres de las medidas más usadas para la evaluación de algoritmos de clustering: el \textbf{índice de Rand}, el \textbf{coeficiente de Jaccard} y el \textbf{índice de Fowlkes-Mallows}, dadas por las ecuaciones (\ref{eq:rand-index}), (\ref{eq:jaccard-coefficient}) y (\ref{eq:fowlkes-mallows-index}) respectivamente~\cite{Aggarawal13,Tan05,Wagner07}.
 
 \begin{align}
     \label{eq:rand-index}
