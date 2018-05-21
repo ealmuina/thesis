@@ -140,7 +140,7 @@ def test(features_set, min_features, max_features, algorithms, categories, expor
                         export(
                             names,
                             labels_pred,
-                            os.path.join(export_path, '%d [%s] %s.json' % (i, algorithm, '+'.join(features)))
+                            os.path.join(export_path, '%d.json' % i)
                         )
                     i += 1
                 reports.append(report)
