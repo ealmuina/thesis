@@ -126,11 +126,15 @@ def test(features_set, min_features, max_features, algorithms, categories, expor
                         (' ', 'ALGORITHM', 'SILHOUETTE', 'CALINSKI-HARABAZ', 'TIME', 'ID')
                     ]
                 for algorithm in algorithms:
-                    X, scaled_X, names, labels_pred, labels_true = LIBRARY.predict(
-                        categories=categories,
-                        features=features,
-                        algorithm=algorithm
-                    )
+                    try:  # TODO remove this try-except
+                        X, scaled_X, names, labels_pred, labels_true = LIBRARY.predict(
+                            categories=categories,
+                            features=features,
+                            algorithm=algorithm
+                        )
+                    except:
+                        print('Error extracting features: %s' % str(features))
+                        continue
                     report.append(report_algorithm(algorithm, scaled_X, labels_pred, labels_true, i))
                     if EXPORT:
                         export(

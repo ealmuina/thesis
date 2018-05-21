@@ -1,22 +1,70 @@
 {
   "features": [
-    "TimeCentroid",
     "DistanceToMaxTime",
+    "Time Energy",
+    "TimeCentroid",
+    "DurationTime",
+    "Autocorrelation",
     "ZeroCrossingRate",
+    [
+      "PeakFreq(start)",
+      "PeakFreq(end)",
+      "PeakFreq(centre)",
+      "PeakFreq(max)",
+      "PeakFreq(max_amp)"
+    ],
+    [
+      "MaxFreq(start)",
+      "MaxFreq(end)",
+      "MaxFreq(centre)",
+      "MaxFreq(max)",
+      "MaxFreq(max_amp)"
+    ],
+    [
+      "MinFreq(start)",
+      "MinFreq(end)",
+      "MinFreq(centre)",
+      "MinFreq(max)",
+      "MinFreq(max_amp)"
+    ],
     [
       "BandwidthFreq(start)",
       "BandwidthFreq(end)",
-      "BandwidthFreq(centre)"
+      "BandwidthFreq(centre)",
+      "BandwidthFreq(max)",
+      "BandwidthFreq(max_amp)"
+    ],
+    [
+      "Spectral Centroid(start)",
+      "Spectral Centroid(end)",
+      "Spectral Centroid(centre)",
+      "Spectral Centroid(max)",
+      "Spectral Centroid(max_amp)"
+    ],
+    [
+      "Roll Off Freq(start)",
+      "Roll Off Freq(end)",
+      "Roll Off Freq(centre)",
+      "Roll Off Freq(max)",
+      "Roll Off Freq(max_amp)"
+    ],
+    [
+      "Flux(start)",
+      "Flux(end)",
+      "Flux(centre)",
+      "Flux(max)",
+      "Flux(max_amp)"
     ],
     "MFCC"
   ],
   "min_features": 1,
-  "max_features": 5,
+  "max_features": 14,
   "algorithms": [
     "hdbscan",
     "kmeans",
     "gmm",
     "affinity"
   ],
+  "n_clusters": 52,
   "export_path": "/home/eddy/Desktop/out/all"
 }
