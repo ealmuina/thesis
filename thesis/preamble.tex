@@ -6,7 +6,7 @@
 \usepackage{charter}
 \usepackage[spanish]{babel}
 \usepackage[T1]{fontenc}
-\usepackage[width=150mm,top=25mm,bottom=25mm]{geometry}
+\usepackage[width=150mm,top=20mm,bottom=20mm,includehead,includefoot]{geometry}
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{pdfpages}
@@ -56,6 +56,7 @@
 }
 
 \renewcommand{\mainmatter}{%
+\cleardoublepage
 \pagenumbering{arabic}
 \pagestyle{fancy}
 }
@@ -68,4 +69,10 @@
 % Renaming cuadro to tabla.
 \renewcommand{\listtablename}{Índice de tablas}%
 \renewcommand{\tablename}{Tabla}%
+}
+
+\let\startappendix\appendix
+\renewcommand{\appendix}{
+\startappendix
+\renewcommand{\tablename}{Tabla} % Renaming cuadro to tabla in Appendices
 }
