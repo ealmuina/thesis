@@ -129,7 +129,7 @@ El primer paso del algoritmo HDBSCAN busca transformar las distancias con la fin
 La nueva matriz de distancias conservará las distancias entre puntos situados en áreas densas del espacio;
 mientras que asociará valores más altos a las distancias correspondientes a puntos ubicados fuera de estas.
 
-Primero se calculan las $k$-distancias (ver en la sección~\hyperref[subsubsec:paramsDBSCAN]{Selección de parámetros para DBSCAN}) de cada punto $x$ del conjunto de datos: $dist_k(x)$.
+Primero se calculan las \hyperref[subsubsec:paramsDBSCAN]{$k$-distancias} de cada punto $x$ del conjunto de datos: $dist_k(x)$.
 A continuación, se construye la nueva matriz de distancias, empleando la función conocida como \textit{distancia de alcanzabilidad mutua}\footnote{\textit{mutual reachability distance} en inglés.} definida por la ecuación~(\ref{eq:d_mreach}):
 
 \begin{equation}
