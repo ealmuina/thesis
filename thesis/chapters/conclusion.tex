@@ -1,5 +1,22 @@
-% TODO Do this
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.
-Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+En el presente trabajo se implementó un sistema para la aplicación de algoritmos de aprendizaje no supervisado en el estudio de señales bioacústicas.
+Numerosas variantes de características de una señal de audio fueron incorporadas al sistema, así como algoritmos representativos de los diferentes modelos de clustering.
+
+Los resultados obtenidos sobre cuatro conjuntos de datos resultan alentadores;
+y sugieren que el peso en el resultado final de los vectores de características con que se representen las señales, es mayor que el del algoritmo empleado.
+
+La combinación de características que produce mejores resultados parece estar en estrecha correspondencia con cada conjunto de datos en particular.
+No obstante, en la amplia mayoría de los casos se observó que los MFCC estuvieron presentes en las combinaciones con resultados de mayor calidad.
+Asimismo, el uso de los MFCC como vector de características parece por sí solo dar muy buenos resultados, a los que la inclusión de características adicionales (altamente dependientes del conjunto de datos) parece mejorar solo hasta cierto punto.
+
+\section*{Recomendaciones}\label{sec:recomendaciones}
+
+Para dar continuidad al desarrollo de este trabajo, se recomienda verificar sus resultados en conjuntos de datos de mayor tamaño, que permitan dar validez estadística a los aquí planteados.
+
+Este trabajo se enfocó en la generación de un resultado final de cara a su empleo directo por el usuario.
+Es por ello que se propone como trabajo futuro comprobar su utilidad en pasos intermedios del proceso de estudio y clasificación de señales bioacústicas.
+Un posible uso en este sentido pudiera ser la selección de los segmentos, donde en particular la habilidad de HDBSCAN de detectar datos de <<ruido>> puede tener buen empleo.
+
+Otro posible uso como paso intermedio puede darse en la mejora de la clasificación de los elementos de un conjunto de datos.
+De esta forma si se dispone solamente de la especie que emitió cada uno de los segmentos, el cluster en que estos se ubiquen puede ser considerado un indicador del tipo de vocalización.
+Así, si los segmentos correspondientes a la misma especie aparecen repartidos en dos clusters, esto señalaría que existen dos tipos de vocalizaciones diferentes;
+información que pudiera añadirse a la clasificación de los segmentos.
