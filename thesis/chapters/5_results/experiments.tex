@@ -1,8 +1,9 @@
 \section{Conjuntos de datos}\label{sec:datasets}
 
-Para desarrollar los experimentos, se conformaron 3 conjuntos de datos con segmentos correspondientes a vocalizaciones de especies de murciélagos, aves e insectos.
+Para desarrollar los experimentos, se conformaron tres conjuntos de datos con segmentos correspondientes a vocalizaciones de dos \textit{clases} taxonómicas (aves e insectos) y un \textit{orden} taxonómico (murciélagos) respectivamente.
 En las tablas~\ref{table:bats-dataset},~\ref{table:birds-dataset} y~\ref{table:insects-dataset} se describen las especies que componen cada uno de estos conjuntos.
 Un cuarto conjunto de datos fue constituido a partir de la unión de los anteriores.
+De esta forma se comprobó la variación en los resultados en dependencia del grado de parentesco existente entre las especies presentes en los conjuntos de datos.
 Todos los segmentos se extrajeron de forma manual a partir de grabaciones de mayor duración.
 
 La diversidad de sonidos que pueden producir los individuos de una misma especie, hace que en la clasificación de los segmentos no baste con recoger simplemente el nombre de la especie de la que proceden.
@@ -74,3 +75,8 @@ Se puede observar que en general los resultados son mucho mejores cuando los MFC
 Si bien añadir características adicionales a dicho vector contribuye en la mayoría de los casos a incrementar la calidad del resultado, el valor en que lo hace no es muy significativo.
 
 Puede apreciarse además que la selección del algoritmo no pesa tanto sobre la evaluación del resultado como lo hace la del conjunto de características.
+
+En cuanto a la relación entre el parentesco taxonómico de las especies en el conjunto de datos y la evaluación de los resultados,
+los obtenidos en este trabajo muestran mejor comportamiento cuando la diferencia entre las especies se da al nivel de \textit{clase}.
+El resultado en el conjunto de los murciélagos soporta la hipótesis de que una relación más estrecha dentro del conjunto de datos deteriora un poco la calidad del resultado.
+Lo mismo (aunque al parecer en menor grado) sucede en un conjunto de datos de alta diversidad de organismos.
