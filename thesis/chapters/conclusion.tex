@@ -6,7 +6,8 @@ y sugieren que el peso en el resultado final de los vectores de características
 
 La combinación de características que produce mejores resultados parece estar en estrecha correspondencia con cada conjunto de datos en particular.
 No obstante, en la amplia mayoría de los casos se observó que los MFCC estuvieron presentes en las combinaciones con resultados de mayor calidad.
-Asimismo, el uso de los MFCC como vector de características parece por sí solo dar muy buenos resultados, a los que la inclusión de características adicionales (altamente dependientes del conjunto de datos) parece mejorar solo hasta cierto punto.
+Asimismo, el uso de los MFCC como vector de características parece por sí solo dar muy buenos resultados;
+a los que la inclusión de características adicionales (altamente dependientes del conjunto de datos), por lo visto, mejora solo hasta cierto punto.
 
 \section*{Recomendaciones}\label{sec:recomendaciones}
 
@@ -17,6 +18,8 @@ Es por ello que se propone como trabajo futuro comprobar su utilidad en pasos in
 Un posible uso en este sentido pudiera ser la selección de los segmentos, donde en particular la habilidad de HDBSCAN de detectar datos de <<ruido>> puede tener buen empleo.
 
 Otro posible uso como paso intermedio puede darse en la mejora de la clasificación de los elementos de un conjunto de datos.
-De esta forma si se dispone solamente de la especie que emitió cada uno de los segmentos, el cluster en que estos se ubiquen puede ser considerado un indicador del tipo de vocalización.
+De esta manera si se dispone solamente de la especie que emitió cada uno de los segmentos, el cluster en que estos se ubiquen puede ser considerado un indicador del tipo de vocalización.
 Así, si los segmentos correspondientes a la misma especie aparecen repartidos en dos clusters, esto señalaría que existen dos tipos de vocalizaciones diferentes;
 información que pudiera añadirse a la clasificación de los segmentos.
+
+Se propone además trabajar en la mejora de la interfaz web, de modo que los usuarios a los que está destinada la perciban de forma más amigable e intuitiva.
