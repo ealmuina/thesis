@@ -53,6 +53,7 @@ Una variación que busca compensar esta dificultad es la técnica nombrada \text
 
 El método de Ward es una propuesta para el cálculo de la distancia entre dos clusters usado en el clustering aglomerativo.
 Utiliza la ecuación~(\ref{eq:SSE}) de la SSE para medir la distancia entre dos clusters como el incremento que produce en este valor unir dichos clusters.
+
 Al igual que K-Means, este método intenta minimizar la suma de los cuadrados de las distancias de cada punto al centroide de su cluster.
 
 \subsubsection{Complejidad espacial y temporal}
@@ -65,7 +66,7 @@ En cuanto al tiempo, el cálculo de la matriz de distancias es $O(n^2)$.
 Los pasos 3 y 4 requieren $n-1$ iteraciones puesto que existen $n$ clusters al comienzo, y en cada paso se unen dos, reduciéndose en uno la cantidad de clusters en cada momento.
 Si el paso 3 es realizado como una búsqueda lineal sobre la matriz, entonces este requerirá un tiempo $O((n-i+1)^2)$ en la $i$-ésima iteración.
 El paso 4 solo requiere un tiempo $O(n-i+1)$ para actualizar la matriz luego de unir dos clusters.
-Sin efectuar ninguna modificación, esto nos lleva a una complejidad temporal total $O(n^3)$.
+Sin efectuar ninguna modificación, esto lleva a una complejidad temporal total $O(n^3)$.
 Aunque aplicando mejoras como el empleo de estructuras de datos alternativas para almacenar la matriz y optimizar la búsqueda del paso 3, esta complejidad puede disminuirse hasta $O(n^2\log{n})$~\cite{Tan05}.
 
 La complejidad espacial y temporal de los algoritmos de clustering jerárquico constituye una de las principales limitantes para su empleo sobre conjuntos de datos de tamaño significativo.

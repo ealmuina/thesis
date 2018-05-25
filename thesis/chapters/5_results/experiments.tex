@@ -13,7 +13,7 @@ pudiendo distinguirse así entre situaciones en que el algoritmo separó incorre
 
 \section{Resultados}\label{sec:results}
 
-Para la experimentación se emplearon todas las combinaciones de 14 de las características mencionadas en este trabajo:
+Para la experimentación se emplearon todas las combinaciones de las siguientes 14 características mencionadas en este trabajo:
 
 \begin{multicols}{2}
     \begin{enumerate}
@@ -40,7 +40,10 @@ Para los MFCC se empleó el vector obtenido al promediar cada uno de los coefici
 
 Los valores de algunas de las medidas de evaluación, aplicadas a los resultados obtenidos, aparecen resumidos en el Apéndice~\ref{ch:experimentsResults}.
 
-En las figuras~\ref{img:bats},~\ref{img:birds},~\ref{img:insects} y~\ref{img:all} se resume la evaluación de los resultados aplicando el medidor \textit{Adjusted Rand Index};
+Los mejores valores del \textit{Adjusted Rand Index} (ARI) encontrados para los conjuntos de datos de murciélagos, aves, insectos y general, fueron de 0.85, 0.99, 0.98 y 0.86 respectivamente.
+Todos son elevados, especialmente los dos intermedios, lo que apunta a que los algoritmos de aprendizaje no supervisado pueden contribuir en el desarrollo del campo de la clasificación de señales bioacústicas.
+
+En las figuras~\ref{img:bats},~\ref{img:birds},~\ref{img:insects} y~\ref{img:all} se resume la evaluación de los resultados aplicando el medidor ARI;
 para tres de estas combinaciones: la conformada por todas las características de la 1 a la 13 (nombradas características \textit{descriptivas}), la que solamente incluye los MFCC, y la que incluye a las 14 características.
 
 \begin{figure}[!h]
@@ -72,11 +75,11 @@ para tres de estas combinaciones: la conformada por todas las características d
 \end{figure}
 
 Se puede observar que en general los resultados son mucho mejores cuando los MFCC se encuentran presentes en las características utilizadas.
-Si bien añadir características adicionales a dicho vector contribuye en la mayoría de los casos a incrementar la calidad del resultado, el valor en que lo hace no es muy significativo.
+Si bien añadir características adicionales a dicho vector contribuye en la mayoría de los casos a aumentar la calidad del resultado, el incremento muchas veces es poco significativo.
 
 Puede apreciarse además que la selección del algoritmo no pesa tanto sobre la evaluación del resultado como lo hace la del conjunto de características.
 
 En cuanto a la relación entre el parentesco taxonómico de las especies en el conjunto de datos y la evaluación de los resultados,
 los obtenidos en este trabajo muestran mejor comportamiento cuando la diferencia entre las especies se da al nivel de \textit{clase}.
-El resultado en el conjunto de los murciélagos soporta la hipótesis de que una relación más estrecha dentro del conjunto de datos deteriora un poco la calidad del resultado.
-Lo mismo (aunque al parecer en menor grado) sucede en un conjunto de datos de alta diversidad de organismos.
+El resultado en el conjunto de los murciélagos soporta la hipótesis de que una relación más estrecha entre los elementos deteriora un poco la calidad del resultado.
+Lo mismo sucede en el conjunto de datos de muy alta diversidad de organismos.

@@ -1,6 +1,6 @@
 Las características de esta categoría describen la representación de las señales de sonido en el dominio de las frecuencias.
 
-Una trama $x[n]$, de longitud $N$, tiene una representación en el dominio de las frecuencias, conocida como \textit{espectro}, que puede ser obtenida mediante la aplicación de la \textbf{transformada discreta de Fourier} (DFT por sus siglas en inglés):
+Una trama $x[n]$, de longitud $N$, tiene una representación en el dominio de las frecuencias, o \textit{espectro}, que puede ser obtenida mediante la aplicación de la \textbf{transformada discreta de Fourier} (DFT por sus siglas en inglés):
 
 \begin{equation}
     \label{eq:DFT}
@@ -14,21 +14,21 @@ El espectro $X[f]$ puede ser transformado de vuelta al dominio del tiempo aplica
     x[n] = \frac{1}{N}\sum_{f=0}^{N-1}{X[f]e^{\frac{i2\pi fn}{N}}}
 \end{equation}
 
-Al ser $x[n]$ un vector de valores reales, podemos aplicar sobre este una propiedad de la DFT que plantea que el vector $X[f]$ es, por tanto, conjugado simétrico, por lo que suelen considerarse solamente los últimos $\lceil (N+1)/2 \rceil$ valores de este.
+Al ser $x[n]$ un vector de valores reales, se puede aplicar sobre este una propiedad de la DFT que plantea que el vector $X[f]$ es, por tanto, conjugado simétrico, por lo que suelen considerarse solamente los últimos $\lceil (N+1)/2 \rceil$ valores de este.
 
-La posición $k$-ésima del vector $X[k]$ contiene la amplitud correspondiente a la frecuencia $k(F_s/N)$ en la señal.
+La posición $k$-ésima del vector $X[k]$ contiene la amplitud correspondiente a la frecuencia $k\cdot(F_s/N)$ en la señal.
 
-Podemos definir $X[f,t]$ como la matriz compuesta por las DFTs correspondientes a cada una de las tramas de una señal, donde el valor en la posición $(f, t)$ corresponde a la amplitud de la frecuencia $f$ en la trama $t$.
+Puede definirse $X[f,t]$ como la matriz compuesta por las DFTs correspondientes a cada una de las tramas de una señal, donde el valor en la posición $\left<f, t\right>$ corresponde a la amplitud de la frecuencia $f$ en la trama $t$.
 A partir de esta matriz se construye el espectrograma de la señal.
 
-Algunas de las características más simples que pueden ser obtenidas directamente a partir de la DFT son las siguientes:
+Algunas de las características más simples que pueden obtenerse directamente a partir de la DFT son las siguientes:
 
 \begin{itemize}
     \label{itemize:basic-spectral-features}
     \item \textbf{Frecuencia pico} (\textit{Peak Frequency}): Es la frecuencia que presenta mayor magnitud en el espectro de la señal.
     \item \textbf{Amplitud pico} (\textit{Peak Amplitude}): Amplitud correspondiente a la frecuencia pico.
     \item \textbf{Frecuencias mínima y máxima} (\textbf{Min-Max Frequencies}): Menor y mayor frecuencias respectivamente, cuyas amplitudes se encuentran por encima de un valor prefijado (por ejemplo, -20 dB~\footnote{El decibelio (dB) es una unidad de medida que permite comparar relativamente dos valores siguiendo una escala logarítmica.
-    La relación entre las amplitudes $A_1$ y $A_2$ está dada por la expresión $dB = 10\log(A_1/A_2)$} respecto a la amplitud pico).
+    La relación entre las amplitudes $A_1$ y $A_2$ está dada por la expresión $dB = 10\log(A_1/A_2)$.} respecto a la amplitud pico).
     \item \textbf{Bandwidth}: Diferencia entre las frecuencias máxima y mínima.
     \item \textbf{Cuartiles}: Caracteriza la distribución de energía en torno al espectro.
     Está compuesta por tres componentes, cada una correspondiente a la frecuencia por debajo de la cual se sitúa el 25\%, el 50\% y el 75\% de la energía total del espectro respectivamente.
@@ -85,7 +85,7 @@ El \textit{spectral roll-off} (SRO)~\cite{Fagerlund07,Peters04} se define como l
 
 Caracteriza la variación dinámica de la información espectral.
 El \textit{spectral flux} (SFX)~\cite{Fagerlund07,Lasseck14,Zamanian17} se calcula como la norma de la diferencia entre los espectros de dos tramas consecutivas.
-El coeficiente correspondiente a la trama $t$, $t\geq 1$, puede calcularse entonces aplicando:
+El coeficiente correspondiente a la trama $t$ ($t\geq 1$) puede calcularse entonces aplicando:
 
 \begin{equation}
     \label{eq:SFX}

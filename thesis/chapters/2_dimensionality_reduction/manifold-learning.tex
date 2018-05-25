@@ -5,7 +5,7 @@ A continuación se mencionan algunos de los algoritmos de manifold learning más
 
 \subsection{Multi-dimensional Scaling}\label{subsec:MDS}
 
-\textit{Multi-dimensional scaling} (MDS) es una técnica que tiene como objetivo obtener una representación del conjunto de datos en un espacio de menos dimensiones, preservando las distancias existentes entre los elementos en el espacio original.
+\textit{Multi-dimensional scaling} (MDS)~\cite{deLeeuw00,Groenen14} es una técnica que tiene como objetivo obtener una representación del conjunto de datos en un espacio de menos dimensiones, preservando las distancias existentes entre los elementos en el espacio original.
 
 En otras palabras, se busca minimizar la siguiente función objetivo:
 
@@ -22,7 +22,7 @@ Puesto que MDS se basa en las distancias entre los elementos y no utiliza la rep
 \subsection{Isomap}\label{subsec:isomap}
 
 Al igual que PCA, MDS tampoco produce buenos resultados cuando la relación entre los puntos no es lineal.
-\textit{Isomap} puede considerarse como una extensión de MDS, desarrollada para procesar ese tipo de conjuntos de datos; y que a diferencia de MDS, se basa en la distancia \textit{geodésica} entre los puntos.
+\textit{Isomap}~\cite{Tenenbaum00} puede considerarse como una extensión de MDS, desarrollada para procesar ese tipo de conjuntos de datos; y que a diferencia de MDS, se basa en la distancia \textit{geodésica} entre los puntos.
 
 Para ello se construye un grafo donde existirá una arista entre los puntos $i$ y $j$ si estos son \textit{vecinos} en el espacio original, que tendrá un peso igual a la distancia euclidiana entre los puntos.
 
@@ -30,7 +30,7 @@ Luego la distancia geodésica entre cualquier par de puntos se corresponderá co
 Finalmente, empleando esta nueva distancia, se aplica MDS\@.
 
 El modo en que se determina si dos puntos son vecinos entre sí, está sujeto a variaciones.
-Generalmente suele definirse un cierto radio para el que si dos puntos se encuentran a una distancia menor que este, se consideran vecinos.
+Generalmente suele definirse un cierto radio para el que si los dos puntos se encuentran a una distancia menor que este, se consideran vecinos.
 Otro enfoque consiste en, dado un valor $k$, fijar como vecinos de un punto los $k$ puntos más próximos a este.
 
 \begin{figure}[!h]
@@ -42,11 +42,11 @@ Otro enfoque consiste en, dado un valor $k$, fijar como vecinos de un punto los 
 
 \subsection{Locally Linear Embedding}\label{subsec:LLE}
 
-\textit{Locally Linear Embedding} (LLE) es una técnica para la reducción de dimensiones basada en la idea de analizar regiones locales de puntos superpuestas, para determinar la estructura local de los datos.
+\textit{Locally Linear Embedding} (LLE)~\cite{Roweis00} es una técnica para la reducción de dimensiones basada en la idea de analizar regiones locales de puntos superpuestas, para determinar la estructura local de los datos.
 
 El primer paso del algoritmo consiste en hallar los puntos más cercanos a cada punto $x_i$, expresando luego a $x_i$ como una combinación lineal de estos.
 De modo que se cumpla que $x_i =\sum_j {w_{ij}x_j}$, donde $\sum_j w_{ij}=1$ y $w_{ij} = 0$ si $x_j$ no es un vecino cercano de $x_i$.
-La matriz de pesos $W$, de coeficientes $w_{ij}$ es encontrada minimizando el error cuadrático medio, dado por la ecuación:
+La matriz de pesos $W$, con coeficientes $w_{ij}$ es encontrada minimizando el error cuadrático medio, dado por la ecuación:
 
 \begin{equation}
     error(W) = \sum_i \left( x_i - \sum_j {w_{ij}x_j} \right)^2

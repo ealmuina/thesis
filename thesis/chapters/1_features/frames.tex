@@ -1,8 +1,8 @@
-Para procesar una señal esta a menudo es dividida en pequeños segmentos, conocidos como \textit{tramas}\footnote{\textit{frames} en inglés.}, de longitud constante y espaciados en intervalos de tiempo iguales.
-Denotamos por $N$ la cantidad de muestras de la señal que contiene una trama;
+Para procesar una señal esta a menudo es dividida en pequeños segmentos, conocidos como \textit{tramas}\footnote{\textit{Frames} en inglés.}, de longitud constante y espaciados en intervalos de tiempo iguales.
+Se denota por $N$ la cantidad de muestras de la señal que contiene una trama;
 de esta forma la duración de una trama será de $N/F_s$.
-Asimismo, denotamos por $M$ la cantidad de muestras en que difieren dos tramas consecutivas, conocida como \textit{tamaño de paso}, y que usualmente es menor que $N$.
-A partir de estos valores podemos igualmente calcular la cantidad de muestras que dos tramas consecutivas tienen en común, como $N-M$;
+Asimismo, $M$ es la cantidad de muestras en que difieren dos tramas consecutivas, conocida como \textit{tamaño de paso}, y que usualmente es menor que $N$.
+A partir de estos valores puede igualmente calcularse la cantidad de muestras que dos tramas consecutivas tienen en común, como $N-M$;
 y el número de tramas por segundo (\textit{frame rate}) como $F_s/M$.
 
 Cada trama de $N$ muestras es usualmente obtenida mediante la aplicación de una función \textit{ventana} $w(n)$ a la señal, que es distinta de cero solo si $0\leq n\leq N-1$.
@@ -17,7 +17,7 @@ Dada la señal $s[n]$, una trama que comienza en la muestra $m$ es obtenida como
 \end{equation}
 
 La elección de la ventana $w(n)$ tiene un efecto en los resultados de operaciones posteriores sobre las tramas obtenidas.
-En la práctica, algunos métodos de procesamiento, como la transformada de Fourier producen mejores resultados cuando se emplean funciones que se aproximan a cero en sus extremos, como la de Hamming (tabla~\ref{table:window-function}).
+En la práctica, algunos métodos de procesamiento, como la transformada de Fourier producen mejores resultados cuando se emplean funciones que se aproximan a cero en sus extremos, como la de \textit{Hamming} (tabla~\ref{table:window-function}).
 
 \begin{table}[H]
     \centering

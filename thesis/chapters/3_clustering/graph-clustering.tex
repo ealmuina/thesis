@@ -1,4 +1,4 @@
-Los algoritmos de \textit{clustering basado en grafos}, a diferencia de otros como K-Means o GMM, no aplican un modelo matemático particular para representar el conjunto de datos, o minimizan directamente una función objetivo.
+Los algoritmos de \textit{clustering basado en grafos}, a diferencia de otros como K-Means o GMM, no aplican un modelo matemático particular para representar el conjunto de datos, ni minimizan directamente una función objetivo.
 Esto les permite aplicarse en escenarios de mayor complejidad y, en algunos casos, pueden producir clusters de estructura no necesariamente convexa.
 
 La idea detrás de estos algoritmos consiste en construir un grafo no dirigido ponderado $W$, a partir de la matriz de similaridad (o distancias) correspondiente al conjunto de datos.
@@ -192,5 +192,5 @@ Frecuentemente el valor $s(i,i)$ se fija como la media de todas las similitudes,
 El algoritmo Affinity Propagation tiene una complejidad temporal $O(N^2 \cdot T)$, con $N$ número de elementos del conjunto de datos y $T$ cantidad de iteraciones hasta converger, para grafos densos.
 Para matrices esparcidas (correspondientes a grafos densos), el comportamiento en tiempo del algoritmo es, en cambio, $O(E\cdot T)$, con $E$ número de aristas (valores distintos de cero).
 
-En el caso de la complejidad espacial, la memoria ocupada es $O(N^2)$ y $O(E)$ en dependencia si la matriz es esparcida o no, respectivamente~\cite{Murphy12}.
+En el caso de la complejidad espacial la memoria ocupada es, respectivamente, $O(N^2)$ y $O(E)$ en dependencia si la matriz es esparcida o no~\cite{Murphy12}.
 

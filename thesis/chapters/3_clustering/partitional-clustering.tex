@@ -22,11 +22,11 @@ En la práctica, suele usarse como criterio de convergencia una versión relajad
     }
 \end{algorithm}
 
-La elección de la medida de proximidad para calcular el centroide más próximo a cada punto puede afectar significativamente las asignaciones y la calidad de la solución final.
+La elección de la medida de proximidad para calcular el centroide más cercano a cada punto puede afectar significativamente las asignaciones y la calidad de la solución final.
 Medidas como la distancia Manhattan (norma $L_1$), la distancia euclidiana (norma $L_2$) y la similitud coseno son frecuentemente empleadas, especialmente la segunda.
 Tanto la medida de proximidad como el valor de $K$ son determinantes en la configuración de clusters producida por K-Means.
 
-Si se analiza este algoritmo como un problema de optimización, entonces estaría minimizándose la función objetivo de K-Means conocida como Suma de Errores Cuadráticos (SSE por sus siglas en inglés), cuya formulación matemática se presenta a continuación.
+Si se analiza este algoritmo como un problema de optimización, entonces estaría minimizándose la función objetivo de K-Means conocida como \textit{Suma de Errores Cuadráticos} (SSE por sus siglas en inglés), cuya formulación matemática se presenta a continuación.
 
 Dado un conjunto de datos $D={x_1,x_2,\dots,x_N}$ de $N$ puntos, y denotado el conjunto de clusters obtenido tras aplicar K-Means como $C={C_1,C_2,\dots,C_k,\dots,C_K}$;
 la SSE para $C$ es definida en la ecuación~(\ref{eq:SSE}) donde $c_k$ es el centroide del cluster $C_k$.
@@ -48,7 +48,7 @@ El centroide del $k$-ésimo cluster, $c_k$, quedaría entonces definido según l
     c_{k}=\frac{1}{|C_k|}\sum_{x_{i}\in C_k}{x_i}
 \end{equation}
 
-Los pasos 3 y 4 del algoritmo~\ref{algorithm:KMeans} directamente intentan minimizar la SSE. El paso 3 forma clusters asignando los puntos al centroide más cercano, lo que minimiza el SSE de dicho conjunto de centroides.
+Los pasos 3 y 4 del algoritmo~\ref{algorithm:KMeans} directamente intentan minimizar la SSE. El paso 3 forma clusters asignando los puntos al centroide más cercano, lo que minimiza la SSE de dicho conjunto de centroides.
 Asimismo, el paso 4 recomputa los centroides, produciendo un nuevo conjunto de menor SSE, en correspondencia con la ecuación ~(\ref{eq:centroid}).
 Sin embargo, como se mencionó anteriormente, estos pasos solamente garantizan la convergencia de K-Means a un mínimo local de la función SSE, puesto que la optimizan partiendo de una selección específica de centroides y cantidad de estos, en lugar de todas las posibles opciones.
 
@@ -82,7 +82,7 @@ A continuación se mencionan algunos de los más generalizados.
     El número de clusters es seleccionado maximizando la función dada en la ecuación~(\ref{eq:CH}).
     $B(K)$ y $W(K)$ constituyen las sumas de los cuadrados de las distancias intra e inter-cluster respectivamente (dados $K$ clusters).
 
-    \item \textbf{Estadística de Brecha}\footnote{\textit{Gap Statistic} en inglés.}~\cite{Tibshirani01}: En este método se generan $B$ conjuntos de datos que sigan una distribución uniforme en el mismo intervalo que el original.
+    \item \textbf{Estadística de Brecha}\footnote{\textit{Gap Statistic} en inglés.}~\cite{Tibshirani01}: En este método se generan $B$ conjuntos de datos que siguen una distribución uniforme en el mismo intervalo que los valores del original.
     Sea $W_{b}^{*}(K)$ la suma de los cuadrados de las distancias intra-cluster del $b$-ésimo conjunto de datos, se plantea entonces la siguiente ecuación:
     \begin{equation}
         Gap(K) = \frac{1}{B} \times\sum_{b}{\log(W_{b}^{*}(K)) - \log(W(K))}
@@ -113,7 +113,7 @@ A continuación se mencionan algunos de los más generalizados.
 
 \subsubsection{Complejidad espacial y temporal}
 
-Los requerimientos de espacio de memoria para K-Means son relativamente pequeños puesto que solamente los puntos de datos y los centroides son almacenados por el algoritmo.
+Los requerimientos de espacio de memoria para K-Means son relativamente pequeños puesto que solamente los puntos y los centroides son almacenados por el algoritmo.
 Específicamente, la cantidad de memoria empleada es $O((n+K)m)$, donde $n$ es el número de puntos y $m$ la cantidad de atributos (dimensionalidad) de estos.
 Los requisitos de tiempo de este algoritmo son igualmente bajos, es básicamente lineal respecto al tamaño del conjunto de datos.
 En particular, el tiempo requerido es $O(I \cdot K \cdot m \cdot n)$, donde $I$ es el número de iteraciones necesarias para converger.
