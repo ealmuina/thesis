@@ -46,7 +46,7 @@ Otro enfoque consiste en, dado un valor $k$, fijar como vecinos de un punto los 
 
 El primer paso del algoritmo consiste en hallar los puntos más cercanos a cada punto $x_i$, expresando luego a $x_i$ como una combinación lineal de estos.
 De modo que se cumpla que $x_i =\sum_j {w_{ij}x_j}$, donde $\sum_j w_{ij}=1$ y $w_{ij} = 0$ si $x_j$ no es un vecino cercano de $x_i$.
-La matriz de pesos $W$, con coeficientes $w_{ij}$ es encontrada minimizando el error cuadrático medio, dado por la ecuación:
+La matriz de pesos $W$, con coeficientes $w_{ij}$ es encontrada minimizando la función de costo $error(W)$, dada por la ecuación:
 
 \begin{equation}
     error(W) = \sum_i \left( x_i - \sum_j {w_{ij}x_j} \right)^2
@@ -60,4 +60,4 @@ entonces se busca $Y$ tal que minimice la siguiente expresión:
     error(Y) = \sum_i \left( y_i - \sum_j {w_{ij}y_j} \right)^2
 \end{equation}
 
-Es decir, la nueva representación del conjunto de datos minimiza el error cuadrático medio a partir de los pesos encontrados para la representación original.
+Es decir, la nueva representación del conjunto de datos minimiza la función de costo $error(Y)$ a partir de los pesos encontrados para la representación original.
