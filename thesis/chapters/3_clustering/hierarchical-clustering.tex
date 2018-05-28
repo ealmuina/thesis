@@ -11,7 +11,7 @@ Existen dos clasificaciones para los algoritmos de clustering jerárquico de acu
     Requiere un criterio para decidir cuál cluster dividir en cada paso y cómo redistribuir a sus miembros entre los dos clusters resultantes.
 \end{itemize}
 
-Debido al modo en que se ejecutan los algoritmos de clustering jerárquico, su ejecución sobre un conjunto de datos puede ser visualizado gráficamente mediante diagramas llamados \textit{dendrogramas}, que representan las relaciones entre cada cluster y los sub-clusters formados a partir de este durante los distintos pasos del algoritmo.
+Debido al modo en que se ejecutan los algoritmos de clustering jerárquico, su ejecución sobre un conjunto de datos puede ser visualizado gráficamente mediante diagramas llamados \textit{dendrogramas}, que representan las relaciones entre cada cluster y los sub-clusters formados a partir de él durante los distintos pasos del algoritmo.
 
 Las técnicas de clustering aglomerativas son las más estudiadas~\cite{Tan05}, y serán las abordadas en esta sección.
 
@@ -41,7 +41,7 @@ Este concepto constituye la diferencia entre los distintos algoritmos de cluster
     \centering
     \includegraphics[width=\textwidth]{agglomerative-clustering.png}
     \caption{Ejemplo de aplicación de algoritmos de clustering aglomerativo. (a) Matriz de similaridad para un conjunto de datos de 4 puntos.
-    Dendrogramas obtenidos a partir de este conjunto usando los métodos de clustering aglomerativo (b) single link y (c) complete link. (Tomado de~\cite{Aggarawal13})}
+    Dendrogramas obtenidos a partir del conjunto usando los métodos de clustering aglomerativo (b) single link y (c) complete link. (Tomado de~\cite{Aggarawal13})}
 \end{figure}
 
 \textbf{Group averaged}\footnote{También conocido como \textit{Average linkage}.} es una tercera variante de clustering aglomerativo.
@@ -52,7 +52,7 @@ Una variación que busca compensar esta dificultad es la técnica nombrada \text
 \subsubsection{Método de Ward}
 
 El método de Ward es una propuesta para el cálculo de la distancia entre dos clusters usado en el clustering aglomerativo.
-Utiliza la ecuación~(\ref{eq:SSE}) de la SSE para medir la distancia entre dos clusters como el incremento que produce en este valor unir dichos clusters.
+Utiliza la ecuación~(\ref{eq:SSE}) de la SSE para medir la distancia entre dos clusters como el incremento que produce en dicho valor unir dichos clusters.
 
 Al igual que K-Means, este método intenta minimizar la suma de los cuadrados de las distancias de cada punto al centroide de su cluster.
 
@@ -64,7 +64,7 @@ La complejidad de memoria requerida por estos algoritmos es, por tanto, $O(n^2)$
 
 En cuanto al tiempo, el cálculo de la matriz de distancias es $O(n^2)$.
 Los pasos 3 y 4 requieren $n-1$ iteraciones puesto que existen $n$ clusters al comienzo, y en cada paso se unen dos, reduciéndose en uno la cantidad de clusters en cada momento.
-Si el paso 3 es realizado como una búsqueda lineal sobre la matriz, entonces este requerirá un tiempo $O((n-i+1)^2)$ en la $i$-ésima iteración.
+Si el paso 3 es realizado como una búsqueda lineal sobre la matriz, entonces requerirá un tiempo $O((n-i+1)^2)$ en la $i$-ésima iteración.
 El paso 4 solo requiere un tiempo $O(n-i+1)$ para actualizar la matriz luego de unir dos clusters.
 Sin efectuar ninguna modificación, esto lleva a una complejidad temporal total $O(n^3)$.
 Aunque aplicando mejoras como el empleo de estructuras de datos alternativas para almacenar la matriz y optimizar la búsqueda del paso 3, esta complejidad puede disminuirse hasta $O(n^2\log{n})$~\cite{Tan05}.

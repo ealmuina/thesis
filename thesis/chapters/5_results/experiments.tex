@@ -3,13 +3,13 @@
 Para desarrollar los experimentos, se conformaron tres conjuntos de datos con segmentos correspondientes a vocalizaciones de dos \textit{clases} taxonómicas (aves e insectos) y un \textit{orden} taxonómico (murciélagos) respectivamente.
 En las tablas~\ref{table:bats-dataset},~\ref{table:birds-dataset} y~\ref{table:insects-dataset} se describen las especies que componen cada uno de estos conjuntos.
 Un cuarto conjunto de datos fue constituido a partir de la unión de los anteriores.
-De esta forma se comprobó la variación en los resultados en dependencia del grado de parentesco existente entre las especies presentes en los conjuntos de datos.
+De este modo se comprobó la variación de los resultados en dependencia del grado de parentesco existente entre las especies presentes en los conjuntos de datos.
 Todos los segmentos se extrajeron de forma manual a partir de grabaciones de mayor duración.
 
 La diversidad de sonidos que pueden producir los individuos de una misma especie, hace que en la clasificación de los segmentos no baste con recoger simplemente el nombre de la especie de la que proceden.
-Por tal razón, se empleó además un identificador para distinguir entre tipos de vocalizaciones diferentes aun cuando estas pudieran provenir de individuos pertenecientes a la misma especie.
+Por tal razón, se empleó además un identificador para distinguir entre tipos de vocalizaciones diferentes que pudieran provenir de individuos pertenecientes a la misma especie.
 De esta forma es posible evaluar mejor los resultados de los algoritmos abordados en este trabajo;
-pudiendo distinguirse así entre situaciones en que el algoritmo separó incorrectamente dos clusters de aquellas en que dicha acción tenía sentido por tratarse de tipos de vocalizaciones diferentes.
+pudiendo distinguirse así entre situaciones en que el algoritmo separó incorrectamente dos clusters de aquellas en que dicha acción tenía sentido por tratarse de tipos de vocalizaciones distintas.
 
 \section{Resultados}\label{sec:results}
 
@@ -41,10 +41,9 @@ Para los MFCC se empleó el vector obtenido al promediar cada uno de los coefici
 Los valores de algunas de las medidas de evaluación, aplicadas a los resultados obtenidos, aparecen resumidos en el Apéndice~\ref{ch:experimentsResults}.
 
 Los mejores valores del \textit{Adjusted Rand Index} (ARI) encontrados para los conjuntos de datos de murciélagos, aves, insectos y general, fueron de 0.85, 0.99, 0.98 y 0.86 respectivamente.
-Todos son elevados, especialmente los dos intermedios, lo que apunta a que los algoritmos de aprendizaje no supervisado pueden contribuir en el desarrollo del campo de la clasificación de señales bioacústicas.
+Todos son elevados, especialmente los dos intermedios, lo que apunta a que los algoritmos de aprendizaje no supervisado pueden contribuir en el estudio de las señales bioacústicas.
 
-En las figuras~\ref{img:bats},~\ref{img:birds},~\ref{img:insects} y~\ref{img:all} se resume la evaluación de los resultados aplicando el medidor ARI;
-para tres de estas combinaciones: la conformada por todas las características de la 1 a la 13 (nombradas características \textit{descriptivas}), la que solamente incluye los MFCC, y la que incluye a las 14 características.
+En las figuras~\ref{img:bats},~\ref{img:birds},~\ref{img:insects} y~\ref{img:all} se resume la evaluación de los resultados aplicando el medidor ARI, para tres de las combinaciones de descriptores: la conformada por todas las características de la 1 a la 13 (nombradas características \textit{descriptivas}), la que solamente incluye los MFCC, y la que incluye a las 14 características.
 
 \begin{figure}[!h]
     \centering
@@ -82,4 +81,4 @@ Puede apreciarse además que la selección del algoritmo no pesa tanto sobre la 
 En cuanto a la relación entre el parentesco taxonómico de las especies en el conjunto de datos y la evaluación de los resultados,
 los obtenidos en este trabajo muestran mejor comportamiento cuando la diferencia entre las especies se da al nivel de \textit{clase}.
 El resultado en el conjunto de los murciélagos soporta la hipótesis de que una relación más estrecha entre los elementos deteriora un poco la calidad del resultado.
-Lo mismo sucede en el conjunto de datos de muy alta diversidad de organismos.
+Lo mismo ocurre para el conjunto de datos de muy alta diversidad de organismos.

@@ -16,7 +16,7 @@ En este modo se ofrecen dos vistas diferentes:
 
 \begin{itemize}
     \item \textbf{Análisis de datos}: Vista enfocada al análisis de los patrones existentes en el conjunto de datos y los resultados producidos por diferentes algoritmos de clustering al aplicarse con determinadas configuraciones y características de audio. Puede observarse un ejemplo de esta vista en la figura~\ref{img:dataset-analysis}.
-    \item \textbf{Selección de las mejores características}: Esta vista permite determinar el conjunto de características de audio para el que se produce el resultado de mejor evaluación para un algoritmo de clustering dado. Un ejemplo de esta vista aparece en la figura~\ref{img:best-features}.
+    \item \textbf{Selección de las mejores características}: Vista que permite determinar el conjunto de características de audio para el que se produce el resultado de mejor evaluación para un algoritmo de clustering dado. Un ejemplo de esta vista aparece en la figura~\ref{img:best-features}.
 \end{itemize}
 
 \begin{figure}[!h]
@@ -34,13 +34,13 @@ En este modo se ofrecen dos vistas diferentes:
 \end{figure}
 
 Las opciones de configuración en la interfaz web, así como la presentación de los resultados, varían en dependencia de si se dispone o no de información sobre la clasificación real de los segmentos de audio del conjunto de datos sobre el que se realiza el análisis.
-Asimismo, en concordancia con dicha información se elige si será supervisado o no, el método para evaluar la calidad de los resultados de los algoritmos;
-que es usado en la selección de las características que mejor diferencian los distintos tipos de vocalizaciones presentes en el conjunto de datos.
+Asimismo, en concordancia con dicha información se elige si será supervisado o no, el método para evaluar la calidad de los resultados de los algoritmos.
+Dicho método es usado en la selección de las características que mejor diferencian los distintos tipos de vocalizaciones presentes en el conjunto de datos.
 
 \subsection{Interfaz de línea de comandos}\label{subsec:CLI}
 
-Mediante esta interfaz, usuarios de mayor experiencia empleando terminales de línea de comandos, pueden interactuar con la herramienta.
-Si bien el número de configuraciones que ofrece esta variante es equivalente al de la interfaz web;
+Mediante esta interfaz, usuarios de mayor experiencia empleando terminales de línea de comandos pueden interactuar con la herramienta.
+Si bien el número de configuraciones que ofrece es equivalente al de la interfaz web;
 a diferencia de en aquella, las configuraciones no son introducidas de forma manual por el usuario, sino que se reciben en un fichero en formato \textit{JSON}.
 Ello ofrece mayor rapidez en la ejecución de pruebas con variaciones en la configuración de la herramienta, y que dichas configuraciones puedan ser conservadas en disco para futuras réplicas de los resultados.
 
@@ -54,4 +54,4 @@ La librería de Python constituye la base sobre la que fueron implementadas las 
 Se trata de una capa de abstracción entre el código que se encarga de la capa de presentación y el que realiza el cómputo científico.
 
 Esta interfaz ofrece las mismas prestaciones que las ya mencionadas.
-Su propósito radica en que puede ser empleada como base sobre la que implementar nuevas interfaces de interacción con el usuario, o para añadir las funcionalidades que provee la herramienta \textit{Clusterapp} directamente dentro de las interfaces de otras aplicaciones.
+Su propósito radica en que puede ser empleada como base para implementar nuevas interfaces de interacción con el usuario, o para añadir las funcionalidades que provee la herramienta \textit{Clusterapp} directamente dentro de las interfaces de otras aplicaciones.

@@ -1,4 +1,4 @@
-Para procesar una señal esta a menudo es dividida en pequeños segmentos, conocidos como \textit{tramas}\footnote{\textit{Frames} en inglés.}, de longitud constante y espaciados en intervalos de tiempo iguales.
+Para procesar una señal a menudo es dividida en pequeñas porciones, conocidas como \textit{tramas}\footnote{\textit{Frames} en inglés.}, de longitud constante y espaciadas en intervalos de tiempo iguales.
 Se denota por $N$ la cantidad de muestras de la señal que contiene una trama;
 de esta forma la duración de una trama será de $N/F_s$.
 Asimismo, $M$ es la cantidad de muestras en que difieren dos tramas consecutivas, conocida como \textit{tamaño de paso}, y que usualmente es menor que $N$.
@@ -17,7 +17,7 @@ Dada la señal $s[n]$, una trama que comienza en la muestra $m$ es obtenida como
 \end{equation}
 
 La elección de la ventana $w(n)$ tiene un efecto en los resultados de operaciones posteriores sobre las tramas obtenidas.
-En la práctica, algunos métodos de procesamiento, como la transformada de Fourier producen mejores resultados cuando se emplean funciones que se aproximan a cero en sus extremos, como la de \textit{Hamming} (tabla~\ref{table:window-function}).
+En la práctica, algunos métodos de procesamiento como la transformada de Fourier producen mejores resultados cuando se emplean funciones que se aproximan a cero en sus extremos, como la de \textit{Hamming} (tabla~\ref{table:window-function}).
 
 \begin{table}[H]
     \centering

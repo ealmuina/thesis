@@ -26,7 +26,7 @@ La elección de la medida de proximidad para calcular el centroide más cercano 
 Medidas como la distancia Manhattan (norma $L_1$), la distancia euclidiana (norma $L_2$) y la similitud coseno son frecuentemente empleadas, especialmente la segunda.
 Tanto la medida de proximidad como el valor de $K$ son determinantes en la configuración de clusters producida por K-Means.
 
-Si se analiza este algoritmo como un problema de optimización, entonces estaría minimizándose la función objetivo de K-Means conocida como \textit{Suma de Errores Cuadráticos} (SSE por sus siglas en inglés), cuya formulación matemática se presenta a continuación.
+Si se analiza el algoritmo como un problema de optimización, entonces estaría minimizándose la función objetivo de K-Means conocida como \textit{Suma de Errores Cuadráticos} (SSE por sus siglas en inglés), cuya formulación matemática se presenta a continuación.
 
 Dado un conjunto de datos $D={x_1,x_2,\dots,x_N}$ de $N$ puntos, y denotado el conjunto de clusters obtenido tras aplicar K-Means como $C={C_1,C_2,\dots,C_k,\dots,C_K}$;
 la SSE para $C$ es definida en la ecuación~(\ref{eq:SSE}) donde $c_k$ es el centroide del cluster $C_k$.
@@ -55,7 +55,7 @@ Sin embargo, como se mencionó anteriormente, estos pasos solamente garantizan l
 \subsubsection{Selección de centroides iniciales}
 
 En~\cite{MacQueen67} se propone un simple método de inicialización consistente en seleccionar los $K$ centroides de modo aleatorio.
-Este es ampliamente usado en la literatura por su sencillez, aunque tiene la desventaja de que puede producir resultados muy diferentes en varias corridas del algoritmo, algunos de mayor calidad que otros.
+Es ampliamente usado en la literatura por su sencillez, aunque tiene la desventaja de que puede producir resultados muy diferentes en varias corridas del algoritmo, algunos de mayor calidad que otros.
 
 Se han popularizado otras variantes de selección de los centroides, con el propósito de aumentar la efectividad y consistencia en los resultados de K-Means.
 Uno de ellos es tomar una muestra de puntos y agruparlos empleando una técnica de clustering jerárquico.
@@ -68,7 +68,7 @@ Luego, se selecciona el punto más alejado de los centroides formados con anteri
 \subsubsection{Estimación del número de clusters}
 
 K-Means es un algoritmo extremadamente dependiente del valor de $K$ seleccionado por el usuario.
-La decisión de tal número constituye uno de los mayores desafíos, si no el mayor, al hacer uso de este algoritmo.
+La decisión de tal número constituye uno de los mayores desafíos, si no el mayor, al hacer uso del algoritmo.
 Es por esto que numerosos trabajos se han enfocado en el área de determinar el $K$ más apropiado, y varios métodos han sido desarrollados con tal propósito.
 A continuación se mencionan algunos de los más generalizados.
 

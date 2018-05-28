@@ -1,5 +1,6 @@
-Este tipo de características, que describen las propiedades de la señal en el dominio del tiempo, son muy simples;
+Las características temporales, que describen las propiedades de la señal en el dominio del tiempo, son muy simples;
 y se computan directamente a partir de la señal digitalizada.
+A continuación se mencionan varias de ellas.
 
 \subsection{Log-Attack Time}\label{subsec:log-attackTime}
 
@@ -25,7 +26,7 @@ Para computar esta característica se divide la señal en tramas no superpuestas
 
 El \textit{audio waveform} (AWF)~\cite{Kim05,Manjunath02} de la señal consistirá en un vector con los pares calculados, correspondientes a cada una de dichas tramas.
 
-La extracción de esta característica puede ser vista como un modo de <<compresión>> de la señal.
+La extracción del AWF puede ser vista como un modo de <<compresión>> de la señal.
 Si se toma $N=1$ se obtendrá la propia señal, mientras que a medida que se seleccionen valores de $N$ más altos, el número de valores resultantes será cada vez menor, obteniéndose una representación reducida de la señal original.
 El AWF puede representarse gráficamente como un conjunto de segmentos con extremos en los valores de la tupla correspondiente y ubicados según el momento en que ocurren en la señal (figura~\ref{img:awf+ap}).
 

@@ -2,8 +2,8 @@ Los \textit{Mel Frequency Cepstral Coefficients} (MFCC)~\cite{Davis80} son coefi
 Su objetivo es caracterizar el contenido relevante de la señal, obviando aquellas características que poseen información poco valiosa como el ruido de fondo, emociones, volumen, tono, etc.
 Si bien fueron desarrollados para tareas asociadas al reconocimiento automático del habla, igualmente han tenido una amplia aplicación en áreas relacionadas al procesamiento de señales musicales y bioacústicas~\cite{Clemins05,Cowling03,Dufour14,Fagerlund07,Lee06,Li01,McKinney03,Mitrovic06}.
 
-Los MFCC se basan en la característica del sistema auditivo humano que provoca que para este sea más difícil discernir entre dos frecuencias cercanas cuanto más altas ellas sean.
-La \textbf{escala Mel} (figura~\ref{img:mel-scale}) fue desarrollada con el propósito de representar dicha propiedad, permitiendo medir las frecuencias de un modo más acorde a la percepción humana de estas, mediante el uso de la unidad de medida conocida como \textit{mel}.
+Los MFCC se basan en la característica del sistema auditivo humano que provoca que le sea más difícil discernir entre dos frecuencias cercanas cuanto más altas ellas sean.
+La \textbf{escala Mel} (figura~\ref{img:mel-scale}) fue desarrollada con el propósito de representar dicha propiedad, permitiendo medir las frecuencias de un modo más acorde a la percepción humana, mediante el uso de la unidad de medida conocida como \textit{mel}.
 
 \begin{figure}[!h]
     \centering
@@ -21,7 +21,7 @@ La conversión de hertz ($f$) a mel ($m$) se realiza aplicando la ecuación~(\re
     f = 700\left( 10^{m/2595} - 1 \right)
 \end{gather}
 
-Una ventaja de la escala Mel es que permite definir los llamados \textbf{bancos de filtros de Mel}, mediante los cuales se <<resume>> la energía de una señal en $M$ bandas repartidas en correspondencia con esta escala (más distanciadas a medida que las frecuencias se hacen mayores).
+Una ventaja de la escala Mel es que permite definir los llamados \textbf{bancos de filtros de Mel}, mediante los cuales se <<resume>> la energía de una señal en $M$ bandas repartidas en correspondencia con dicha escala (más distanciadas a medida que las frecuencias se hacen mayores).
 Para ello, se divide el intervalo de frecuencias presente en la señal en $M+2$ puntos igualmente distanciados.
 A continuación se convierten a Mel, de forma que ahora estos estarán situados a distancias correspondientes a la percepción humana de las frecuencias.
 Luego, los $M$ filtros son definidos mediante la siguiente fórmula:
@@ -66,7 +66,7 @@ A partir de todo lo anterior puede plantearse el procedimiento para el cálculo 
 
 Los pasos del 1 al 4 cumplen la meta de lograr un <<resumen>> de la energía presente en la señal que se corresponda con la percepción humana del sonido.
 El paso número 5, persigue eliminar la correlación entre los coeficientes.
-Gracias a la aplicación de la DCT, se obtiene un vector de componentes independientes entre sí (no correlacionadas), y por lo tanto este puede ser utilizado en otros procedimientos que así lo requieran.
+Gracias a la aplicación de la DCT, se obtiene un vector de componentes independientes entre sí (no correlacionadas), y que por lo tanto puede ser utilizado en otros procedimientos que así lo requieran.
 
 La DCT se calcula mediante la siguiente ecuación:
 \begin{equation}
@@ -75,7 +75,7 @@ La DCT se calcula mediante la siguiente ecuación:
 \end{equation}
 
 Generalmente se usan bancos de entre 20 y 40 filtros, y solamente se conservan los primeros 12 o 13 coeficientes.
-Esto último debido a que la representación obtenida a partir de la aplicación de la DCT suele comprimir la información relevante en los primeros coeficientes, quedando poco valor en los más altos~\cite{Davis80}.
+Lo último es debido a que la representación obtenida a partir de la aplicación de la DCT suele comprimir la información relevante en los primeros coeficientes, quedando poco valor en los más altos~\cite{Davis80}.
 
 \begin{figure}[!h]
     \centering
@@ -101,4 +101,4 @@ El valor de la cantidad de tramas consecutivas a explorar ($T$) suele ser 2.
 Los coeficientes delta-delta pueden ser calculados de igual forma aplicando~(\ref{eq:delta}) a los delta en lugar de los MFCC\@.
 
 A menudo sucede que un segmento de audio está compuesto por más de una trama, de manera que los procedimientos que se han descrito en esta sección producen no un único vector de características sino uno por cada trama del segmento.
-Una posible solución a esta situación consiste en construir un único vector, con los promedios componente a componente de todos los de la secuencia obtenida~\cite{Fagerlund07,Lee06}.
+Una posible solución a tal situación consiste en construir un único vector, con los promedios componente a componente de todos los de la secuencia obtenida~\cite{Fagerlund07,Lee06}.

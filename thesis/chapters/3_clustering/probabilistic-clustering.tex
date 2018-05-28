@@ -120,7 +120,7 @@ En el caso particular de GMM, se puede aplicar empleando para ello las ecuacione
 Usualmente se toma como criterio de convergencia para este algoritmo que la variación de la log-verosimilitud respecto a la iteración anterior haya sido menor que un valor $\epsilon$ determinado, o se haya superado una cantidad máxima de iteraciones.
 
 La cantidad de iteraciones requeridas por EM para converger es mayor que las que toma K-Means~\cite{Park09}.
-Para acelerar la ejecución de este algoritmo, generalmente se realiza una corrida de K-Means sobre el conjunto de datos, y se toman las medias, varianzas y proporción de puntos en los clusters para inicializar los parámetros $\mu_k^0$, $\Sigma_k^0$ y $\pi_k^0$ respectivamente.
+Para acelerar la ejecución del algoritmo, generalmente se realiza una corrida de K-Means sobre el conjunto de datos, y se toman las medias, varianzas y proporción de puntos en los clusters para inicializar los parámetros $\mu_k^0$, $\Sigma_k^0$ y $\pi_k^0$ respectivamente.
 
 De forma similar a lo que ocurre con el algoritmo K-Means, EM puede caer en máximos locales en dependencia de los valores iniciales.
 

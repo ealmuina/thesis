@@ -17,12 +17,12 @@ Un cluster definido siguiendo el criterio de densidad de los puntos, consiste en
 \subsection{Densidad}\label{subsec:densidad}
 
 El algoritmo DBSCAN define la densidad de un punto como la cantidad de puntos localizados alrededor de este en un radio, $Eps$, específico.
-El propio punto es incluido en este conteo.
+El propio punto es incluido en el conteo.
 En la figura~\ref{img:dbscan} se puede observar gráficamente esta definición.
 En este caso número de puntos alrededor de $A$ es 7.
 
 El valor del radio es determinante en la densidad de un punto.
-Si este valor es suficientemente grande, entonces todos los puntos tendrán una densidad de $N$, el número de puntos en el conjunto de datos.
+Si es suficientemente grande, entonces todos los puntos tendrán una densidad de $N$, el número de puntos en el conjunto de datos.
 En cambio, si el radio es demasiado pequeño, la densidad de todos los puntos será igual a 1.
 Más adelante se discutirán algunas estrategias para la selección de valores apropiados para el radio.
 
@@ -37,7 +37,7 @@ De acuerdo con la densidad de un punto, estos pueden ser clasificados de la sigu
 
 \begin{itemize}
     \item \textbf{Puntos núcleo}: Constituyen puntos de la región interna de un cluster basado en densidad.
-    Un punto es núcleo si el número de puntos alrededor de este (incluyéndolo) supera o iguala un valor $MinPts$, especificado por el usuario.
+    Un punto es núcleo si el número de puntos a su alrededor (incluyéndolo) supera o iguala un valor $MinPts$, especificado por el usuario.
     En la figura~\ref{img:dbscan} los puntos identificados con la letra $A$ son núcleos para el radio $Eps$ indicado si $MinPts\leq 7$.
     \item \textbf{Puntos frontera}: Un punto frontera es aquel que no cumple el criterio de núcleo, pero que forma parte de la vecindad de al menos uno de estos.
     En la figura~\ref{img:dbscan} $B$ es un punto frontera.
@@ -77,7 +77,7 @@ Un criterio para determinar los parámetros es mediante la observación del comp
 Si un punto pertenece a un cluster, entonces su $k$-distancia debe ser un valor relativamente pequeño, siempre que $k$ no sea mayor que el tamaño del cluster.
 
 Si las densidades de los clusters no difieren radicalmente, en promedio, los valores de la $k$-distancias para puntos que pertenezcan a algún cluster no mostrarán un rango de valores muy amplio.
-En cambio, para puntos que no pertenezcan a ningún cluster, es decir, de ruido, este valor sí estará situado muy por encima del rango antes mencionado.
+En cambio, para puntos que no pertenezcan a ningún cluster, es decir, de ruido, el valor sí estará situado muy por encima del rango antes mencionado.
 De esta forma, si se toman todos los puntos de un conjunto de datos, se les ordena por su $k$-distancia y estas se representan en una gráfica (figura~\ref{img:dbscan-k-dist}), se debería obtener una imagen donde existirá un punto de inflexión que se corresponda con el valor de la $k$-distancia a partir del cual los puntos se encuentran fuera de algún cluster.
 Puede entonces tomarse dicho valor como el $Eps$ adecuado para el problema en cuestión.
 En cuanto al valor de $MinPts$, este sería precisamente el $k$ seleccionado para calcular las distancias, pues los puntos cuya $k$-distancia sea menor que $Eps$ serán etiquetados como núcleos, mientras los demás serán fronteras o ruido.
@@ -89,7 +89,7 @@ En cuanto al valor de $MinPts$, este sería precisamente el $k$ seleccionado par
     \label{img:dbscan-k-dist}
 \end{figure}
 
-Es importante notar que el valor de $Eps$ resultante de este proceso dependerá del $k$ seleccionado al inicio.
+Es importante notar que el valor de $Eps$ resultante del proceso dependerá del $k$ seleccionado al inicio.
 Si $k$ es muy pequeño, algunos puntos de ruido situados muy próximos entre sí pudieran ser etiquetados incorrectamente como clusters.
 Por otra parte, si $k$ es demasiado grande, aquellos clusters cuya cantidad de elementos sea menor que $k$ no serán identificados correctamente.
 
@@ -216,4 +216,4 @@ En cuanto al espacio de memoria, se necesita $O(m n)$ para almacenar el conjunto
 El paso 2, teniendo en cuenta que el grafo no requiere ser computado y almacenado en memoria por completo, sino arista por arista;
 requiere una cantidad de memoria $O(n)$.
 Los siguientes pasos, solo necesitan tener en memoria en un mismo momento un nivel dado de la jerarquía, lo que ocupa un espacio $O(n)$.
-De esta forma, se concluye que la complejidad de memoria del algoritmo es $O(m n)$~\cite{Campello15}.
+De tal forma, se concluye que la complejidad de memoria del algoritmo es $O(m n)$~\cite{Campello15}.

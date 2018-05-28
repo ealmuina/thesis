@@ -16,7 +16,7 @@ Mediante su análisis se pueden detectar con facilidad los instantes de tiempo c
     \label{img:oscillogram}
 \end{figure}
 
-Una importante clase de sonidos son aquellos que consisten en oscilaciones que se repiten de forma periódica.
+Una importante clase de sonidos es la de aquellos que consisten en oscilaciones que se repiten de forma periódica.
 La duración de una de estas oscilaciones es conocida como su \textit{período} (medido en segundos), cuya medida inversa es la \textit{frecuencia}, mencionada con anterioridad.
 Otro grupo de señales sonoras, llamadas \textit{armónicas} es igualmente interesante, pues se trata de aquellas compuestas por la combinación de varias oscilaciones periódicas cuyas frecuencias son todas múltiplos de la más baja presente en la señal.
 Existen, asimismo, otros sonidos de características aleatorias y que no se repiten periódicamente, llamados \textit{ruidos}.
@@ -33,26 +33,26 @@ Esta transformada puede ser igualmente computada sobre pequeñas tramas de tiemp
 \end{figure}
 
 Para el procesamiento computacional de una señal, esta debe ser llevada del dominio analógico al digital, para lo cual se discretiza mediante observaciones realizadas a intervalos regulares.
-Los pasos más importantes en esta conversión de la señal de un dominio a otro son:
+Los pasos más importantes en la conversión de la señal de un dominio a otro son:
 
 \begin{enumerate}
     \item \textbf{Filtrado}: La señal analógica se \textit{filtra} con el propósito de limitar las frecuencias presentes al intervalo $[0,B]$, donde $B$ es la frecuencia \textit{máxima} o \textit{de corte}.
     \item \textbf{Muestreo}: Se digitaliza la señal resultante del paso anterior.
-    Se emplea una \textit{frecuencia de muestreo} $F_s = 2B$, es decir, se toman $2B$ observaciones de la señal en cada segundo; esto evita la ocurrencia del fenómeno conocido como \textit{aliasing}\footnote{Se llama \textit{aliasing} al efecto que causa que señales continuas distintas se tornen indistinguibles cuando se muestrean digitalmente, si la tasa de muestreo es menor que el doble de la frecuencia más alta.
+    Se emplea una \textit{frecuencia de muestreo} $F_s = 2B$, es decir, se toman $2B$ observaciones de la señal en cada segundo. Esto evita la ocurrencia del fenómeno conocido como \textit{aliasing}\footnote{Se llama \textit{aliasing} al efecto que causa que señales continuas distintas se tornen indistinguibles cuando se muestrean digitalmente, si la tasa de muestreo es menor que el doble de la frecuencia más alta.
     Cuando esto sucede, la señal original no puede ser reconstruida de forma unívoca a partir de la señal digital.}.
     \item \textbf{Cuantificación}: La señal digital es \textit{cuantificada}, o sea los valores obtenidos en la fase de muestreo son restringidos a un intervalo dado, lo que limita el espacio de almacenamiento ocupado por cada muestra.
 \end{enumerate}
 
-Para una calidad de audio de CD se emplean valores de muestreo $F_s = 44.1$ kHz y una cuantificación de 16 bits por muestra.
+Para una calidad de audio de disco compacto (CD) se emplean valores de muestreo $F_s = 44.1$ kHz y una cuantificación de 16 bits por muestra.
 
 Los algoritmos de inteligencia artificial tradicionalmente operan con vectores numéricos, llamados \textit{vectores de características}.
 Si bien luego de digitalizada una señal puede considerarse como un vector numérico, no resulta propicio trabajar con esta directamente por lo grande y variable que resulta su tamaño.
-En las siguientes secciones se analizan los procedimientos mediante los cuales una señal de audio digital es transformada en una secuencia de tales vectores, más adecuados para su procesamiento mediante técnicas de inteligencia artificial.
+En las siguientes secciones se analizan los procedimientos mediante los cuales una señal de audio digital es transformada en una secuencia de tales vectores, más adecuados para su procesamiento con técnicas de inteligencia artificial.
 
 Al procesar una grabación sonora, determinados intervalos de tiempo y/o frecuencias pueden resultar más <<importantes>> que otros.
 Estas secciones, conocidas como \textit{segmentos}, permiten establecer una correspondencia entre un evento de sonido y un individuo de una especie dada.
-La segmentación, por lo tanto, simplifica la tarea de clasificar una señal acústica;
-y las operaciones de procesamiento y extracción de características que se mencionan en lo adelante se aplican sobre dichos segmentos.
+La \textit{segmentación}, por lo tanto, simplifica la tarea de clasificar una señal acústica.
+Las operaciones de procesamiento y extracción de características mencionadas en lo adelante se aplican sobre dichos segmentos, llamados indistintamente \textit{señales}.
 
 \section{Tramas}\label{sec:frames}
 \input{chapters/1_features/frames}

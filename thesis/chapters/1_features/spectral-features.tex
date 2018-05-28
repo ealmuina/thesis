@@ -1,4 +1,4 @@
-Las características de esta categoría describen la representación de las señales de sonido en el dominio de las frecuencias.
+Las características espectrales describen la representación de las señales de sonido en el dominio de las frecuencias.
 
 Una trama $x[n]$, de longitud $N$, tiene una representación en el dominio de las frecuencias, o \textit{espectro}, que puede ser obtenida mediante la aplicación de la \textbf{transformada discreta de Fourier} (DFT por sus siglas en inglés):
 
@@ -14,7 +14,7 @@ El espectro $X[f]$ puede ser transformado de vuelta al dominio del tiempo aplica
     x[n] = \frac{1}{N}\sum_{f=0}^{N-1}{X[f]e^{\frac{i2\pi fn}{N}}}
 \end{equation}
 
-Al ser $x[n]$ un vector de valores reales, se puede aplicar sobre este una propiedad de la DFT que plantea que el vector $X[f]$ es, por tanto, conjugado simétrico, por lo que suelen considerarse solamente los últimos $\lceil (N+1)/2 \rceil$ valores de este.
+Al ser $x[n]$ un vector de valores reales, se puede aplicar una propiedad de la DFT que plantea que el vector $X[f]$ es por tanto conjugado simétrico, por lo que suelen considerarse solamente los últimos $\lceil (N+1)/2 \rceil$ valores de este.
 
 La posición $k$-ésima del vector $X[k]$ contiene la amplitud correspondiente a la frecuencia $k\cdot(F_s/N)$ en la señal.
 
@@ -31,7 +31,7 @@ Algunas de las características más simples que pueden obtenerse directamente a
     La relación entre las amplitudes $A_1$ y $A_2$ está dada por la expresión $dB = 10\log(A_1/A_2)$.} respecto a la amplitud pico).
     \item \textbf{Bandwidth}: Diferencia entre las frecuencias máxima y mínima.
     \item \textbf{Cuartiles}: Caracteriza la distribución de energía en torno al espectro.
-    Está compuesta por tres componentes, cada una correspondiente a la frecuencia por debajo de la cual se sitúa el 25\%, el 50\% y el 75\% de la energía total del espectro respectivamente.
+    Está compuesta por tres componentes, cada una correspondiente a la frecuencia por debajo de la que se sitúa el 25\%, el 50\% y el 75\% de la energía total del espectro respectivamente.
 \end{itemize}
 
 \subsection{Spectral Shape}\label{subsec:spectralShape}
@@ -51,7 +51,7 @@ Puede computarse mediante la siguiente expresión:
 \end{equation}
 
 \noindent
-donde $K$ es la longitud del vector correspondiente a la DFT de la trama, y $f(k)$ frecuencia asociada a la posición $k$-ésima de este.
+donde $K$ es la longitud del vector correspondiente a la DFT de la trama, y $f(k)$ la frecuencia asociada a la posición $k$-ésima de este.
 
 \subsubsection{Spectral Spread}
 

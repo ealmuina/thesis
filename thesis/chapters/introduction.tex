@@ -8,13 +8,13 @@ El anterior es el caso de la Bioacústica, hija de la Biología y la Acústica, 
 Durante años la Bioacústica vio su labor dificultada por problemas de índole tecnológica, el desarrollo científico estuvo lastrado por el de los medios necesarios para procesar la información disponible.
 Esto ha cambiado recientemente con la introducción de dispositivos de grabación y almacenamiento de mayor calidad y capacidad y, especialmente, con la aplicación de técnicas de Inteligencia Artificial.
 
-Un factor que afectó el avance científico en esta área era que las señales debían ser procesadas por expertos en la materia, quienes tenían la engorrosa tarea de segmentar\footnote{Segmentar es el procedimiento de separar una grabación sonora en porciones (segmentos) en las que ocurren una o varias señales acústicas de interés.} y clasificar cada grabación con el propósito de determinar la ocurrencia de sonidos emitidos por ciertas especies de animales en estas.
+Un factor que afectó el avance científico en esta área era que las señales debían ser procesadas por expertos en la materia, quienes tenían la engorrosa tarea de segmentar\footnote{Segmentar es el procedimiento de separar una grabación sonora en porciones (segmentos) en las que ocurren una o varias señales acústicas de interés.} y clasificar cada grabación con el propósito de determinar la ocurrencia de sonidos emitidos por ciertas especies de animales.
 Los especialistas debían dedicar horas a ese procedimiento, haciendo poco factible el desarrollo de estudios que requirieran la detección de especies mediante tal proceder.
 Dichos estudios son muy necesarios para el desarrollo de proyectos ecológicos, medioambientales y de investigación de nuevas especies, sobre todo en lugares donde las condiciones geográficas y del entorno dificultan la observación directa.
 
 La Inteligencia Artificial ha sido vista como una posible solución a la problemática antes planteada.
 Son numerosos los estudios llevados a cabo con diferentes algoritmos de esta, para su aplicación en la detección y clasificación de señales bioacústicas~\cite{Gerhard03}.
-En general dichos algoritmos pueden ser clasificados en supervisados o no supervisados, de acuerdo a si requieren un conjunto de datos previamente procesados a partir de los cuales <<deducir>> el resultado para nuevos datos o no, respectivamente.
+En general los algoritmos pueden ser clasificados en supervisados o no supervisados, de acuerdo a si requieren un conjunto de datos previamente procesados a partir de los cuales <<deducir>> el resultado para nuevos datos o no, respectivamente.
 Algoritmos supervisados han sido ampliamente aplicados para la solución del problema en cuestión, quedando la pertinencia y calidad del uso de los no supervisados como un objeto de estudio abordado en pocos trabajos como~\cite{Jancovic13}.
 
 Entre las técnicas más estudiadas para la clasificación de señales bioacústicas se encuentran:
@@ -47,11 +47,11 @@ Para dar respuesta a esta interrogante, se plantean los siguientes objetivos:
 \begin{itemize}
     \item Presentar un estudio de los algoritmos de aprendizaje no supervisado, la validación de sus resultados, y su aplicación en el procesamiento de señales.
     \item Implementar una herramienta para el análisis de señales bioacústicas aplicando los algoritmos estudiados.
-    \item Aplicar la herramienta en conjuntos de datos de diferentes características, que representen una muestra de posibles escenarios donde esta pudiera ser de utilidad.
-    \item Establecer una comparación entre los resultados obtenidos, en correspondencia con el problema general (clasificación de señales de diversas especies) y restricciones de este (clasificación de señales en categorías de especies específicas).
+    \item Aplicar la herramienta en conjuntos de datos de diferentes características, que representen una muestra de posibles escenarios donde pudiera ser de utilidad.
+    \item Establecer una comparación entre los resultados obtenidos, en correspondencia con el problema general (clasificación de señales de diversas especies) y sus restricciones (clasificación de señales en categorías de especies específicas).
 \end{itemize}
 
-El presente trabajo se enfoca, por tanto, en el estudio de algoritmos de aprendizaje no supervisado y su aplicación en la clasificación\footnote{Existe una diferencia en el modo de entender la palabra \textit{clasificar} según si los algoritmos son o no supervisados. Para los primeros se entiende por \textit{clasificar} al acto de asociar cada elemento del conjunto de datos a una \textit{clase} conocida de antemano. Sin embargo para segundo caso, que ocupa este trabajo, \textit{clasificar} es la acción de asociar etiquetas arbitrarias (es decir sin significación por sí mismas), que coincidan para todos los elementos del conjunto de datos que se correspondan con una misma clase, cuyo nombre el algoritmo desconoce; de modo que los datos queden agrupados en categorías de elementos semejantes.} de señales bioacústicas.
+El presente trabajo se enfoca, por tanto, en el estudio de algoritmos de aprendizaje no supervisado y su aplicación en la clasificación\footnote{Existe una diferencia en el modo de entender la palabra \textit{clasificar} según si los algoritmos son o no supervisados. Para los primeros se entiende por \textit{clasificar} al acto de asociar cada elemento del conjunto de datos a una \textit{clase} conocida de antemano. Sin embargo para el segundo caso, que ocupa este trabajo, \textit{clasificar} es la acción de asociar etiquetas arbitrarias (es decir sin significación por sí mismas), que coincidan para todos los elementos del conjunto de datos que se correspondan con una misma clase, cuyo nombre el algoritmo desconoce; de modo que los datos queden agrupados en categorías de elementos semejantes.} de señales bioacústicas.
 
 \subsection*{Estructura del Trabajo}\label{subsec:estructuraDelTrabajo}
 
