@@ -8,7 +8,7 @@ from sklearn.decomposition import PCA
 from sklearn.manifold import MDS, Isomap, LocallyLinearEmbedding
 from sklearn.preprocessing import LabelEncoder, scale
 
-from clusterapp.features import Audio
+from codes.audio import Audio
 
 TESTING_DIR = '../sounds/testing'
 CATEGORIES = [

@@ -5,7 +5,7 @@ import seaborn as sns
 from matplotlib import collections as mc
 from matplotlib.ticker import MaxNLocator, FuncFormatter
 
-from clusterapp.features import Audio
+from codes.audio import Audio
 
 FS = 44100
 

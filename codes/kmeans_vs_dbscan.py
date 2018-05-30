@@ -6,56 +6,62 @@ import seaborn as sns
 from sklearn.cluster import KMeans, DBSCAN
 from sklearn.datasets.samples_generator import make_blobs
 
-sns.set()
-sns.set_style('white')
 
-# #############################################################################
-# Generate sample data
-np.random.seed(170)
-n_clusters = 3
+def main():
+    sns.set()
+    sns.set_style('white')
 
-X, y = make_blobs(n_samples=5000)
-transformation = [[0.60834549, -0.63667341], [-0.40887718, 0.85253229]]
-X = np.dot(X, transformation)
+    # #############################################################################
+    # Generate sample data
+    np.random.seed(170)
+    n_clusters = 3
 
-# #############################################################################
-# Compute clustering with K-Means
+    X, y = make_blobs(n_samples=5000)
+    transformation = [[0.60834549, -0.63667341], [-0.40887718, 0.85253229]]
+    X = np.dot(X, transformation)
 
-k_means = KMeans(n_clusters=n_clusters)
-k_means.fit(X)
+    # #############################################################################
+    # Compute clustering with K-Means
 
-# #############################################################################
-# Compute clustering with DBSCAN
+    k_means = KMeans(n_clusters=n_clusters)
+    k_means.fit(X)
 
-dbscan = DBSCAN(eps=0.15, min_samples=2)
-dbscan.fit(X)
+    # #############################################################################
+    # Compute clustering with DBSCAN
 
-# #############################################################################
-# Plot result
+    dbscan = DBSCAN(eps=0.15, min_samples=2)
+    dbscan.fit(X)
 
-algorithms = (
-    ('K-Means', k_means),
-    ('DBSCAN', dbscan)
-)
+    # #############################################################################
+    # Plot result
 
-fig = plt.figure(figsize=(8, 3))
-fig.subplots_adjust(left=0.02, right=0.98, bottom=0.05, top=0.9)
+    algorithms = (
+        ('K-Means', k_means),
+        ('DBSCAN', dbscan)
+    )
 
-for i, (name, algorithm) in enumerate(algorithms):
-    y_pred = algorithm.labels_.astype(np.int)
+    fig = plt.figure(figsize=(8, 3))
+    fig.subplots_adjust(left=0.02, right=0.98, bottom=0.05, top=0.9)
 
-    colors = np.array(list(islice(cycle(['#377eb8', '#ff7f00', '#4daf4a',
-                                         '#f781bf', '#a65628', '#984ea3',
-                                         '#999999', '#e41a1c', '#dede00']),
-                                  int(len(set(y_pred))))))
+    for i, (name, algorithm) in enumerate(algorithms):
+        y_pred = algorithm.labels_.astype(np.int)
 
-    ax = fig.add_subplot(1, 2, i + 1)
-    for k, col in zip(set(y_pred), colors):
-        my_members = y_pred == k
-        ax.scatter(X[:, 0], X[:, 1], s=0.5, color=colors[y_pred])
+        colors = np.array(list(islice(cycle(['#377eb8', '#ff7f00', '#4daf4a',
+                                             '#f781bf', '#a65628', '#984ea3',
+                                             '#999999', '#e41a1c', '#dede00']),
+                                      int(len(set(y_pred))))))
 
-    ax.set_title(name)
-    ax.set_xticks(())
-    ax.set_yticks(())
+        ax = fig.add_subplot(1, 2, i + 1)
+        for k, col in zip(set(y_pred), colors):
+            my_members = y_pred == k
+            ax.scatter(X[:, 0], X[:, 1], s=0.5, color=colors[y_pred])
 
-plt.show()
+        ax.set_title(name)
+        ax.set_xticks(())
+        ax.set_yticks(())
+
+    plt.show()
+
+
+if __name__ == '__main__':
+    main()
