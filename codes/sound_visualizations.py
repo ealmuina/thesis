@@ -23,12 +23,11 @@ def main():
     spec = spectrum(w(frame))
 
     sns.set_style("white")
-    fig = pl.figure(figsize=(12, 4))
+    fig, (ax1, ax2) = pl.subplots(1, 2, figsize=(12, 4))
     fig.subplots_adjust(left=0.07, right=0.97)
 
-    ax = fig.add_subplot(1, 2, 1)
-    ax.plot(spec[:250])
-    ax.set_title('(a)')
+    ax1.plot(spec[:250])
+    ax1.set_title('(a)')
 
     specs = []
 
@@ -40,9 +39,8 @@ def main():
     # we need to convert the list to an essentia.array first (== numpy.array of floats)
     specs = essentia.array(specs).T
 
-    ax = fig.add_subplot(1, 2, 2)
-    ax.imshow(specs[:80, :], aspect='auto', origin='lower', interpolation='none')
-    ax.set_title('(b)')
+    ax2.imshow(specs[:80, :], aspect='auto', origin='lower', interpolation='none')
+    ax2.set_title('(b)')
 
     fig.show()
 
