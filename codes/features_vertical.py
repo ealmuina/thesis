@@ -88,9 +88,9 @@ def main():
 
     audio = Audio(pathlib.Path('../sounds/sheep.wav'))
 
-    # plot_temporal_descriptors(audio)
-    # plot_spectral_descriptors(audio)
-    # plot_harmonic_descriptors(audio)
+    plot_temporal_descriptors(audio)
+    plot_spectral_descriptors(audio)
+    plot_harmonic_descriptors(audio)
     plot_mfccs(audio)
 
 
