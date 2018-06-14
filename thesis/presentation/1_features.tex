@@ -3,6 +3,28 @@
 \begin{frame}
     \frametitle{Extracción de características}
 
+    \begin{block}{Sonido}
+        Variación en la presión que ejerce el medio que lo transmite sobre su receptor.
+        \begin{itemize}
+            \item<2-> \textbf{Frecuencia}: Cantidad de vibraciones por segundo (medida en Hertz).
+            \item<3-> \textbf{Amplitud}: Intensidad de las vibraciones (medida arbitraria).
+        \end{itemize}
+    \end{block}
+
+    \begin{itemize}
+        \item<4-> \textit{Periódicos}.
+        \begin{itemize}
+            \item Período (en segundos)
+            \item Frecuencia (en Hertz)
+        \end{itemize}
+        \item<5-> \textit{Armónicos}.
+        \item<6-> \textit{Ruidos}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Extracción de características}
+
     \begin{columns}
         \column{0.5\textwidth}
 
@@ -11,11 +33,41 @@
             \includegraphics[width=\textwidth]{oscillogram+spectrum+spectrogram.png}
         \end{figure}
 
+        \pause
         \column{0.5\textwidth}
 
-        Hello, World!
+        Pasos para la conversión de una señal del dominio analógico al digital:
+        \begin{enumerate}
+            \item<3-> \textbf{Filtrado} al intervalo de frecuencias $[0,B]$.
+            \item<4-> \textbf{Muestreo} con frecuencia $F_s = 2B$.
+            \item<5-> \textbf{Cuantificación}.
+        \end{enumerate}
 
     \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Tramas}
+
+    \begin{itemize}
+        \item $N$: Cantidad de muestras de la señal que contiene una trama.
+        \item $M$: Cantidad de muestras diferentes en dos tramas consecutivas.
+    \end{itemize}
+
+    \pause
+    \begin{block}{Obtención de la trama que comienza en la muestra $m$}
+        \begin{equation*}
+            s[n]_m = \begin{cases}
+                         s[n + m]w(n) & 0\leq n\leq N-1 \\
+                         0 & \text{eoc.}
+            \end{cases}
+        \end{equation*}
+    \end{block}
+
+    $w(n)$ \textit{función de ventana}. La más simple es $w(n)=1$.
+
+    \pause
+    \alert{\textit{Hanning}: $w(n) = 0.50 - 0.50 \cdot \cos \left( \frac{2\pi n}{N-1} \right)$}
 \end{frame}
 
 \begin{frame}
@@ -31,9 +83,52 @@
 
         \column{0.5\textwidth}
 
-        Hello, World!
+        \begin{itemize}
+            \item<2-> \textbf{Audio Waveform}: Vector de pares con el máximo y mínimo valor presentes en tramas no superpuestas ($N=M$).
+            \item<3-> \textbf{Audio Power}: $AP = \frac{1}{N}\sum_{n=0}^{N-1}{|x[n]|^2}$
+        \end{itemize}
 
     \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Características temporales}
+
+    \begin{itemize}
+        \item<1-> \textbf{Log-Attack Time}: $LAT = \log_{10}{(stopAttack - startAttack)}$
+        \item<2-> \textbf{Temporal Centroid}: $TC = \frac{\sum_{t=0}^{T-1}{AP_t \cdot t}}{\sum_{t=0}^{T-1}{AP_t}}$
+        \item<3-> \textbf{Effective Duration}: Duración del intervalo de tiempo en que la señal es perceptible.
+        \item<4-> \textbf{Auto-correlation}: $AC_k = \frac{1}{x[0]^2}\sum_{n=0}^{N-k-1}{x[n]\cdot x[n+k]}$
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Características espectrales}
+
+    \begin{columns}
+        \column{0.5\textwidth}
+
+        \begin{block}{Transformada Discreta de Fourier}
+            \begin{equation*}
+                X[f] = \sum_{n=0}^{N-1}{x[n]e^{\frac{-i2\pi fn}{N}}}
+            \end{equation*}
+        \end{block}
+
+        \column{0.5\textwidth}
+
+        \begin{block}{Transformada Discreta Inversa}
+            \begin{equation*}
+                x[n] = \frac{1}{N}\sum_{f=0}^{N-1}{X[f]e^{\frac{i2\pi fn}{N}}}
+            \end{equation*}
+        \end{block}
+    \end{columns}
+
+    \begin{itemize}
+        \item<2-> Suelen considerarse solamente los últimos $\lceil (N+1)/2 \rceil$ valores de $X[n]$.
+        \item<3-> La posición $k$-ésima del vector $X[k]$ contiene la amplitud correspondiente a la frecuencia $k\cdot(F_s/N)$ en la señal.
+    \end{itemize}
+
 \end{frame}
 
 \begin{frame}
@@ -49,9 +144,76 @@
 
         \column{0.5\textwidth}
 
-        Hello, World!
+        \begin{itemize}
+            \item<2-> \textbf{Spectral Shape}:
+            \begin{itemize}
+                \item Spectral Centroid: Centro de masas del espectro
+                \item Spectral Spread: Dispersión del espectro
+                \item Spectral Roll-off: Frecuencia bajo la que se encuentra cierto porcentaje de la energía total
+            \end{itemize}
+            \item<3-> \textbf{Spectral Flux}
+            \item<4-> \textbf{Spectral Flatness}
+        \end{itemize}
 
     \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Características armónicas}
+
+    \begin{block}{Frecuencia Fundamental ($F_0$)}
+        Es la frecuencia más baja del espectro de frecuencias tal que las frecuencias dominantes en la señal pueden expresarse como múltiplos de ella.
+        Puede por tanto considerarse como la frecuencia de la señal armónica que mejor representa a la señal en cuestión.
+    \end{block}
+
+    \pause
+    \begin{columns}
+        \column{0.5\textwidth}
+
+        {\tiny
+        \begin{gather*}
+            d_t'(\tau) = \begin{cases}
+                             1 & \tau = 0 \\
+                             \frac{d_t(\tau)}{\frac{1}{\tau}{\sum_{j=1}^{\tau}{d_t(j)}}} & eoc.
+            \end{cases}\\
+            d_t(\tau) = \sum_{i=0}^{N-1}{(x[i]-x[i+\tau])^2}
+        \end{gather*}
+        }
+
+        \column{0.5\textwidth}
+
+        \textbf{Algoritmo YIN}:\\
+        $F_0$ es el valor $1/\tau$ tal que $\tau$ que minimiza la función $d_t'(\tau)$ para cada trama.
+
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Características armónicas}
+
+    \begin{block}{Picos armónicos}
+        Se localizan en torno a los múltiplos de $F_0$.
+        Se puede definir el $h$-ésimo pico armónico como el valor de la DFT de la señal localizado en la posición $k_h$ tal que:
+        \begin{equation*}
+            k_h = \argmax_{k\in [a_h,b_h]}|X[k]|
+        \end{equation*}
+    \end{block}
+
+    donde los extremos del intervalo $[a_h, b_h]$ están dados por las ecuaciones:
+
+    {\small
+    \begin{columns}
+        \column{0.5\textwidth}
+        \begin{equation*}
+            a_h = \text{floor}\left[ (h - nht)\frac{F_0}{\Delta F} \right]
+        \end{equation*}
+
+        \column{0.5\textwidth}
+        \begin{equation*}
+            b_h = \text{ceil}\left[ (h + nht)\frac{F_0}{\Delta F} \right]
+        \end{equation*}
+    \end{columns}
+    }
 \end{frame}
 
 \begin{frame}
@@ -67,7 +229,11 @@
 
         \column{0.5\textwidth}
 
-        Hello, World!
+        \begin{itemize}
+            \item<1-> \textbf{Inharmonicity}: Divergencia de las frecuencias que componen la señal respecto a los múltiplos de $F_0$.
+            \item<2-> \textbf{Odd to Even Harmonic Energy Ratio}: Proporción entre múltiplos impares y pares de $F_0$.
+            \item<3-> \textbf{Tristimulus}: Equivalente a los atributos de color en la visión.
+        \end{itemize}
 
     \end{columns}
 \end{frame}
