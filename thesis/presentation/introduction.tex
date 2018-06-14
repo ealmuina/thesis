@@ -1,0 +1,61 @@
+\begin{frame}
+    \frametitle{Introducción}
+
+    \begin{block}{Bioacústica}
+        Ciencia multidisciplinaria que combina la biología y la acústica.
+        Usualmente se refiere a la investigación de la producción del sonido, su dispersión a través de un medio y su recepción en animales (incluyendo los humanos).
+    \end{block}
+
+    \pause
+
+    Enfrenta dificultades como:
+    \begin{itemize}
+        \item Duración de las grabaciones.
+        \item Ruido de fondo.
+        \item Variaciones en los parámetros de sonidos de igual clasificación.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Introducción}
+
+    \begin{columns}
+        \column{0.5\textwidth}
+        Aprendizaje supervisado:
+        \column{0.5\textwidth}
+        Aprendizaje no supervisado:
+    \end{columns}
+
+    \begin{columns}
+        \pause
+        \column{0.5\textwidth}
+
+        \begin{itemize}
+            \item Algoritmos que requieren una fase previa de \textit{entrenamiento}, utilizando un conjunto de datos clasificados con anterioridad.
+            \item Redes neuronales, K-Nearest Neighbours (KNN), Support Vector Machines (SVM), árboles de decisión, Naive Bayes\ldots
+        \end{itemize}
+
+        \pause
+        \column{0.5\textwidth}
+
+        \begin{itemize}
+            \item Algoritmos que no necesitan entrenamiento, por lo que pueden ser empleados cuando no se dispone de un conjunto de datos previamente clasificados.
+            \item No etiquetan el resultado con las clases verdaderas puesto que las desconocen.
+        \end{itemize}
+
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Introducción}
+
+    Características de los conjuntos de datos:
+    \begin{itemize}
+        \item Organismos de categorías taxonómicas específicas como \textit{aves} o \textit{primates}.
+        \item Comunidades de organismos diversas.
+    \end{itemize}
+
+    \begin{block}{Pregunta científica}
+        ¿En qué escenarios resulta propicia la aplicación de algoritmos de aprendizaje no supervisado para la clasificación automática de señales sonoras?
+    \end{block}
+\end{frame}
