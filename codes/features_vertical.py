@@ -67,17 +67,18 @@ def plot_harmonic_descriptors(audio):
 
 
 def plot_mfccs(audio):
-    fig, (ax1, ax2) = pl.subplots(2, 1, figsize=(6, 6))
-    fig.subplots_adjust(left=0.05, right=0.97)
+    fig, ax = pl.subplots(1, 1, figsize=(8, 3))
+    ax.plot([mel(x) for x in range(16000)])
+    ax.set_xlabel('hertz')
+    ax.set_ylabel('mels')
 
-    ax1.plot([mel(x) for x in range(16000)])
-    ax1.set_xlabel('hertz')
-    ax1.set_ylabel('mels')
+    fig.show()
 
-    ax2.imshow(audio.mfcc.T[1:, :], aspect='auto', origin='lower', interpolation='none')
-    ax2.set_title('MFCC')
-    ax2.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: int(x + 1)))
-    ax2.yaxis.set_major_locator(MaxNLocator(integer=True))
+    fig, ax = pl.subplots(1, 1, figsize=(6, 6))
+    ax.imshow(audio.mfcc.T[1:, :], aspect='auto', origin='lower', interpolation='none')
+    ax.set_title('MFCC')
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: int(x + 1)))
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
     fig.show()
 

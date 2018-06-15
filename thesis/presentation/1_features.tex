@@ -242,16 +242,118 @@
     \frametitle{Mel Frequency Cepstral Coefficients}
 
     \begin{columns}
+        \pause
+        \column{0.5\textwidth}
+
+        \begin{itemize}
+            \item Caracterizar el contenido relevante de la señal, obviando características que aportan poca información.
+            \begin{itemize}
+                \item ruido de fondo
+                \item emociones
+                \item volumen
+                \item tono
+            \end{itemize}
+            \item Desarrollada para el reconocimiento automático del habla humana.
+        \end{itemize}
+
+        \pause
         \column{0.5\textwidth}
 
         \begin{figure}[!h]
             \centering
-            \includegraphics[width=\textwidth]{mel-scale+mfcc.png}
+            \includegraphics[width=\textwidth]{mel-scale-wide.png}
         \end{figure}
 
-        \column{0.5\textwidth}
-
-        Hello, World!
+        \begin{block}{Escala Mel}
+            \begin{equation*}
+                m = 2595\log_{10}\left( 1 + \frac{f}{700} \right)
+            \end{equation*}
+        \end{block}
 
     \end{columns}
 \end{frame}
+
+\begin{frame}
+    \frametitle{Mel Frequency Cepstral Coefficients}
+
+    \begin{columns}
+        \pause
+        \column{0.5\textwidth}
+
+        \begin{block}{Banco de filtros de Mel}
+            \begin{itemize}
+                \item Se divide el intervalo de frecuencias en M + 2 puntos.
+                \item Se convierten a Mel.
+            \end{itemize}
+        \end{block}
+
+        \pause
+        \column{0.5\textwidth}
+
+        {\small
+        \begin{equation*}
+            H_m(k) = \begin{cases}
+                         0 & k < f_{m-1} \\
+                         \frac{k-f_{m-1}}{f_m - f_{m-1}} & f_{m-1}\leq k\leq f_m \\
+                         \frac{f_{m+1}-k}{f_{m+1}-f_m} & f_m \leq k\leq f_{m+1} \\
+                         0 & k > f_{m+1} \\
+            \end{cases}
+        \end{equation*}
+        }
+    \end{columns}
+
+    \pause
+
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[width=0.8\textwidth]{mel-filters.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Mel Frequency Cepstral Coefficients}
+
+    \begin{enumerate}
+        \item<1-> Descomponer la señal $s[n]$ en tramas $s[n]_m = x[n]$.
+        \item<2-> Por cada trama calcular la potencia espectral, cuya $k$-ésima componente se calcula por
+        \begin{equation*}
+            P[k] = \frac{|X[k]|^2}{K}
+        \end{equation*}
+        \item<3-> Aplicar el banco de filtros de Mel a $P[k]$ y sumar las energías de cada filtro.
+        \item<4-> Calcular el logaritmo de las componentes (energías).
+        \item<5-> Aplicar la transformada de coseno discreta (DCT) al vector de los logaritmos.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Mel Frequency Cepstral Coefficients}
+
+    \begin{columns}
+        \column{0.5\textwidth}
+
+        \begin{block}{Transformada de Coseno Discreta}
+        {\small
+        \begin{equation*}
+            f[j] = \sum_{m=0}^{M-1}{e[m]\cos{\left[ \frac{\pi}{M}j\left( m + \frac{1}{2} \right) \right]}}
+        \end{equation*}
+        }
+        \end{block}
+
+        \begin{block}{Deltas}
+        {\small
+        \begin{equation*}
+            d_t = \frac{\sum_{n=1}^{T}{n(c_{t+n} - c_{t-n})}}{2\sum_{n=1}^{T}{n^2}}
+        \end{equation*}
+        }
+        \end{block}
+
+        \column{0.5\textwidth}
+
+        \begin{figure}[!h]
+            \centering
+            \includegraphics[width=\textwidth]{mfcc-square.png}
+        \end{figure}
+
+    \end{columns}
+\end{frame}
+
