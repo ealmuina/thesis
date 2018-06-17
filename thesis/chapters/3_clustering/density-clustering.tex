@@ -78,7 +78,7 @@ Si un punto pertenece a un cluster, entonces su $k$-distancia debe ser un valor 
 
 Si las densidades de los clusters no difieren radicalmente, en promedio, los valores de la $k$-distancias para puntos que pertenezcan a algún cluster no mostrarán un rango de valores muy amplio.
 En cambio, para puntos que no pertenezcan a ningún cluster, es decir, de ruido, el valor sí estará situado muy por encima del rango antes mencionado.
-De esta forma, si se toman todos los puntos de un conjunto de datos, se les ordena por su $k$-distancia y estas se representan en una gráfica (figura~\ref{img:dbscan-k-dist}), se debería obtener una imagen donde existirá un punto de inflexión que se corresponda con el valor de la $k$-distancia a partir del cual los puntos se encuentran fuera de algún cluster.
+Así, si se toman todos los puntos de un conjunto de datos, se les ordena por su $k$-distancia y estas se representan en una gráfica (figura~\ref{img:dbscan-k-dist}), se debería obtener una imagen donde existirá un punto de inflexión que se corresponda con el valor de la $k$-distancia a partir del cual los puntos se encuentran fuera de algún cluster.
 Puede entonces tomarse dicho valor como el $Eps$ adecuado para el problema en cuestión.
 En cuanto al valor de $MinPts$, este sería precisamente el $k$ seleccionado para calcular las distancias, pues los puntos cuya $k$-distancia sea menor que $Eps$ serán etiquetados como núcleos, mientras los demás serán fronteras o ruido.
 

@@ -60,7 +60,7 @@ Es ampliamente usado en la literatura por su sencillez, aunque tiene la desventa
 Se han popularizado otras variantes de selección de los centroides, con el propósito de aumentar la efectividad y consistencia en los resultados de K-Means.
 Uno de ellos es tomar una muestra de puntos y agruparlos empleando una técnica de clustering jerárquico.
 Una vez formados $K$ clusters, se toman sus centroides y se inicializa K-Means con estos.
-Este enfoque a menudo ofrece buenos resultados, pero solamente resulta práctico si la muestra tomada es relativamente pequeña (de un orden entre $10^2$ y $10^3$) y $K$ es relativamente pequeño comparado con el tamaño de dicha muestra~\cite{Tan05}.
+Este enfoque a menudo ofrece buenos resultados, pero solamente resulta práctico si la muestra tomada es relativamente pequeña (entre 100 y 1000 puntos) y $K$ es relativamente pequeño comparado con el tamaño de dicha muestra~\cite{Tan05}.
 
 Otra variante, conocida como \textbf{K-Means++}~\cite{Arthur07}, consiste en primeramente seleccionar un punto de manera aleatoria o tomando el centroide de todos los puntos.
 Luego, se selecciona el punto más alejado de los centroides formados con anterioridad y se repite este paso hasta obtener $K$ centroides iniciales.
