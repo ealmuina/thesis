@@ -97,7 +97,7 @@ Luego de aplicar algunas operaciones adicionales~\cite{Aggarawal13} debido a las
 \end{equation}
 
 Sin embargo, la optimización de la función~(\ref{eq:log-likelihood}) presenta serios inconvenientes debido a la dependencia existente entre las responsabilidades $\gamma(x_{ik})$ y el resto de los parámetros, por lo que no resulta simple derivar una expresión que permita calcular directamente dichos valores.
-Generalmente solo pueden ser obtenidos mínimos locales aplicando algoritmos de descenso por gradiente sobre~(\ref{eq:log-likelihood}), lo que igualmente resulta difícil debido a las restricciones del modelo (matriz de covarianzas definida positiva, suma de los pesos $\pi_k$ igual a uno, etc)~\cite{Aggarawal13,Murphy12}.
+Generalmente solo pueden ser obtenidos mínimos locales aplicando algoritmos de descenso por gradiente sobre~(\ref{eq:log-likelihood}), lo que igualmente se dificulta por las restricciones del modelo (matriz de covarianzas definida positiva, suma de los pesos $\pi_k$ igual a uno, etc)~\cite{Aggarawal13,Murphy12}.
 
 \subsection{Algoritmo Expectation-maximization}\label{subsec:EM}
 

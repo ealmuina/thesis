@@ -193,7 +193,109 @@
 \end{frame}
 
 \begin{frame}
+
+    \begin{block}{Distancia de alcanzabilidad mutua}
+        \begin{equation*}
+            d_{mreach}(a,b)=\max(dist_k(a), dist_k(b), dist(a,b))
+        \end{equation*}
+    \end{block}
+
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[width=\textwidth]{hdbscan-dataset+mst.png}
+    \end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+    Se eliminan todas las aristas del grafo y se las añade en orden ascendente según su peso, cada componente conexa que unen constituye el cluster padre de los clusters correspondientes en la jerarquía.
+
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[width=0.8\textwidth]{hdbscan-hierarchy.png}
+    \end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+    Generalmente al dividirse un cluster, solo se separan unos pocos puntos mientras el grueso de sus elementos permanecen en el otro cluster hijo.
+
+    \pause
+    {\footnotesize
+    \begin{columns}
+        \column{0.2\textwidth}
+
+        \begin{equation*}
+            \lambda = \frac{1}{d_{mreach}}
+        \end{equation*}
+
+        \column{0.8\textwidth}
+
+        \begin{itemize}
+            \item $\lambda_{birth}$: Valor de $\lambda$ en que surge el nodo.
+            \item $\lambda_{death}$: Valor de $\lambda$ en que el nodo se divide.
+            \item $\lambda_p$: Valor de $\lambda$ en que se elimina el punto $p$.
+        \end{itemize}
+
+    \end{columns}
+    }
+
+    \begin{enumerate}
+        \item<3-> Se toma como solución inicial el conjunto de nodos hojas del árbol condensado.
+        \item<4-> Iterativamente se recorre el árbol hacia arriba, comparando el $\lambda$ de cada nodo con la suma de sus hijos:
+        \begin{itemize}
+            \item<5-> si es menor, se sustituye por la suma
+            \item<5-> si es mayor, se mantiene, y los hijos son reemplazados por el padre en la solución
+        \end{itemize}
+    \end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[width=\textwidth]{hdbscan-hierarchy-condensed+results.png}
+    \end{figure}
+
+\end{frame}
+
+\begin{frame}
     \frametitle{Clustering Basado en Probabilidades}
+
+    \begin{block}{Combinación de modelos}
+        \begin{equation*}
+            p(x_i)=\sum_{k=1}^{K}{\pi_k p(x_i|\theta_k)}
+        \end{equation*}
+    \end{block}
+
+    \begin{itemize}
+        \item $\theta_k$: conjunto de parámetros específicos del modelo $k$.
+        \item $p(x_i|\theta_k)$: función de densidad.
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+    \begin{block}{Gaussian Mixture Model (GMM)}
+        \begin{itemize}
+            \item<2-> Asume que los puntos del conjunto de datos son generados mediante la combinación de un número finito de distribuciones normales con parámetros desconocidos (\textit{media} y \textit{covarianza}).
+            \item<3-> K-Means generalizado para incorporar información sobre la covarianza de los datos.
+        \end{itemize}
+    \end{block}
+
+    \pause
+    \begin{block}{Método de máxima verosimilitud}
+        \begin{equation*}
+            l(\Theta|X) = \sum_{i=1}^{N}{\log{\sum_{k=1}^{K}{\pi_k \mathcal{N}(x_i|\mu_k,\Sigma_k)}}}
+        \end{equation*}
+    \end{block}
+
+    \pause
+    \alert{EXPECTATION-MAXIMIZATION}
 
 \end{frame}
 

@@ -3,9 +3,241 @@
 \begin{frame}
     \frametitle{Validación supervisada}
 
+    \pause
+    \begin{block}{Entropía}
+        Medida del grado en que un conjunto está constituido por elementos de una única clase.
+    \end{block}
+
+    \pause
+    \begin{gather*}
+        H(X, L) = -\sum_{l=1}^{|L|}{\frac{|X_l|}{|X|}\log{\left( \frac{|X_l|}{|X|} \right)}} \\
+        e = H(X, K|C) = \sum_{i=1}^{|K|}{\frac{n_i}{n}H(K_i,C)}
+    \end{gather*}
+
+\end{frame}
+
+\begin{frame}
+
+    \begin{columns}
+        \column{0.7\textwidth}
+
+        \begin{block}{Precisión}
+            Fracción de los elementos de un cluster $i$ que pertenecen a la misma clase $j$.
+        \end{block}
+
+        \column{0.3\textwidth}
+
+        \begin{equation*}
+            precision(i,j) = \frac{n_{ij}}{n_i}
+        \end{equation*}
+
+    \end{columns}
+
+    \pause
+    \begin{columns}
+        \column{0.7\textwidth}
+
+        \begin{block}{Pureza}
+            Mide lo cerca que se encuentra un cluster $i$ de contener objetos pertenecientes a una única categoría.
+        \end{block}
+
+        \column{0.3\textwidth}
+
+        \begin{gather*}
+            p_i =\max_{j}{precision(i,j)} \\
+            purity = \sum_{i=1}^{K}{\frac{n_i}{n}p_i}
+        \end{gather*}
+
+    \end{columns}
+
+    \pause
+    \begin{columns}
+        \column{0.7\textwidth}
+
+        \begin{block}{Recobrado}
+            Mide el grado en que un cluster $i$ contiene todos los elementos del conjunto de datos que pertenecen a la clase $j$.
+        \end{block}
+
+        \column{0.3\textwidth}
+
+        \begin{equation*}
+            recall(i,j) = \frac{n_{ij}}{n_j}
+        \end{equation*}
+
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Validación supervisada}
+
+    \begin{block}{Medida F}
+        Combinación de las medidas \textit{pureza}, \textit{precisión} y \textit{recobrado}, que busca medir el grado en que un cluster $i$ está constituido solamente por elementos de una única clase $j$ y a su vez contiene a todos los elementos de dicha clase.
+    \end{block}
+
+    \begin{equation*}
+        F(i,j) = \frac{2 \cdot precision(i,j) \cdot recall(i,j)}{precision(i,j) + recall(i,j)}
+    \end{equation*}
+
+\end{frame}
+
+\begin{frame}
+
+    Con el propósito de generalizar la evaluación provista por la \textit{precisión} y el \textit{recobrado} para todas las categorías se diseñaron las siguientes medidas:
+
+    \begin{itemize}
+        \item<2-> \textbf{Homogeneidad}: $h = 1 - \frac{H(X, C|K)}{H(X, C)}$
+        \item<3-> \textbf{Completitud}: $c = 1 - \frac{H(X, K|C)}{H(X, K)}$
+    \end{itemize}
+
+    \pause % TODO Fix animation
+    \begin{block}{Medida V}
+        Homóloga a la medida F, basada en la \textit{homogeneidad} y la \textit{completitud}. Se calcula como:
+
+        \begin{equation*}
+            V = \frac{2 \cdot h \cdot c}{h + c}
+        \end{equation*}
+    \end{block}
+
+\end{frame}
+
+\begin{frame}
+
+    \begin{block}{Información Mutua}
+        Puede aplicarse para evaluar la calidad del resultado de un algoritmo de clustering al considerar el propio resultado como una de las variables y las categorías reales como la otra.
+    \end{block}
+
+    \pause
+
+    \begin{equation*}
+        MI(U,V) = \sum_{i=1}^{|U|}\sum_{j=1}^{|V|}{P(i,j)\log{\left( \frac{P(i,j)}{P(i)P'(j)} \right)}}
+    \end{equation*}
+
+    \begin{itemize}
+        \item $U$, $V$: Conjuntos de clusters y categorías reales respectivamente.
+        \item $P(i), P'(j)$: Probabilidades de que un elemento pertenezca al cluster $i$ y a la clase $j$ respectivamente.
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+    \begin{itemize}
+        \item Matriz ideal: 1 en la posición $(i,j)$ si los objetos $i$ y $j$ pertenecen a la \underline{misma clase}.
+        0 en caso contrario.
+        \item Matriz del clustering: 1 en la posición $(i,j)$ si los objetos $i$ y $j$ pertenecen al \underline{mismo cluster}.
+        0 en caso contrario.
+    \end{itemize}
+
+    \begin{block}{Correlación}
+        \begin{equation*}
+            \Gamma = \frac{N_s - N_d}{N_s + N_d}
+        \end{equation*}
+    \end{block}
+
+    \begin{enumerate}
+        \item $N_s$: cantidad de posiciones en que las matrices coinciden
+        \item $N_d$: cantidad de posiciones en que las matrices son diferentes
+    \end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+
+    $f_{ij}$: posiciones en que las que simultáneamente la matriz ideal tiene el valor $i$, y la matriz del clustering el valor $j$.
+
+    \begin{columns}
+
+        \pause
+        \column{0.5\textwidth}
+
+        \begin{block}{Índice de Rand}
+            \begin{equation*}
+                RI = \frac{f_{00} + f_{11}}{f_{00}+f_{01}+f_{10}+f_{11}}
+            \end{equation*}
+        \end{block}
+
+        \pause
+        \column{0.5\textwidth}
+
+        \begin{block}{Coeficiente de Jaccard}
+            \begin{equation*}
+                JC = \frac{f_{11}}{f_{01}+f_{10}+f_{11}}
+            \end{equation*}
+        \end{block}
+
+    \end{columns}
+
+    \pause
+    \begin{block}{Índice de Fowlkes-Mallows}
+        \begin{equation*}
+            FMI = \frac{f_{11}}{\sqrt{(f_{11}+f_{01})(f_{11}+f_{10})}}
+        \end{equation*}
+    \end{block}
+
 \end{frame}
 
 \begin{frame}
     \frametitle{Validación no supervisada}
+
+    \begin{equation*}
+        overall\ validity = \sum_{i=1}^{K}{w_i\ validity(C_i)}
+    \end{equation*}
+
+    \begin{columns}
+
+        \pause
+        \column{0.5\textwidth}
+
+        \begin{block}{Cohesión}
+
+        {\footnotesize
+        \begin{equation*}
+            cohesion_1(C_i) = \sum_{\substack{x\in C_i \\ y\in C_i}}{proximity(x,y)}
+        \end{equation*}
+        }
+
+        {\footnotesize
+        \begin{equation*}
+            cohesion_2(C_i) = \sum_{x\in C_i}{proximity(x,c_i)}
+        \end{equation*}
+        }
+
+        \end{block}
+
+        \pause
+        \column{0.5\textwidth}
+
+        \begin{block}{Separación}
+
+        {\footnotesize
+        \begin{equation*}
+            separation_1(C_i, C_j) = \sum_{\substack{x\in C_i \\ y\in C_j}}{proximity(x,y)}
+        \end{equation*}
+        }
+
+        {\footnotesize
+        \begin{equation*}
+            separation_2(C_i, C_j) = proximity(c_i,c_j)
+        \end{equation*}
+        }
+
+        \end{block}
+    \end{columns}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Validación no supervisada}
+
+    \begin{block}{Coeficiente de Silueta}
+        \begin{enumerate}
+            \item<2-> Calcular $a_x$, distancia promedio del punto a todos los demás puntos de su cluster.
+            \item<3-> Calcular, para cada cluster al que no pertenece el punto, la distancia promedio de este último a sus elementos, y conservar el menor de dichos promedios, $b_x$.
+            \item<4-> El coeficiente de silueta de $x$ estará dado entonces por la expresión:
+            \begin{equation*}
+                s_x = \frac{b_x - a_x}{\max{(a_x, b_x)}}
+            \end{equation*}
+        \end{enumerate}
+    \end{block}
 
 \end{frame}
