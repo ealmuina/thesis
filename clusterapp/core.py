@@ -186,22 +186,19 @@ class ClassifiedLibrary(Library):
 
     def _update_best_features(self, best, features, scaled_X, labels_true, labels_pred):
         ami = metrics.adjusted_mutual_info_score(labels_true, labels_pred)
-        try:
-            ch = metrics.calinski_harabaz_score(scaled_X, labels_pred)
-        except ValueError:
-            ch = -2 ** 31  # Likely because labels_pred had only one category. Just give it a bad score
+        ari = metrics.calinski_harabaz_score(labels_true, labels_pred)
 
-        if ami > best['AMI'] or (ami == best['AMI'] and ch > best['CH']):
+        if ami > best['AMI'] or (ami == best['AMI'] and ari > best['ARI']):
             best.update({
                 'AMI': ami,
-                'CH': ch,
+                'ARI': ari,
                 'features': list(features)
             })
 
     def best_features(self, categories, features_set, algorithm, min_features, max_features):
         best = {
             'AMI': 0,
-            'CH': -2 ** 31
+            'ARI': 0,
         }
         return self._best_features(best, categories, features_set, algorithm, min_features, max_features)
 

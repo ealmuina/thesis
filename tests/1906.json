@@ -1,0 +1,18 @@
+{
+  "features": [
+    "StartTime",
+    "ZeroCrossingRate"
+  ],
+  "min_features": 1,
+  "max_features": 2,
+  "algorithms": [
+    "hdbscan"
+  ],
+  "export_path": "/home/eddy/Desktop/out/bats",
+  "categories": [
+    "e. fuscus",
+    "e. glaucinus",
+    "e. poeyi",
+    "e. sezekorni"
+  ]
+}
