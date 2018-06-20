@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[xcolor={table}]{beamer}
 
 \usepackage[utf8]{inputenc}
 \usepackage[spanish,es-nodecimaldot]{babel}
@@ -13,3 +13,15 @@
 \usecolortheme{beaver}
 
 \DeclareMathOperator*{\argmax}{argmax}
+
+\AtBeginDocument{%
+% Renaming cuadro to tabla.
+\renewcommand{\tablename}{Tabla}%
+}
+
+\addtobeamertemplate{navigation symbols}{}{%
+\usebeamerfont{footline}%
+\usebeamercolor[fg]{footline}%
+\hspace{1em}%
+\insertframenumber/\inserttotalframenumber
+}

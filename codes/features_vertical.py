@@ -29,7 +29,7 @@ def plot_temporal_descriptors(audio):
 
 
 def plot_spectral_descriptors(audio):
-    fig, ax = pl.subplots(4, 1, figsize=(6, 6))
+    fig, ax = pl.subplots(3, 1, figsize=(6, 6))
     fig.subplots_adjust(left=0.07, right=0.97)
 
     ax[0].plot(audio.spectral_centroid, label='SC')
@@ -43,8 +43,8 @@ def plot_spectral_descriptors(audio):
     ax[2].plot(audio.spectral_flux)
     ax[2].set_title('Spectral Flux (SFX)')
 
-    ax[3].plot(audio.spectral_flatness)
-    ax[3].set_title('Spectral Flatness (SF)')
+    # ax[3].plot(audio.spectral_flatness)
+    # ax[3].set_title('Spectral Flatness (SF)')
 
     fig.show()
 
