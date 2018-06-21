@@ -73,14 +73,17 @@ def best_features_nd():
 
     if CLASSIFIED:
         categories = request.args.getlist('species[]')
+        n_categories = len(categories)
     else:
         categories = int(request.args.get('n_clusters'))
+        n_categories = categories
 
     if not categories:
         return jsonify({})
 
     clustering, scores, features = LIBRARY.best_features(
         categories=categories,
+        n_categories=n_categories,
         features_set=[f for f, _, _ in FEATURES],
         algorithm=clustering_algorithm,
         min_features=min_features,
@@ -143,12 +146,21 @@ def parameters_nd():
 
     if CLASSIFIED:
         species = request.args.getlist('species[]')
-        clustering, scores, CLASSIFIER = LIBRARY.cluster(species, features, clustering_algorithm)
+        clustering, scores, CLASSIFIER = LIBRARY.cluster(
+            features=features,
+            algorithm=clustering_algorithm,
+            n_categories=len(species),
+            categories=species
+        )
     else:
         n_clusters = request.args.get('n_clusters')
         if not n_clusters:
             n_clusters = '0'
-        clustering, scores, CLASSIFIER = LIBRARY.cluster(int(n_clusters), features, clustering_algorithm)
+        clustering, scores, CLASSIFIER = LIBRARY.cluster(
+            features=features,
+            algorithm=clustering_algorithm,
+            n_categories=n_clusters
+        )
 
     stats = statistics(clustering)
     return jsonify(get_report(clustering, stats, scores))

@@ -76,20 +76,7 @@ class Library:
             for file in tqdm(files, desc='Loading audio files', file=orig_stdout, dynamic_ncols=True):
                 self.files.append((file, Audio(file, string_path=True)))
 
-    @staticmethod
-    def _parse_clustering_algo(algorithm, categories):
-        if not isinstance(categories, int):
-            categories = len(categories)
-        return {
-            'kmeans': MiniBatchKMeans(n_clusters=categories, random_state=RANDOM_STATE),
-            'spectral': SpectralClustering(n_clusters=categories, n_jobs=-1, random_state=RANDOM_STATE),
-            'affinity': AffinityPropagation(),
-            'gmm': GaussianMixture(n_components=categories, random_state=RANDOM_STATE),
-            'hdbscan': HDBSCAN(min_cluster_size=3),
-            'none': IdentityClustering()
-        }[algorithm]
-
-    def _best_features(self, best, categories, features_set, algorithm, min_features, max_features):
+    def _best_features(self, best, features_set, algorithm, min_features, max_features, **kwargs):
         n = len(features_set)
         with std_out_err_redirect_tqdm() as orig_stdout:
             sizes = trange(
@@ -111,23 +98,38 @@ class Library:
                 )
                 for features in combinations:
                     try:  # TODO remove this try-except
-                        _, scaled_X, _, labels_pred, labels_true = self.predict(categories, features, algorithm)
+                        _, scaled_X, _, labels_pred, labels_true = self.predict(features, algorithm, **kwargs)
                     except:
                         print('Error extracting features: %s' % str(features))
                         continue
                     self._update_best_features(best, features, scaled_X, labels_true, labels_pred)
 
-        clustering, scores, _ = self.cluster(categories, best['features'], algorithm)
+        clustering, scores, _ = self.cluster(best['features'], algorithm, **kwargs)
         return clustering, scores, best['features']
 
-    def _parse_data(self, categories, features, algorithm):
+    @staticmethod
+    def _parse_clustering_algo(algorithm, **kwargs):
+        n_categories = kwargs['n_categories']
+        return {
+            'kmeans': MiniBatchKMeans(n_clusters=n_categories, random_state=RANDOM_STATE),
+            'spectral': SpectralClustering(n_clusters=n_categories, n_jobs=-1, random_state=RANDOM_STATE),
+            'affinity': AffinityPropagation(),
+            'gmm': GaussianMixture(n_components=n_categories, random_state=RANDOM_STATE),
+            'hdbscan': HDBSCAN(min_cluster_size=3),
+            'none': IdentityClustering()
+        }[algorithm]
+
+    def _parse_data(self, features, algorithm, **kwargs):
         raise NotImplementedError()
 
     def _update_best_features(self, best, features, scaled_X, labels_true, labels_pred):
         raise NotImplementedError()
 
-    def cluster(self, categories, features, algorithm):
-        X, scaled_X, names, labels_pred, labels_true = self.predict(categories, features, algorithm)
+    def best_features(self, features_set, algorithm, min_features, max_features, **kwargs):
+        raise NotImplementedError()
+
+    def cluster(self, features, algorithm, **kwargs):
+        X, scaled_X, names, labels_pred, labels_true = self.predict(features, algorithm, **kwargs)
 
         X_2d = X
         if X.shape[1] != 2:
@@ -150,9 +152,9 @@ class Library:
 
         return result, evaluate(scaled_X, labels_pred, labels_true), Classifier(result)
 
-    def predict(self, categories, features, algorithm):
-        algorithm = self._parse_clustering_algo(algorithm, categories)
-        X, names, labels_true = self._parse_data(categories, features, algorithm)
+    def predict(self, features, algorithm, **kwargs):
+        algorithm = self._parse_clustering_algo(algorithm, **kwargs)
+        X, names, labels_true = self._parse_data(features, algorithm, **kwargs)
 
         scaled_X = scale(X) if len(X) else X
         algorithm.fit(scaled_X, labels_true)
@@ -174,7 +176,8 @@ class ClassifiedLibrary(Library):
 
         self.categories = set(self.segments.keys())
 
-    def _parse_data(self, categories, features, algorithm):
+    def _parse_data(self, features, algorithm, **kwargs):
+        categories = kwargs['categories']
         X, labels_true, names = [], [], []
         for cat in categories:
             for audio in self.segments[cat]:
@@ -186,7 +189,7 @@ class ClassifiedLibrary(Library):
 
     def _update_best_features(self, best, features, scaled_X, labels_true, labels_pred):
         ami = metrics.adjusted_mutual_info_score(labels_true, labels_pred)
-        ari = metrics.calinski_harabaz_score(labels_true, labels_pred)
+        ari = metrics.adjusted_rand_score(labels_true, labels_pred)
 
         if ami > best['AMI'] or (ami == best['AMI'] and ari > best['ARI']):
             best.update({
@@ -195,12 +198,12 @@ class ClassifiedLibrary(Library):
                 'features': list(features)
             })
 
-    def best_features(self, categories, features_set, algorithm, min_features, max_features):
+    def best_features(self, features_set, algorithm, min_features, max_features, **kwargs):
         best = {
             'AMI': 0,
             'ARI': 0,
         }
-        return self._best_features(best, categories, features_set, algorithm, min_features, max_features)
+        return self._best_features(best, features_set, algorithm, min_features, max_features, **kwargs)
 
 
 class UnclassifiedLibrary(Library):
@@ -210,7 +213,7 @@ class UnclassifiedLibrary(Library):
             audio for _, audio in self.files
         ]
 
-    def _parse_data(self, categories, features, algorithm):
+    def _parse_data(self, features, algorithm, **kwargs):
         X, names = [], []
         for audio in self.segments:
             X.append(_extract_features(audio, features))
@@ -230,11 +233,11 @@ class UnclassifiedLibrary(Library):
                 'features': list(features)
             })
 
-    def best_features(self, categories, features_set, algorithm, min_features, max_features):
+    def best_features(self, features_set, algorithm, min_features, max_features, **kwargs):
         best = {
             'CH': -2 ** 31
         }
-        return self._best_features(best, categories, features_set, algorithm, min_features, max_features)
+        return self._best_features(best, features_set, algorithm, min_features, max_features, **kwargs)
 
 
 def _extract_features(audio, features):

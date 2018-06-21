@@ -129,6 +129,7 @@ def test(features_set, min_features, max_features, algorithms, categories, expor
                     try:  # TODO remove this try-except
                         X, scaled_X, names, labels_pred, labels_true = LIBRARY.predict(
                             categories=categories,
+                            n_categories=categories if isinstance(categories, int) else len(categories),
                             features=features,
                             algorithm=algorithm
                         )

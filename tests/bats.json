@@ -58,7 +58,7 @@
     "MFCC"
   ],
   "min_features": 1,
-  "max_features": 1,
+  "max_features": 14,
   "algorithms": [
     "hdbscan",
     "kmeans",
